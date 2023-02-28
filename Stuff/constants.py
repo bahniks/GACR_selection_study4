@@ -1,0 +1,3 @@
+BONUS = 45
+
+TESTING = True
