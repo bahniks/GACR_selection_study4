@@ -658,41 +658,29 @@ Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verz
 
 class Auction(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = intro_auction, height = 23, font = 15)
+        super().__init__(root, text = intro_auction, height = 8, font = 15)
 
-        self.checkVar = StringVar()
+        self.offerVar = IntVar()
+        self.offerVar.set(None)
         self.vcmd = (self.register(self.onValidate), '%P')
-        self.checkFrame = Canvas(self, background = "white", highlightbackground = "white",
+        self.offerFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
-        self.checkFrame.grid(row = 2, column = 1)
-        self.entry = ttk.Entry(self.checkFrame, textvariable = self.checkVar, width = 10, justify = "right",
+        self.offerFrame.grid(row = 2, column = 1)
+        self.entry = ttk.Entry(self.offerFrame, textvariable = self.offerVar, width = 10, justify = "right",
                                font = "helvetica 15", validate = "key", validatecommand = self.vcmd)
         self.entry.grid(row = 2, column = 1, padx = 6)
-        self.currencyLabel = ttk.Label(self.checkFrame, text = "Kč", font = "helvetica 16",
+        self.currencyLabel = ttk.Label(self.offerFrame, text = "Kč", font = "helvetica 16",
                                        background = "white")
         self.currencyLabel.grid(row = 2, column = 2, sticky = NSEW)
-
-        self.predictionsLab = ttk.Label(self.bottomAnswers, text = prediction_label, font = "helvetica 15",
-                                        background = "white", foreground = "white")
-        self.predictionsLab.grid(row = 0, column = 1, sticky = NSEW, pady = 12)
-        self.bottomMistakes = Text(self, font = "helvetica 15", relief = "flat", background = "white",
-                                   width = 90, height = 1, wrap = "word", highlightbackground = "white",
-                                   state = "disabled", foreground = "red")
-        self.bottomMistakes.tag_config("centered", justify = "center")
-        self.bottomMistakes.grid(row = 6, column = 1, pady = 10)
-        
-        self.next.grid(row = 7, column = 1)
-        self.next["state"] = "disabled"
-        self.text.grid(row = 1, column = 1, columnspan = 1)
+               
+        self.next.grid(row = 4, column = 1)
+        self.next["state"] = "disabled"        
 
         self.rowconfigure(0, weight = 1)
-        self.rowconfigure(2, weight = 0)
-        self.rowconfigure(3, weight = 0)
-        self.rowconfigure(7, weight = 1)
-        self.rowconfigure(8, weight = 2)
-
-        self.checked = False
-        
+        self.rowconfigure(3, weight = 1)
+        self.rowconfigure(4, weight = 1)
+        self.rowconfigure(5, weight = 1)        
+      
     def onValidate(self, P):
         try:
             if int(P) >= 0:
@@ -702,41 +690,57 @@ class Auction(InstructionsFrame):
         except Exception as e:
             self.next["state"] = "disabled"
         return True
-    
-    def nextFun(self):
-        if self.checked:
-            if int(self.predictionVar.get()) > 12:
-                self.bottomMistakes["state"] = "normal"
-                self.bottomMistakes.delete("1.0", "end")
-                self.bottomMistakes.insert("1.0", wrong_trials, "centered")
-                self.bottomMistakes["state"] = "disabled"
-                return
-            self.write()
-            super().nextFun()
-        else:
-            answer = int(self.checkVar.get())
-            if answer == 15:
-                text = correct_answer.format(answer)
-            else:
-                text = wrong_answer.format(answer)
-            self.lowerText["state"] = "normal"
-            self.lowerText.insert("1.0", text)
-            self.lowerText["state"] = "disabled"
-            self.next["state"] = "disabled"
-            self.checked = True
-            self.bottomText["state"] = "normal"
-            self.bottomText.insert("1.0", second_check_question)
-            self.bottomText["state"] = "disabled"
-            self.vcmd2 = (self.register(self.onValidate), '%P')
-            self.predictionsEntry = ttk.Entry(self.bottomAnswers, textvariable = self.predictionVar, width = 10,
-                                              justify = "right", font = "helvetica 16", validate = "key",
-                                              validatecommand = self.vcmd2)
-            self.predictionsLab["foreground"] = "black"
-            self.predictionsEntry.grid(row = 0, column = 0, padx = 6)
-
+  
     def write(self):
-        self.file.write("Cheating estimates\n")
-        self.file.write(self.id + "\t" + self.predictionVar.get() + "\n\n")
+        self.file.write("Auction\n")
+        self.file.write(self.id + "\t" + self.offerVar.get() + "\n\n")
+
+        filepath = os.path.join(os.getcwd(), "Data", "Auction")
+        if not os.path.exists(filepath):
+            os.mkdir(filepath)
+
+        with open(os.path.join(filepath, "Auction" + self.id), mode = "w") as self.infile:
+            self.write(self.id + "\t" + self.offerVar.get() + "\t" + random.random())
+
+
+
+
+wait_text = "Prosím počkejte než se rozhodnou ostatní členové týmu."
+
+
+class Wait(InstructionsFrame):
+    def __init__(self, root):
+        super().__init__(root, text = wait_text, height = 8, font = 15, proceed = False)
+
+        self.checkOffers()        
+
+
+    def checkOffers(self):
+        offerfiles = os.listdir(os.path.join(os.getcwd(), "Data", "Auction"))
+        if len(offerfiles) == 4:
+            interested = []
+            maxoffer = 0
+            for file in offerfiles:
+                with open(file, mode = "r") as infile:
+                    text = infile.readline()
+                    participant, offer, random_number = text.split("\t")                                        
+                    if offer > maxoffer:
+                        interested = [participant, random_number]
+                    elif offer == maxoffer:
+                        if not interested:
+                            interested = [participant, random_number]
+                        else:
+                            if random_number > interested[1]:
+                                interested = [participant, random_number]
+            # change
+            global conditions            
+            conditions[0] = "treatment" if self.id == interested[0] else "control"
+            self.next()  
+        else:
+            sleep(1)
+            self.checkOffers()
+
+
 
 
         
@@ -771,6 +775,7 @@ EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Auction,
+         Wait,
          Instructions1,
          BlockOne,
          Instructions2,

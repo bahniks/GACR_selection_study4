@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from time import localtime, strftime, time
 from collections import defaultdict
+from uuid import uuid4
 
 from constants import TESTING
 
@@ -30,7 +31,8 @@ class GUI(Tk):
             os.mkdir(filepath)
         
         writeTime = localtime()
-        self.outputfile = os.path.join(filepath, strftime("%y_%m_%d_%H%M%S", writeTime) + ".txt")
+        self.id = str(uuid4())
+        self.outputfile = os.path.join(filepath, strftime("%y_%m_%d_%H%M%S", writeTime) + "_" + self.id + ".txt")
 
         self.bind("<Escape>", self.closeFun)
 
