@@ -26,13 +26,14 @@ class GUI(Tk):
         self.screenwidth = 1680 # adjust
         self.screenheight = 1050 # adjust
 
+        os.chdir(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
         filepath = os.path.join(os.getcwd(), "Data")
         if not os.path.exists(filepath):
             os.mkdir(filepath)
         
         writeTime = localtime()
         self.id = str(uuid4())
-        self.outputfile = os.path.join(filepath, strftime("%y_%m_%d_%H%M%S", writeTime) + "_" + self.id + ".txt")
+        self.outputfile = os.path.join("Data", strftime("%y_%m_%d_%H%M%S", writeTime) + "_" + self.id + ".txt")
 
         self.bind("<Escape>", self.closeFun)
 

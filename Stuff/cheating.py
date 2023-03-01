@@ -660,8 +660,7 @@ class Auction(InstructionsFrame):
     def __init__(self, root):
         super().__init__(root, text = intro_auction, height = 8, font = 15)
 
-        self.offerVar = IntVar()
-        self.offerVar.set(None)
+        self.offerVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
         self.offerFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
@@ -700,7 +699,11 @@ class Auction(InstructionsFrame):
             os.mkdir(filepath)
 
         with open(os.path.join(filepath, "Auction" + self.id), mode = "w") as self.infile:
-            self.write(self.id + "\t" + self.offerVar.get() + "\t" + random.random())
+            self.infile.write(self.id + "\t" + self.offerVar.get() + "\t" + str(random.random()))
+
+    def nextFun(self):
+        self.write()
+        super().nextFun()
 
 
 
@@ -712,18 +715,31 @@ class Wait(InstructionsFrame):
     def __init__(self, root):
         super().__init__(root, text = wait_text, height = 8, font = 15, proceed = False)
 
-        self.checkOffers()        
-
+        self.timer = 0
+    
 
     def checkOffers(self):
+        # timer display
+        self.timer += 1
+        if self.timer > 15:
+            self.timer = 1
+        self.text.config(state = "normal")
+        self.text.delete("1.0", "end")
+        self.text.insert("1.0", wait_text + "\n")
+        self.text.insert("2.0", "."*self.timer)
+        self.update()
+        self.text.config(state = "disabled")
+
         offerfiles = os.listdir(os.path.join(os.getcwd(), "Data", "Auction"))
         if len(offerfiles) == 4:
             interested = []
             maxoffer = 0
             for file in offerfiles:
-                with open(file, mode = "r") as infile:
+                with open(os.path.join(os.getcwd(), "Data", "Auction", file), mode = "r") as infile:
                     text = infile.readline()
-                    participant, offer, random_number = text.split("\t")                                        
+                    participant, offer, random_number = text.split("\t")
+                    offer = int(offer)
+                    random_number = float(random_number)
                     if offer > maxoffer:
                         interested = [participant, random_number]
                     elif offer == maxoffer:
@@ -735,10 +751,16 @@ class Wait(InstructionsFrame):
             # change
             global conditions            
             conditions[0] = "treatment" if self.id == interested[0] else "control"
-            self.next()  
+            self.nextFun()  
         else:
+            print(self.timer) #
+            self.update()       
             sleep(1)
             self.checkOffers()
+
+    def run(self):
+        self.checkOffers()
+            
 
 
 

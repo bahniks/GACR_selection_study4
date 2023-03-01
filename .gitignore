@@ -1,3 +1,9 @@
+Data/*.txt
+!Data/extract.py
+Data/Auction/*.txt
+!Data/Auction/file.txt
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
