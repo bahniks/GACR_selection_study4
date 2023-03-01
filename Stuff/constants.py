@@ -1,3 +1,4 @@
 BONUS = 45
+MAX_BDM_PRIZE = 60
 
 TESTING = True

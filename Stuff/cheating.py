@@ -10,11 +10,7 @@ import os
 from common import ExperimentFrame, InstructionsFrame, Measure
 from gui import GUI
 from debriefcheating import DebriefCheating
-
-
-
-
-FEE = 25
+from constants import MAX_BDM_PRIZE
 
 
 ################################################################################
@@ -45,24 +41,12 @@ wintext = "správná a vydělali jste {} Kč."
 losstext = "špatná a nevydělali jste možných {} Kč."
 
 
-freetext = """Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+# buttons
+controlchoicetext = "verze PŘED"
+treatmentchoicetext = "verze PO"  
 
-Jak jste zaznamenali, úkol měl dvě verze:
-
-<b>Verzi “PŘED”</b>, ve které činíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli či nikoliv, a kolik jste vydělali.
-<b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
-
-Nyní vás čeká {{}} blok s dvanácti koly. Pro tento blok máte možnost si zvolit jednu z následujících možností:
-- verze PŘED  
-- verze PO.
-
-{}
-"""
-
-fourthfree = "Všimněte si, že v tomto bloku není s verzí PO spojen žádný poplatek."
-thirdfree = ""
-
-feetext = """Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+intro_BDM = """
+Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
 
@@ -72,11 +56,26 @@ Jak jste zaznamenali, úkol měl dvě verze:
 Nyní vás čeká {{}} blok s dvanácti pokusy. Pro tento blok máte možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna {} Kč</b>. Zvolíte-li tuto verzi, bude částka {} Kč odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO a zaplatím {} Kč
 - verze PŘED a zaplatím 0 Kč.
-""".format(FEE, FEE, FEE)
 
-# buttons
-controlchoicetext = "verze PŘED"
-treatmentchoicetext = "verze PO"  
+V následujícím kole budete hrát jednu z verzí úlohy.
+Za verzi "PO" je nutné zaplatit poplatek, který bude náhodně určen z intervalu od 1 do {} Kč.
+Do textového pole níže uveďte, kolik jste ochotni za hraní verze "PO" zaplatit.
+Pokud tato částka bude vyšší nebo rovná náhodně vybranému poplatek, poplatek zaplatíte a budete hrát verzi "PO".
+Pokud vámi uvedená částka bude nižší než náhodně vybraný poplatek, poplatek platit nebudete a budete hrát verzi "PŘED".
+Nikdy nebudete platit více než, kolik je náhodně vybraný poplatek. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, co jste ochotni zaplatit.
+Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {}, budete určitě hrát verzi "PO".
+""".format(MAX_BDM_PRIZE, MAX_BDM_PRIZE)
+
+
+intro_auction = """
+Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech lidech. Z každé skupiny bude v následujícím kole jeden hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
+Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik Kč jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku rovnou druhé nejvyšší nabídce ve skupině.
+Ostatní členové skupiny budou hrát verzi "PŘED".
+Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verzi "PO" úlohy.
+"""
+
+wait_text = "Prosím počkejte než se rozhodnou ostatní členové týmu."
+
 
 
 intro_block_5 = """
@@ -146,6 +145,7 @@ Toto je konec úkolu s kostkou.
 
 third = ("druhého", "třetí")
 fourth = ("třetího", "čtvrtý")
+
 
 
 
@@ -647,18 +647,11 @@ class CheatingInstructions(InstructionsFrame):
 
 
 
+class PaymentFrame(InstructionsFrame):
+    def __init__(self, root, text, name):
+        super().__init__(root, text = text, height = 8, font = 15)
 
-intro_auction = """
-Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech lidech. Z každé skupiny bude v následujícím kole jeden hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
-Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik Kč jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku rovnou druhé nejvyšší nabídce ve skupině.
-Ostatní členové skupiny budou hrát verzi "PŘED".
-Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verzi "PO" úlohy.
-"""
-
-
-class Auction(InstructionsFrame):
-    def __init__(self, root):
-        super().__init__(root, text = intro_auction, height = 8, font = 15)
+        self.name = name
 
         self.offerVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
@@ -691,8 +684,21 @@ class Auction(InstructionsFrame):
         return True
   
     def write(self):
-        self.file.write("Auction\n")
+        self.file.write(self.name + "\n")
         self.file.write(self.id + "\t" + self.offerVar.get() + "\n\n")
+
+    def nextFun(self):
+        self.write()
+        super().nextFun()   
+
+
+
+class Auction(PaymentFrame):
+    def __init__(self, root):
+        super().__init__(root, text = intro_auction, name = "Auction")
+  
+    def write(self):
+        super().write()
 
         filepath = os.path.join(os.getcwd(), "Data", "Auction")
         if not os.path.exists(filepath):
@@ -701,14 +707,12 @@ class Auction(InstructionsFrame):
         with open(os.path.join(filepath, "Auction" + self.id), mode = "w") as self.infile:
             self.infile.write(self.id + "\t" + self.offerVar.get() + "\t" + str(random.random()))
 
-    def nextFun(self):
-        self.write()
-        super().nextFun()
 
 
+class BDM(PaymentFrame):
+    def __init__(self, root):
+        super().__init__(root, text = intro_BDM, name = "BDM")
 
-
-wait_text = "Prosím počkejte než se rozhodnou ostatní členové týmu."
 
 
 class Wait(InstructionsFrame):
