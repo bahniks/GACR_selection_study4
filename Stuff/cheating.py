@@ -46,14 +46,14 @@ controlchoicetext = "verze PŘED"
 treatmentchoicetext = "verze PO"  
 
 intro_BDM = """
-Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
 
 <b>Verzi “PŘED”</b>, ve které činíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli či nikoliv, a kolik jste vydělali.
 <b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
-Nyní vás čeká {{}} blok s dvanácti pokusy. Pro tento blok máte možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude částka zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
+Nyní vás čeká třetí blok s dvanácti pokusy. Pro tento blok máte možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude částka zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO se zpoplatněním
 - verze PŘED bez poplatku.
 
@@ -64,7 +64,14 @@ Pokud tato částka bude vyšší nebo rovná náhodně vybranému poplatek, pop
 Pokud vámi uvedená částka bude nižší než náhodně vybraný poplatek, poplatek platit nebudete a budete hrát verzi "PŘED".
 Nikdy nebudete platit více než, kolik je náhodně vybraný poplatek. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, co jste ochotni zaplatit.
 Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {}, budete určitě hrát verzi "PO".
-""".format("", "", "", MAX_BDM_PRIZE, MAX_BDM_PRIZE)
+""".format("", MAX_BDM_PRIZE, MAX_BDM_PRIZE)
+
+bdm_result = """
+Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplatit {} Kč. V následujícím kole tedy budete hrát verzi "{}" a {}.
+"""
+
+bdm_after = "a z vaší výhry bude odečten vybraný poplatek"
+bdm_before = "a nezaplatíte žádný poplatek"
 
 
 intro_auction = """
@@ -467,7 +474,7 @@ class CheatingInstructions(InstructionsFrame):
 
 class PaymentFrame(InstructionsFrame):
     def __init__(self, root, text, name):
-        super().__init__(root, text = text, height = 8, font = 15)
+        super().__init__(root, text = text, height = 25, font = 15, width = 100)
 
         self.name = name
 
@@ -530,6 +537,21 @@ class Auction(PaymentFrame):
 class BDM(PaymentFrame):
     def __init__(self, root):
         super().__init__(root, text = intro_BDM, name = "BDM")
+
+    def write():        
+        fee = random.randint(1, MAX_BDM_PRIZE)
+        if int(self.offerVar.get()) >= fee:
+            condition = "after"
+            self.root.texts["bdmVersion"] = "PO"
+            self.root.texts["bdmPaymentText"] = bdm_after
+        else:
+            condition = "before"
+            self.root.texts["bdmVersion"] = "PŘED"
+            self.root.texts["bdmPaymentText"] = bdm_before
+        self.root.texts["bdmFee"] = fee
+        self.root.texts["bdmResponse"] = int(selfofferVar.get())                
+
+        self.super().write()
 
 
 
@@ -594,6 +616,8 @@ random.shuffle(conditions)
 
 Instructions1 = CheatingInstructions
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
+BDM3 = (BDM, {"update": ["win2"]})
+BDMResult = (InstructionsFrame, {"text": bdm_result, "height": 3, "update": ["bdmFee", "bdmResponse", "bdmVersion", "bdmPaymentText"]})
 # Auction4 = (Auction, {"roundNum": 4, "update": ["win3"]})
 # Auction5 = (Auction, {"roundNum": 5, "update": ["win4"]})
 # Auction6 = (Auction, {"roundNum": 6})
@@ -613,6 +637,7 @@ EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([BDM, #!
+         BDMResult, #!
          Auction, #!
          Wait, #!
          Instructions1,
@@ -620,6 +645,8 @@ if __name__ == "__main__":
          Instructions2,
          BlockTwo,
          BDM,
+         #BDM3,
+         BDMResult,
          BlockThree,
          Auction,
          #Auction4,
