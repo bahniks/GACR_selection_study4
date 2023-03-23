@@ -41,15 +41,15 @@ class InstructionsFrame(ExperimentFrame):
                  font = 18, space = False, width = 90, keys = None, update = None, bold = None):
         super().__init__(root)
 
+        self.root = root
+        self.t0 = time()
+
         if update:
             updateTexts = []
             for i in update:
                 updateTexts.append(self.root.texts[i])
-            text = text.format(*updateTexts)
-        
-        self.root = root
-        self.t0 = time()
-                    
+            text = text.format(*updateTexts)       
+                   
         self.text = Text(self, font = "helvetica {}".format(font), relief = "flat",
                          background = "white", width = width, height = height, wrap = "word",
                          highlightbackground = "white")

@@ -64,25 +64,35 @@ Pokud tato částka bude vyšší nebo rovná náhodně vybranému poplatek, pop
 Pokud vámi uvedená částka bude nižší než náhodně vybraný poplatek, poplatek platit nebudete a budete hrát verzi "PŘED".
 Nikdy nebudete platit více než, kolik je náhodně vybraný poplatek. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, co jste ochotni zaplatit.
 Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {}, budete určitě hrát verzi "PO".
-""".format("", MAX_BDM_PRIZE, MAX_BDM_PRIZE)
+""".format(MAX_BDM_PRIZE, MAX_BDM_PRIZE)
 
 bdm_result = """
 Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplatit {} Kč. V následujícím kole tedy budete hrát verzi "{}" a {}.
 """
 
-bdm_after = "a z vaší výhry bude odečten vybraný poplatek"
-bdm_before = "a nezaplatíte žádný poplatek"
+bdm_after = "z vaší výhry bude poplatek odečten"
+bdm_before = "nezaplatíte žádný poplatek"
 
 
 intro_auction = """
+Toto je konec {} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+
 Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech lidech. Z každé skupiny bude v následujícím kole jeden hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
 Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik Kč jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku rovnou druhé nejvyšší nabídce ve skupině.
 Ostatní členové skupiny budou hrát verzi "PŘED".
 Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verzi "PO" úlohy.
 """
 
+block_numbers = ["třetího", "čtvrtého", "pátého"]
+
 wait_text = "Prosím počkejte než se rozhodnou ostatní členové týmu."
 
+
+auction_result = 'Za verzi "PO" jste nabídli {} Kč. {}.'
+
+
+auction_after = 'Druhá nejvyšší nabídka byla {} Kč. Budete tedy hrát verzi "PO" a z vaší výhry bude odečteno {} Kč'
+auction_before = 'Nejvyšší nabídka byla {} Kč. Budete tedy hrát verzi "PŘED" a nezaplatíte žádný poplatek'
 
 
 
@@ -104,9 +114,6 @@ Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém b
 wrong_answer = "{} Kč je chybná odpověď, správná odpověď je 15 Kč. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
 correct_answer = "15 Kč je správná odpověď. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
 
-second_check_question = "Dříve než začnete, zkuste odhadnout, kolik hodů správně uhodnete ve vylosovaném bloku."
-prediction_label = "správných předpovědí"
-wrong_trials = "V jednom bloku je pouze 12 hodů!"
 
 
 intro_block_2 = """
@@ -131,28 +138,31 @@ fifth =  ("čtvrtého", "pátý")
 
 
 class Cheating(ExperimentFrame):
-    def __init__(self, root, block):
+    def __init__(self, root):
         super().__init__(root)
 
         #######################
         # adjustable parameters
-        self.trials = 12 # change for testing
+        self.trials = 2 # change for testing
         self.pause_after_roll = 0.5
         self.pause_before_trial = 0.2
         self.displayNum = self.createDots # self.createDots or self.createText
-        self.fakeRolling = True # False for testing
+        self.fakeRolling = False # False for testing
         self.diesize = 240
         self.rewards = [i*5 + 5 for i in range(self.trials)]
         #######################
 
+        if not "block" in self.root.status:
+            self.root.status["block"] = 1
+        self.blockNumber = self.root.status["block"]      
+
         global conditions
-        self.condition = conditions[block - 1]
-        self.blockNumber = block
+        self.condition = conditions[self.blockNumber - 1]
 
         self.width = self.root.screenwidth
         self.height = self.root.screenheight
 
-        self.file.write("Cheating {}\n".format(block))
+        self.file.write("Cheating {}\n".format(self.blockNumber))
 
         self.upperText = Text(self, height = 5, width = 80, relief = "flat", font = "helvetica 15",
                               wrap = "word")
@@ -368,6 +378,7 @@ class Cheating(ExperimentFrame):
         
                    
     def write(self):
+        self.root.status["block"] += 1
         for response in self.responses:
             begin = [self.id]
             self.file.write("\t".join(map(str, begin + response)) + "\n")
@@ -377,9 +388,8 @@ class Cheating(ExperimentFrame):
 
 class CheatingInstructions(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = intro_block_1, height = 23, font = 15)
+        super().__init__(root, text = intro_block_1, height = 31, font = 15)
 
-        self.predictionVar = StringVar()
         self.checkVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
         self.checkFrame = Canvas(self, background = "white", highlightbackground = "white",
@@ -401,12 +411,9 @@ class CheatingInstructions(InstructionsFrame):
                                width = 90, height = 2, wrap = "word", highlightbackground = "white",
                                state = "disabled")
         self.bottomText.grid(row = 4, column = 1)
-        self.bottomAnswers = Canvas(self, height = 40, background = "white", highlightbackground = "white",
+        self.bottomAnswers = Canvas(self, height = 10, background = "white", highlightbackground = "white",
                                     highlightcolor = "white")
         self.bottomAnswers.grid(row = 5, column = 1)
-        self.predictionsLab = ttk.Label(self.bottomAnswers, text = prediction_label, font = "helvetica 15",
-                                        background = "white", foreground = "white")
-        self.predictionsLab.grid(row = 0, column = 1, sticky = NSEW, pady = 12)
         self.bottomMistakes = Text(self, font = "helvetica 15", relief = "flat", background = "white",
                                    width = 90, height = 1, wrap = "word", highlightbackground = "white",
                                    state = "disabled", foreground = "red")
@@ -437,12 +444,6 @@ class CheatingInstructions(InstructionsFrame):
     
     def nextFun(self):
         if self.checked:
-            if int(self.predictionVar.get()) > 12:
-                self.bottomMistakes["state"] = "normal"
-                self.bottomMistakes.delete("1.0", "end")
-                self.bottomMistakes.insert("1.0", wrong_trials, "centered")
-                self.bottomMistakes["state"] = "disabled"
-                return
             self.write()
             super().nextFun()
         else:
@@ -454,27 +455,18 @@ class CheatingInstructions(InstructionsFrame):
             self.lowerText["state"] = "normal"
             self.lowerText.insert("1.0", text)
             self.lowerText["state"] = "disabled"
-            self.next["state"] = "disabled"
             self.checked = True
-            self.bottomText["state"] = "normal"
-            self.bottomText.insert("1.0", second_check_question)
-            self.bottomText["state"] = "disabled"
-            self.vcmd2 = (self.register(self.onValidate), '%P')
-            self.predictionsEntry = ttk.Entry(self.bottomAnswers, textvariable = self.predictionVar, width = 10,
-                                              justify = "right", font = "helvetica 16", validate = "key",
-                                              validatecommand = self.vcmd2)
-            self.predictionsLab["foreground"] = "black"
-            self.predictionsEntry.grid(row = 0, column = 0, padx = 6)
 
     def write(self):
         self.file.write("Cheating estimates\n")
-        self.file.write(self.id + "\t" + self.predictionVar.get() + "\n\n")
+        self.file.write(self.id + "\t" + "\n\n")
 
 
 
 class PaymentFrame(InstructionsFrame):
-    def __init__(self, root, text, name):
-        super().__init__(root, text = text, height = 25, font = 15, width = 100)
+    def __init__(self, root, text, name, height = 10):
+        update = ["win" + str(root.status["block"] - 1)]
+        super().__init__(root, text = text, height = height, font = 15, width = 100, update = update)
 
         self.name = name
 
@@ -520,38 +512,49 @@ class PaymentFrame(InstructionsFrame):
 
 class Auction(PaymentFrame):
     def __init__(self, root):
-        super().__init__(root, text = intro_auction, name = "Auction")
+        # for testing
+        if not "block" in root.status: 
+            root.status["block"] = 1
+
+        instructions = intro_auction.format(block_numbers[root.status["block"] - 4], "")
+        super().__init__(root, text = instructions, name = "Auction")
   
     def write(self):
+        self.root.texts["auctionResponse"] = self.offerVar.get()
+
         super().write()
 
         filepath = os.path.join(os.getcwd(), "Data", "Auction")
         if not os.path.exists(filepath):
             os.mkdir(filepath)
 
-        with open(os.path.join(filepath, "Auction" + self.id), mode = "w") as self.infile:
-            self.infile.write(self.id + "\t" + self.offerVar.get() + "\t" + str(random.random()))
+        block = str(self.root.status["block"])
+        with open(os.path.join(filepath, "_".join(["Auction", block, self.id])), mode = "w") as self.infile:
+            self.infile.write(self.id + "\t" + block + "\t" + self.offerVar.get() + "\t" + str(random.random()))
 
 
 
 class BDM(PaymentFrame):
     def __init__(self, root):
-        super().__init__(root, text = intro_BDM, name = "BDM")
+        super().__init__(root, text = intro_BDM, name = "BDM", height = 25)
 
-    def write():        
+    def write(self):        
         fee = random.randint(1, MAX_BDM_PRIZE)
+        global conditions
         if int(self.offerVar.get()) >= fee:
             condition = "after"
             self.root.texts["bdmVersion"] = "PO"
             self.root.texts["bdmPaymentText"] = bdm_after
+            conditions.append("treatment")
         else:
             condition = "before"
             self.root.texts["bdmVersion"] = "PŘED"
             self.root.texts["bdmPaymentText"] = bdm_before
+            conditions.append("control")
         self.root.texts["bdmFee"] = fee
-        self.root.texts["bdmResponse"] = int(selfofferVar.get())                
+        self.root.texts["bdmResponse"] = int(self.offerVar.get())                
 
-        self.super().write()
+        super().write()
 
 
 
@@ -575,35 +578,56 @@ class Wait(InstructionsFrame):
         self.text.config(state = "disabled")
 
         offerfiles = os.listdir(os.path.join(os.getcwd(), "Data", "Auction"))
-        if len(offerfiles) == 4:
+        if len(offerfiles) >= 4:
             interested = []
             maxoffer = 0
+            secondoffer = 0
+            finished = 0
             for file in offerfiles:
                 with open(os.path.join(os.getcwd(), "Data", "Auction", file), mode = "r") as infile:
                     text = infile.readline()
-                    participant, offer, random_number = text.split("\t")
+                    participant, block, offer, random_number = text.split("\t")
+                    if block != str(self.root.status["block"]):
+                        continue
+                    else:
+                        finished += 1
                     offer = int(offer)
                     random_number = float(random_number)
                     if offer > maxoffer:
                         interested = [participant, random_number]
+                        secondoffer = maxoffer
+                        maxoffer = offer
                     elif offer == maxoffer:
                         if not interested:
                             interested = [participant, random_number]
-                        else:
-                            if random_number > interested[1]:
-                                interested = [participant, random_number]
-            # change
-            global conditions            
-            conditions[0] = "treatment" if self.id == interested[0] else "control"
-            self.nextFun()  
+                        elif random_number > interested[1]:
+                            interested = [participant, random_number]
+                        secondoffer = offer
+            if finished != 4:
+                self.update()       
+                sleep(1)
+                self.checkOffers()
+            else:
+                # change
+                global conditions            
+                nextCondition = "treatment" if self.id == interested[0] else "control"
+                conditions.append(nextCondition)
+                self.updateResults(maxoffer, secondoffer, nextCondition)
+                self.nextFun()  
         else:
-            print(self.timer) #
             self.update()       
             sleep(1)
             self.checkOffers()
 
     def run(self):
         self.checkOffers()
+
+    def updateResults(self, maxoffer, secondoffer, nextCondition):        
+        if nextCondition == "treatment":
+            self.root.texts["auctionText"] = auction_after.format(secondoffer, secondoffer)
+        else:
+            self.root.texts["auctionText"] = auction_before.format(maxoffer)           
+
             
 
 
@@ -616,19 +640,8 @@ random.shuffle(conditions)
 
 Instructions1 = CheatingInstructions
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
-BDM3 = (BDM, {"update": ["win2"]})
 BDMResult = (InstructionsFrame, {"text": bdm_result, "height": 3, "update": ["bdmFee", "bdmResponse", "bdmVersion", "bdmPaymentText"]})
-# Auction4 = (Auction, {"roundNum": 4, "update": ["win3"]})
-# Auction5 = (Auction, {"roundNum": 5, "update": ["win4"]})
-# Auction6 = (Auction, {"roundNum": 6})
-
-BlockOne = (Cheating, {"block": 1})
-BlockTwo = (Cheating, {"block": 2})
-BlockThree = (Cheating, {"block": 3})
-BlockFour = (Cheating, {"block": 4})
-BlockFive = (Cheating, {"block": 5})
-BlockSix = (Cheating, {"block": 6})
-
+AuctionResult = (InstructionsFrame, {"text": auction_result, "height": 3, "update": ["auctionResponse", "auctionText"]})
 EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win6"]})
 
 
@@ -636,30 +649,25 @@ EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([BDM, #!
-         BDMResult, #!
-         Auction, #!
-         Wait, #!
-         Instructions1,
-         BlockOne,
+    GUI([Instructions1,
+         Cheating,
          Instructions2,
-         BlockTwo,
+         Cheating,
          BDM,
-         #BDM3,
          BDMResult,
-         BlockThree,
+         Cheating,
          Auction,
-         #Auction4,
          Wait,
-         BlockFour,
+         AuctionResult,
+         Cheating,
          Auction,
-         #Auction5,
          Wait,
-         BlockFive,
+         AuctionResult,
+         Cheating,
          Auction,
-         #Auction6,
          Wait,
-         BlockSix,
+         AuctionResult,
+         Cheating,
          EndCheating,
          DebriefCheating
          ])

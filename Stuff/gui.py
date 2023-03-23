@@ -40,6 +40,7 @@ class GUI(Tk):
         self.order = frames
 
         self.texts = defaultdict(str)
+        self.status = defaultdict(str)
                                     
         self.count = -1
 
