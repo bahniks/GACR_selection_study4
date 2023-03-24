@@ -6,6 +6,7 @@ from collections import defaultdict
 
 import random
 import os
+import urllib.request
 
 from common import ExperimentFrame, InstructionsFrame, Measure
 from gui import GUI
@@ -568,6 +569,14 @@ class BDM(PaymentFrame):
 
 
 
+class WebCommunication(InstructionsFrame):
+    def __init__(self, root):
+        with urllib.request.urlopen("http://127.0.0.1:8000/") as f:
+            text = f.read(300)
+
+        super().__init__(root, text = text, height = 3, font = 15, width = 45)
+
+
 class Wait(InstructionsFrame):
     def __init__(self, root):
         super().__init__(root, text = wait_text, height = 3, font = 15, proceed = False, width = 45)
@@ -662,7 +671,8 @@ EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([Instructions1,
+    GUI([WebCommunication,
+         Instructions1,
          Cheating,
          Instructions2,
          Cheating,
