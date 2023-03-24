@@ -73,6 +73,7 @@ Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplatit {} Kč. V nás
 bdm_after = "z vaší výhry bude poplatek odečten"
 bdm_before = "nezaplatíte žádný poplatek"
 
+offerText = "Jsem ochoten/ochotna zaplatit:"
 
 intro_auction = """
 Toto je konec {} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
@@ -92,8 +93,9 @@ auction_result = 'Za verzi "PO" jste nabídli {} Kč. {}.'
 
 
 auction_after = 'Druhá nejvyšší nabídka byla {} Kč. Budete tedy hrát verzi "PO" a z vaší výhry bude odečteno {} Kč'
+auction_after_same = 'Druhá nejvyšší nabídka byla také {} Kč. Verze hry byly tedy mezi vámi a členem skupiny, který nabídl stejnou částku, rozřazeny náhodně. Budete hrát verzi "PO" a z vaší výhry bude odečteno {} Kč'
 auction_before = 'Nejvyšší nabídka byla {} Kč. Budete tedy hrát verzi "PŘED" a nezaplatíte žádný poplatek'
-
+auction_before_same = 'Druhá nejvyšší nabídka byla také {} Kč. Verze hry byly tedy mezi vámi a členem skupiny, který nabídl stejnou částku, rozřazeny náhodně. Budete hrát verzi "PŘED" a nezaplatíte žádný poplatek'
 
 
 intro_block_1 = """
@@ -150,6 +152,8 @@ class Cheating(ExperimentFrame):
         self.fakeRolling = False # False for testing
         self.diesize = 240
         self.rewards = [i*5 + 5 for i in range(self.trials)]
+        self.charityRewards = [(i-10)*50 if i > 9 else 0 for i in range(self.trials)]
+        self.charityEndowment = 100
         #######################
 
         if not "block" in self.root.status:
@@ -209,7 +213,9 @@ class Cheating(ExperimentFrame):
         ttk.Style().configure("TButton", font = "helvetica 15")
 
         if not hasattr(self.root, "wins"):
-            self.root.wins = defaultdict(int)            
+            self.root.wins = defaultdict(int)    
+        if not hasattr(self.root, "fees"):
+            self.root.fees = defaultdict(int)
 
         self.responses = []
 
@@ -221,10 +227,10 @@ class Cheating(ExperimentFrame):
             self.currentTrial += 1
             self.startTrial()
         else:
-            fee = FEE if conditions[self.blockNumber - 1] == "fee_treatment" else 0
+            fee = self.root.fees[self.blockNumber]
             self.root.texts["win" + str(self.blockNumber)] = sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee
-            if self.blockNumber == 5:
-                win = random.randint(1, 5)
+            if self.blockNumber == 6:
+                win = random.randint(1, 6)
                 self.root.texts["dice"] = self.root.texts["win{}".format(win)]
                 self.root.texts["block"] = win
             self.nextFun()
@@ -349,8 +355,9 @@ class Cheating(ExperimentFrame):
         self.die.create_text(x0, y0, text = str(num), font = "helvetica 70", tag = "die")
 
     def showWinnings(self):
-        fee = FEE if conditions[self.blockNumber - 1] == "fee_treatment" else 0
-        self.infoWinnings["text"] = "Současná výhra:\n{} Kč".format(sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee)
+        fee = self.root.fees[self.blockNumber]
+        self.infoWinnings["text"] = "Vaše současná výhra:\n{} Kč".format(sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee)
+        self.infoWinnings["text"] += "\n\nPříspěvek charitě:\n{} Kč".format(sum(self.charityRewards[:self.root.wins[self.blockNumber]]) + self.charityEndowment)
 
     def answer(self, answer = "NA"):
         t = perf_counter()
@@ -475,6 +482,8 @@ class PaymentFrame(InstructionsFrame):
         self.offerFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
         self.offerFrame.grid(row = 2, column = 1)
+        self.offerTextLab = ttk.Label(self.offerFrame, text = offerText, font = "helvetica 16", background = "white")
+        self.offerTextLab.grid(row = 2, column = 0, padx = 6, sticky = E)
         self.entry = ttk.Entry(self.offerFrame, textvariable = self.offerVar, width = 10, justify = "right",
                                font = "helvetica 15", validate = "key", validatecommand = self.vcmd)
         self.entry.grid(row = 2, column = 1, padx = 6)
@@ -546,6 +555,7 @@ class BDM(PaymentFrame):
             self.root.texts["bdmVersion"] = "PO"
             self.root.texts["bdmPaymentText"] = bdm_after
             conditions.append("treatment")
+            self.root.fees[self.root.status["block"]] = fee
         else:
             condition = "before"
             self.root.texts["bdmVersion"] = "PŘED"
@@ -560,22 +570,16 @@ class BDM(PaymentFrame):
 
 class Wait(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = wait_text, height = 8, font = 15, proceed = False)
+        super().__init__(root, text = wait_text, height = 3, font = 15, proceed = False, width = 45)
+
+        self.progressBar = ttk.Progressbar(self, orient = HORIZONTAL, length = 400, mode = 'indeterminate')
+        self.progressBar.grid(row = 2, column = 1, sticky = N)
 
         self.timer = 0
     
 
     def checkOffers(self):
-        # timer display
-        self.timer += 1
-        if self.timer > 15:
-            self.timer = 1
-        self.text.config(state = "normal")
-        self.text.delete("1.0", "end")
-        self.text.insert("1.0", wait_text + "\n")
-        self.text.insert("2.0", "."*self.timer)
         self.update()
-        self.text.config(state = "disabled")
 
         offerfiles = os.listdir(os.path.join(os.getcwd(), "Data", "Auction"))
         if len(offerfiles) >= 4:
@@ -592,6 +596,8 @@ class Wait(InstructionsFrame):
                     else:
                         finished += 1
                     offer = int(offer)
+                    if self.id == participant:
+                        myoffer = offer
                     random_number = float(random_number)
                     if offer > maxoffer:
                         interested = [participant, random_number]
@@ -603,30 +609,37 @@ class Wait(InstructionsFrame):
                         elif random_number > interested[1]:
                             interested = [participant, random_number]
                         secondoffer = offer
-            if finished != 4:
-                self.update()       
-                sleep(1)
-                self.checkOffers()
-            else:
+            if finished == 4:                
                 # change
                 global conditions            
                 nextCondition = "treatment" if self.id == interested[0] else "control"
                 conditions.append(nextCondition)
-                self.updateResults(maxoffer, secondoffer, nextCondition)
+                sameoffers = myoffer == maxoffer and myoffer == secondoffer
+                self.updateResults(maxoffer, secondoffer, nextCondition, sameoffers)
+                self.progressBar.stop()
                 self.nextFun()  
-        else:
-            self.update()       
-            sleep(1)
-            self.checkOffers()
+                return
 
-    def run(self):
+        sleep(0.1)
         self.checkOffers()
 
-    def updateResults(self, maxoffer, secondoffer, nextCondition):        
+
+    def run(self):
+        self.progressBar.start()
+        self.checkOffers()
+
+    def updateResults(self, maxoffer, secondoffer, nextCondition, sameoffers):        
         if nextCondition == "treatment":
-            self.root.texts["auctionText"] = auction_after.format(secondoffer, secondoffer)
+            self.root.fees[self.root.status["block"]] = maxoffer
+            if sameoffers:
+                self.root.texts["auctionText"] = auction_after_same.format(secondoffer, secondoffer)
+            else:
+                self.root.texts["auctionText"] = auction_after.format(secondoffer, secondoffer)
         else:
-            self.root.texts["auctionText"] = auction_before.format(maxoffer)           
+            if sameoffers:
+                self.root.texts["auctionText"] = auction_before_same.format(maxoffer)   
+            else:
+                self.root.texts["auctionText"] = auction_before.format(maxoffer)           
 
             
 
