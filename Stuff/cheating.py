@@ -10,7 +10,7 @@ import os
 from common import ExperimentFrame, InstructionsFrame, Measure
 from gui import GUI
 from debriefcheating import DebriefCheating
-from constants import MAX_BDM_PRIZE
+from constants import MAX_BDM_PRIZE, TESTING
 
 
 ################################################################################
@@ -145,11 +145,11 @@ class Cheating(ExperimentFrame):
 
         #######################
         # adjustable parameters
-        self.trials = 2 # change for testing
+        self.trials = 12 if not TESTING else 2 # change for testing
         self.pause_after_roll = 0.5
         self.pause_before_trial = 0.2
         self.displayNum = self.createDots # self.createDots or self.createText
-        self.fakeRolling = False # False for testing
+        self.fakeRolling = not TESTING
         self.diesize = 240
         self.rewards = [i*5 + 5 for i in range(self.trials)]
         self.charityRewards = [(i-10)*50 if i > 9 else 0 for i in range(self.trials)]
