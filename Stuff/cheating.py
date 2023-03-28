@@ -633,12 +633,12 @@ class Wait(InstructionsFrame):
 
 class Login(InstructionsFrame):
     def __init__(self, root):
-        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "login"})
+        super().__init__(root, text = "Klikněte na Pokračovat", height = 3, font = 15, width = 45)
+        
+        data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
         data = data.encode('ascii')
         with urllib.request.urlopen(URL, data = data) as f:
             pass
-
-        super().__init__(root, text = "Klikněte na Pokračovat", height = 3, font = 15, width = 45)
 
        
 

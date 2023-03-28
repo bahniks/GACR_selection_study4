@@ -12,7 +12,7 @@ class ExperimentFrame(Canvas):
         
         self.root = root
         self.file = self.root.file
-        self.id = os.path.basename(self.root.outputfile)
+        self.id = self.root.id #os.path.basename(self.root.outputfile)
         self["background"] = "white"
 
     def nextFun(self):
