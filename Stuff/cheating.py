@@ -7,11 +7,12 @@ from collections import defaultdict
 import random
 import os
 import urllib.request
+import urllib.parse
 
 from common import ExperimentFrame, InstructionsFrame, Measure
 from gui import GUI
 from debriefcheating import DebriefCheating
-from constants import MAX_BDM_PRIZE, TESTING
+from constants import MAX_BDM_PRIZE, TESTING, URL
 
 
 ################################################################################
@@ -534,13 +535,11 @@ class Auction(PaymentFrame):
 
         super().write()
 
-        filepath = os.path.join(os.getcwd(), "Data", "Auction")
-        if not os.path.exists(filepath):
-            os.mkdir(filepath)
-
-        block = str(self.root.status["block"])
-        with open(os.path.join(filepath, "_".join(["Auction", block, self.id])), mode = "w") as self.infile:
-            self.infile.write(self.id + "\t" + block + "\t" + self.offerVar.get() + "\t" + str(random.random()))
+        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.offerVar.get()})
+        data = data.encode('ascii')
+        with urllib.request.urlopen(URL, data = data) as f:
+            if f.getcode() != "200" or f.read.strip() != "ok":
+                print("problem") # zmemit na opakovani a pak zavolat experimentatora
 
 
 
@@ -569,12 +568,14 @@ class BDM(PaymentFrame):
 
 
 
-class WebCommunication(InstructionsFrame):
-    def __init__(self, root):
-        with urllib.request.urlopen("http://127.0.0.1:8000/") as f:
-            text = f.read(300)
+# class WebCommunication(InstructionsFrame):
+#     def __init__(self, root):
+#         data = urllib.parse.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
+#         data = data.encode('ascii')
+#         with urllib.request.urlopen("http://127.0.0.1:8000/", data = data) as f: 
+#             text = f.read(300)
 
-        super().__init__(root, text = text, height = 3, font = 15, width = 45)
+#         super().__init__(root, text = text, height = 3, font = 15, width = 45)
 
 
 class Wait(InstructionsFrame):
@@ -590,44 +591,19 @@ class Wait(InstructionsFrame):
     def checkOffers(self):
         self.update()
 
-        offerfiles = os.listdir(os.path.join(os.getcwd(), "Data", "Auction"))
-        if len(offerfiles) >= 4:
-            interested = []
-            maxoffer = 0
-            secondoffer = 0
-            finished = 0
-            for file in offerfiles:
-                with open(os.path.join(os.getcwd(), "Data", "Auction", file), mode = "r") as infile:
-                    text = infile.readline()
-                    participant, block, offer, random_number = text.split("\t")
-                    if block != str(self.root.status["block"]):
-                        continue
-                    else:
-                        finished += 1
-                    offer = int(offer)
-                    if self.id == participant:
-                        myoffer = offer
-                    random_number = float(random_number)
-                    if offer > maxoffer:
-                        interested = [participant, random_number]
-                        secondoffer = maxoffer
-                        maxoffer = offer
-                    elif offer == maxoffer:
-                        if not interested:
-                            interested = [participant, random_number]
-                        elif random_number > interested[1]:
-                            interested = [participant, random_number]
-                        secondoffer = offer
-            if finished == 4:                
-                # change
+        data = urllib.parse.urlencode({'id': self.id, 'round': root.status["block"], 'offer': "result"})
+        data = data.encode('ascii')
+        with urllib.request.urlopen(URL, data = data) as f:
+            response = f.read()
+            condition, maxoffer, secondoffer, myoffer = response.split("|")
+            if response:
                 global conditions            
-                nextCondition = "treatment" if self.id == interested[0] else "control"
-                conditions.append(nextCondition)
+                conditions.append(condition)
                 sameoffers = myoffer == maxoffer and myoffer == secondoffer
                 self.updateResults(maxoffer, secondoffer, nextCondition, sameoffers)
                 self.progressBar.stop()
                 self.nextFun()  
-                return
+                return            
 
         sleep(0.1)
         self.checkOffers()
@@ -636,6 +612,7 @@ class Wait(InstructionsFrame):
     def run(self):
         self.progressBar.start()
         self.checkOffers()
+
 
     def updateResults(self, maxoffer, secondoffer, nextCondition, sameoffers):        
         if nextCondition == "treatment":
@@ -671,7 +648,10 @@ EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([WebCommunication,
+    GUI([Auction,
+         Wait,
+         AuctionResult,
+         Cheating,
          Instructions1,
          Cheating,
          Instructions2,
