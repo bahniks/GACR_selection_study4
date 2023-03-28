@@ -538,7 +538,7 @@ class Auction(PaymentFrame):
         data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.offerVar.get()})
         data = data.encode('ascii')
         with urllib.request.urlopen(URL, data = data) as f:
-            if f.getcode() != "200" or f.read.strip() != "ok":
+            if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
                 print("problem") # zmemit na opakovani a pak zavolat experimentatora
 
 
@@ -591,19 +591,19 @@ class Wait(InstructionsFrame):
     def checkOffers(self):
         self.update()
 
-        data = urllib.parse.urlencode({'id': self.id, 'round': root.status["block"], 'offer': "result"})
+        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "result"})
         data = data.encode('ascii')
         with urllib.request.urlopen(URL, data = data) as f:
-            response = f.read()
-            condition, maxoffer, secondoffer, myoffer = response.split("|")
+            response = f.read().decode("utf-8")       
             if response:
+                condition, maxoffer, secondoffer, myoffer = response.split("|")  
                 global conditions            
                 conditions.append(condition)
                 sameoffers = myoffer == maxoffer and myoffer == secondoffer
-                self.updateResults(maxoffer, secondoffer, nextCondition, sameoffers)
+                self.updateResults(maxoffer, secondoffer, condition, sameoffers)
                 self.progressBar.stop()
                 self.nextFun()  
-                return            
+                return
 
         sleep(0.1)
         self.checkOffers()
@@ -615,8 +615,10 @@ class Wait(InstructionsFrame):
 
 
     def updateResults(self, maxoffer, secondoffer, nextCondition, sameoffers):        
+        if not hasattr(self.root, "fees"):
+            self.root.fees = defaultdict(int)
         if nextCondition == "treatment":
-            self.root.fees[self.root.status["block"]] = maxoffer
+            self.root.fees[self.root.status["block"]] = int(maxoffer)
             if sameoffers:
                 self.root.texts["auctionText"] = auction_after_same.format(secondoffer, secondoffer)
             else:
@@ -629,6 +631,14 @@ class Wait(InstructionsFrame):
 
             
 
+class Login(InstructionsFrame):
+    def __init__(self, root):
+        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "login"})
+        data = data.encode('ascii')
+        with urllib.request.urlopen(URL, data = data) as f:
+            pass
+
+        super().__init__(root, text = "Klikněte na Pokračovat", height = 3, font = 15, width = 45)
 
        
 
@@ -648,7 +658,8 @@ EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([Auction,
+    GUI([Login,
+         Auction,
          Wait,
          AuctionResult,
          Cheating,
