@@ -567,17 +567,6 @@ class BDM(PaymentFrame):
         super().write()
 
 
-
-# class WebCommunication(InstructionsFrame):
-#     def __init__(self, root):
-#         data = urllib.parse.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
-#         data = data.encode('ascii')
-#         with urllib.request.urlopen("http://127.0.0.1:8000/", data = data) as f: 
-#             text = f.read(300)
-
-#         super().__init__(root, text = text, height = 3, font = 15, width = 45)
-
-
 class Wait(InstructionsFrame):
     def __init__(self, root):
         super().__init__(root, text = wait_text, height = 3, font = 15, proceed = False, width = 45)
@@ -585,34 +574,30 @@ class Wait(InstructionsFrame):
         self.progressBar = ttk.Progressbar(self, orient = HORIZONTAL, length = 400, mode = 'indeterminate')
         self.progressBar.grid(row = 2, column = 1, sticky = N)
 
-        self.timer = 0
-    
-
     def checkOffers(self):
-        self.update()
-
-        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "result"})
-        data = data.encode('ascii')
-        with urllib.request.urlopen(URL, data = data) as f:
-            response = f.read().decode("utf-8")       
-            if response:
-                condition, maxoffer, secondoffer, myoffer = response.split("|")  
-                global conditions            
-                conditions.append(condition)
-                sameoffers = myoffer == maxoffer and myoffer == secondoffer
-                self.updateResults(maxoffer, secondoffer, condition, sameoffers)
-                self.progressBar.stop()
-                self.nextFun()  
-                return
-
-        sleep(0.1)
-        self.checkOffers()
-
+        count = 0
+        while True:
+            self.update()
+            if count % 50 == 0:
+                data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "result"})
+                data = data.encode('ascii')
+                with urllib.request.urlopen(URL, data = data) as f:
+                    response = f.read().decode("utf-8")       
+                    if response:
+                        condition, maxoffer, secondoffer, myoffer = response.split("|")  
+                        global conditions            
+                        conditions.append(condition)
+                        sameoffers = myoffer == maxoffer and myoffer == secondoffer
+                        self.updateResults(maxoffer, secondoffer, condition, sameoffers)
+                        self.progressBar.stop()
+                        self.nextFun()  
+                        return
+            count += 1
+            sleep(0.1)
 
     def run(self):
         self.progressBar.start()
         self.checkOffers()
-
 
     def updateResults(self, maxoffer, secondoffer, nextCondition, sameoffers):        
         if not hasattr(self.root, "fees"):
@@ -633,16 +618,35 @@ class Wait(InstructionsFrame):
 
 class Login(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = "Klikněte na Pokračovat", height = 3, font = 15, width = 45)
-        
-        data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
-        data = data.encode('ascii')
-        with urllib.request.urlopen(URL, data = data) as f:
-            pass
+        super().__init__(root, text = "Počkejte na spuštění experimentu", height = 3, font = 15, width = 45, proceed = False)
 
-       
+        self.progressBar = ttk.Progressbar(self, orient = HORIZONTAL, length = 400, mode = 'indeterminate')
+        self.progressBar.grid(row = 2, column = 1, sticky = N)
+
+    def login(self):        
+        count = 0
+        while True:
+            self.update()
+            if count % 50 == 0:            
+                data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
+                data = data.encode('ascii')
+                with urllib.request.urlopen(URL, data = data) as f:
+                    response = f.read().decode("utf-8") 
+                if response == "start":
+                    self.progressBar.stop()
+                    self.nextFun()  
+                    break
+            count += 1                  
+            sleep(0.1)        
+
+    def run(self):
+        self.progressBar.start()
+        self.login()       
 
         
+
+
+
 conditions = ["treatment", "control"]
 random.shuffle(conditions)
 
