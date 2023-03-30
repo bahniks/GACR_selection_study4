@@ -663,10 +663,6 @@ EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
-         Auction,
-         Wait,
-         AuctionResult,
-         Cheating,
          Instructions1,
          Cheating,
          Instructions2,
