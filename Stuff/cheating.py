@@ -415,19 +415,6 @@ class CheatingInstructions(InstructionsFrame):
                               width = 90, height = 3, wrap = "word", highlightbackground = "white")
         self.lowerText.grid(row = 3, column = 1, pady = 15)
         self.lowerText["state"] = "disabled"
-
-        self.bottomText = Text(self, font = "helvetica 15", relief = "flat", background = "white",
-                               width = 90, height = 2, wrap = "word", highlightbackground = "white",
-                               state = "disabled")
-        self.bottomText.grid(row = 4, column = 1)
-        self.bottomAnswers = Canvas(self, height = 10, background = "white", highlightbackground = "white",
-                                    highlightcolor = "white")
-        self.bottomAnswers.grid(row = 5, column = 1)
-        self.bottomMistakes = Text(self, font = "helvetica 15", relief = "flat", background = "white",
-                                   width = 90, height = 1, wrap = "word", highlightbackground = "white",
-                                   state = "disabled", foreground = "red")
-        self.bottomMistakes.tag_config("centered", justify = "center")
-        self.bottomMistakes.grid(row = 6, column = 1, pady = 10)
         
         self.next.grid(row = 7, column = 1)
         self.next["state"] = "disabled"
