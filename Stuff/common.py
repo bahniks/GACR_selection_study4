@@ -5,6 +5,8 @@ from time import time
 import os
 import sys
 
+from constants import TESTING
+
 
 class ExperimentFrame(Canvas):
     def __init__(self, root):
@@ -14,6 +16,15 @@ class ExperimentFrame(Canvas):
         self.file = self.root.file
         self.id = self.root.id #os.path.basename(self.root.outputfile)
         self["background"] = "white"
+
+        # scrolling, but does not work for some reason
+        # if TESTING:
+        #     v = ttk.Scrollbar(self.root, orient = 'vertical', command = self.yview)            
+        #     v.grid(column = 1, row = 0, sticky = NS)            
+        #     self.configure(scrollregion=(0, 0, self.root.screenwidth, self.root.screenheight))
+        #     self["yscrollcommand"] = v.set
+            
+
 
     def nextFun(self):
         if self.check():
