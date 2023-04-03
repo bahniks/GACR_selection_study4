@@ -12,7 +12,7 @@ import urllib.parse
 from common import ExperimentFrame, InstructionsFrame, Measure
 from gui import GUI
 from debriefcheating import DebriefCheating
-from constants import MAX_BDM_PRIZE, TESTING, URL
+from constants import MAX_BDM_PRIZE, TESTING, URL, CONDITION_LOW, CONDITION_HIGH
 
 
 ################################################################################
@@ -47,8 +47,8 @@ losstext = "špatná a nevydělali jste možných {} Kč."
 controlchoicetext = "verze PŘED"
 treatmentchoicetext = "verze PO"  
 
-intro_BDM = """
-Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+intro_BDM = f"""
+Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
 
@@ -60,38 +60,38 @@ Nyní vás čeká třetí blok s dvanácti pokusy. Pro tento blok máte možnost
 - verze PŘED bez poplatku.
 
 V následujícím kole budete hrát jednu z verzí úlohy.
-Za verzi "PO" je nutné zaplatit poplatek, jehož výše bude náhodně určena z intervalu od 1 do {} Kč.
+Za verzi "PO" je nutné zaplatit poplatek, jehož výše bude náhodně určena z intervalu od 1 do {MAX_BDM_PRIZE} Kč.
 Do textového pole níže uveďte, kolik jste ochotni za hraní verze "PO" zaplatit.
 
 Pokud tato částka bude vyšší nebo rovná náhodně vybrané velikosti poplatku, poplatek zaplatíte a budete hrát verzi "PO".
 
 Pokud Vámi uvedená částka bude nižší než náhodně vybraná velikost poplatku, platit jej nebudete a budete hrát verzi "PŘED".
 
-Nikdy nebudete platit více než, kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit.
+Nikdy nebudete platit více než, kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč.
 
-Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {}, budete určitě hrát verzi "PO".
-""".format(MAX_BDM_PRIZE, MAX_BDM_PRIZE)
+Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {MAX_BDM_PRIZE}, budete určitě hrát verzi "PO".
+"""
 
 
-intro_BDM2 = """
-Toto je konec šestého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+intro_BDM2 = f"""
+Toto je konec šestého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
 Nyní vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO se zpoplatněním
 - verze PŘED bez poplatku.
 
 V následujícím kole budete hrát jednu z verzí úlohy.
-Za verzi "PO" je nutné zaplatit poplatek, jehož výše bude náhodně určena z intervalu od 1 do {} Kč.
+Za verzi "PO" je nutné zaplatit poplatek, jehož výše bude náhodně určena z intervalu od 1 do {MAX_BDM_PRIZE} Kč.
 Do textového pole níže uveďte, kolik jste ochotni za hraní verze "PO" zaplatit.
 
 Pokud tato částka bude vyšší nebo rovná náhodně vybrané velikosti poplatku, poplatek zaplatíte a budete hrát verzi "PO".
 
 Pokud Vámi uvedená částka bude nižší než náhodně vybraná velikost poplatku, platit jej nebudete a budete hrát verzi "PŘED".
 
-Nikdy nebudete platit více než, kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit.
+Nikdy nebudete platit více než, kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč.
 
-Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {}, budete určitě hrát verzi "PO".
-""".format(MAX_BDM_PRIZE, MAX_BDM_PRIZE)
+Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {MAX_BDM_PRIZE}, budete určitě hrát verzi "PO".
+"""
 
 
 bdm_result = """
@@ -103,13 +103,13 @@ bdm_before = "nezaplatíte žádný poplatek"
 
 offerText = "Jsem ochoten/ochotna zaplatit:"
 
-intro_auction = """
-Toto je konec {} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+intro_auction = f"""
+Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
 Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech lidech. Z každé skupiny bude v následujícím kole jeden hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
 Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku rovnou druhé nejvyšší nabídce ve skupině.
 Ostatní členové skupiny budou hrát verzi "PŘED".
-Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verzi "PO" úlohy.
+Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verzi "PO" úlohy. Nejvýše je možné nabídnout {MAX_BDM_PRIZE} Kč.
 """
 
 block_numbers = ["třetího", "čtvrtého", "pátého"]
@@ -133,7 +133,7 @@ V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor
 
 Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč.
 
-Charita, kterou jste dříve vybrali, obdrží na začátku experimentu 100 Kč. Pokud uhodnete v rámci jednoho bloku správně 10 hodů, charita ztratí 50 Kč z tohoto počátečního příspěvku. Pokud uhodnete 11 hodů, charita ztratí dalších 100 Kč. Pokud uhodnete správně všech 12 hodů v rámci jednoho bloku, charita ztratí dalších 150 Kč. Charita tedy z počátečního příspěvku může ztratit až 300 Kč (50+100+150). Když je ztráta vyšší než počáteční příspěvek, který charita obdržela díky Vaší volbě, tato ztráta se odečte z příspěvků, které obdrží od ostatních účastníků výzkumu.
+Charita, kterou jste dříve vybrali, obdrží na začátku experimentu 100 Kč. Pokud uhodnete v rámci jednoho bloku správně 10 hodů, charita ztratí {} Kč z tohoto počátečního příspěvku. Pokud uhodnete 11 hodů, charita ztratí dalších {} Kč. Pokud uhodnete správně všech 12 hodů v rámci jednoho bloku, charita ztratí dalších {} Kč. Charita tedy z počátečního příspěvku může ztratit až {} Kč ({}+{}+{}). Když je ztráta vyšší než počáteční příspěvek, který charita obdržela díky Vaší volbě, tato ztráta se odečte z příspěvků, které obdrží od ostatních účastníků výzkumu.
 
 Poté, co dokončíte všech sedm bloků, bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Charita taktéž ztrácí peníze z počátečního příspěvku jen dle počtu správně uhodnutých hodů v rámci tohoto vylosovaného bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč a charita ztratí ze svého počátečního příspěvku 300 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte Vy nebo Vámi vybraná charita.
 
@@ -147,7 +147,7 @@ correct_answer = "15 Kč je správná odpověď. Byl vylosován třetí blok, ve
 
 
 intro_block_2 = """
-Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč. Nyní začne druhý blok s dvanácti koly.
+Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč a Vámi vybraná charita {} Kč. Nyní začne druhý blok s dvanácti koly.
 """
 
 endtext = """Toto je konec posledního bloku. Pokud bude tento blok vybrán, obdržíte {} Kč.
@@ -251,6 +251,7 @@ class Cheating(ExperimentFrame):
         else:
             fee = self.root.fees[self.blockNumber]
             self.root.texts["win" + str(self.blockNumber)] = sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee
+            self.root.texts["charity" + str(self.blockNumber)] = sum(self.charityRewards[:self.root.wins[self.blockNumber]])  + self.charityEndowment
             if self.blockNumber == 7:
                 win = random.randint(1, 7)
                 self.root.texts["dice"] = self.root.texts["win{}".format(win)]
@@ -481,7 +482,8 @@ class CheatingInstructions(InstructionsFrame):
 
 class PaymentFrame(InstructionsFrame):
     def __init__(self, root, text, name, height = 10):
-        update = ["win" + str(root.status["block"] - 1)]
+        block_num = str(root.status["block"] - 1)
+        update = ["win" + block_num, "charity" + block_num]
         super().__init__(root, text = text, height = height, font = 15, width = 100, update = update)
 
         self.name = name
@@ -499,6 +501,9 @@ class PaymentFrame(InstructionsFrame):
         self.currencyLabel = ttk.Label(self.offerFrame, text = "Kč", font = "helvetica 16",
                                        background = "white")
         self.currencyLabel.grid(row = 2, column = 2, sticky = NSEW)
+
+        self.problem = ttk.Label(self, text = "", font = "helvetica 16", background = "white", foreground = "red")
+        self.problem.grid(row = 3, column = 1)
                
         self.next.grid(row = 4, column = 1)
         self.next["state"] = "disabled"        
@@ -510,12 +515,24 @@ class PaymentFrame(InstructionsFrame):
       
     def onValidate(self, P):
         try:
-            if int(P) >= 0:
-                self.next["state"] = "!disabled"
+            if "," in P or "." in P:
+                raise ValueError()            
+            if "-" in P:
+                raise Exception("Nabídka musí být vyšší než 0 Kč.")
+            offer = int(P)
+            if offer < 0:
+                raise Exception("Nabídka musí být vyšší než 0 Kč.")
+            elif offer > MAX_BDM_PRIZE:
+                raise Exception("Nabídka nesmí být vyšší než {} Kč.".format(MAX_BDM_PRIZE))
             else:
-                self.next["state"] = "disabled"
+                self.next["state"] = "!disabled"
+                self.problem["text"] = ""
+        except ValueError:
+            self.next["state"] = "disabled"
+            self.problem["text"] = "Do textového pole je potřeba uvést celé číslo."
         except Exception as e:
             self.next["state"] = "disabled"
+            self.problem["text"] = e
         return True
   
     def write(self):
@@ -534,8 +551,8 @@ class Auction(PaymentFrame):
         if not "block" in root.status: 
             root.status["block"] = 1
 
-        instructions = intro_auction.format(block_numbers[root.status["block"] - 4], "")
-        super().__init__(root, text = instructions, name = "Auction")
+        root.texts["previous_block"] = block_numbers[root.status["block"] - 4]
+        super().__init__(root, text = intro_auction, name = "Auction")
   
     def write(self):
         self.root.texts["auctionResponse"] = self.offerVar.get()
@@ -556,7 +573,7 @@ class BDM(PaymentFrame):
         super().__init__(root, text = text, name = "BDM", height = 25)
 
     def write(self):        
-        fee = random.randint(1, MAX_BDM_PRIZE)
+        fee = self.root.status["bdm1"] if self.root.status["block"] == 3 else self.root.status["bdm2"]
         global conditions
         if int(self.offerVar.get()) >= fee:
             condition = "after"
@@ -640,16 +657,27 @@ class Login(InstructionsFrame):
                 data = data.encode('ascii')
                 with urllib.request.urlopen(URL, data = data) as f:
                     response = f.read().decode("utf-8") 
-                if response == "start":
+                if "start" in response:
+                    info, bdm1, bdm2, condition = response.split("_")                    
+                    self.root.status["bdm1"] = int(bdm1)
+                    self.root.status["bdm2"] = int(bdm2)
+                    self.root.status["condition"] = condition
+                    self.update_intro(condition)
                     self.progressBar.stop()
-                    self.nextFun()  
+                    self.nextFun()                      
                     break
             count += 1                  
             sleep(0.1)        
 
     def run(self):
         self.progressBar.start()
-        self.login()       
+        self.login()
+
+    def update_intro(self, condition):        
+        global intro_block_1
+        loss = CONDITION_HIGH if condition == "high" else CONDITION_LOW
+        intro_block_1 = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2])
+
 
         
 
@@ -660,10 +688,10 @@ random.shuffle(conditions)
 
 
 Instructions1 = CheatingInstructions
-Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
+Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1", "charity1"]})
 BDMResult = (InstructionsFrame, {"text": bdm_result, "height": 3, "update": ["bdmFee", "bdmResponse", "bdmVersion", "bdmPaymentText"]})
-AuctionResult = (InstructionsFrame, {"text": auction_result, "height": 3, "update": ["auctionResponse", "auctionText"]})
-EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win6"]})
+AuctionResult = (InstructionsFrame, {"text": auction_result, "height": 3, "update": ["previous_block", "auctionResponse", "auctionText"]})
+EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win7", "charity7"]})
 
 
 
