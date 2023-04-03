@@ -68,6 +68,24 @@ Nikdy nebudete platit více než, kolik je náhodně vybraný poplatek. I pokud 
 Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {}, budete určitě hrát verzi "PO".
 """.format(MAX_BDM_PRIZE, MAX_BDM_PRIZE)
 
+
+intro_BDM2 = """
+Toto je konec šestého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+
+Nyní vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude částka zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
+- verze PO se zpoplatněním
+- verze PŘED bez poplatku.
+
+V následujícím kole budete hrát jednu z verzí úlohy.
+Za verzi "PO" je nutné zaplatit poplatek, který bude náhodně určen z intervalu od 1 do {} Kč.
+Do textového pole níže uveďte, kolik jste ochotni za hraní verze "PO" zaplatit.
+Pokud tato částka bude vyšší nebo rovná náhodně vybranému poplatek, poplatek zaplatíte a budete hrát verzi "PO".
+Pokud vámi uvedená částka bude nižší než náhodně vybraný poplatek, poplatek platit nebudete a budete hrát verzi "PŘED".
+Nikdy nebudete platit více než, kolik je náhodně vybraný poplatek. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, co jste ochotni zaplatit.
+Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {}, budete určitě hrát verzi "PO".
+""".format(MAX_BDM_PRIZE, MAX_BDM_PRIZE)
+
+
 bdm_result = """
 Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplatit {} Kč. V následujícím kole tedy budete hrát verzi "{}" a {}.
 """
@@ -128,11 +146,6 @@ endtext = """Toto je konec posledního bloku. Pokud bude tento blok vybrán, obd
 
 Toto je konec úkolu s kostkou.
 """
-
-third = ("druhého", "třetí")
-fourth = ("třetího", "čtvrtý")
-fifth =  ("čtvrtého", "pátý")
-
 
 
 
@@ -231,8 +244,8 @@ class Cheating(ExperimentFrame):
         else:
             fee = self.root.fees[self.blockNumber]
             self.root.texts["win" + str(self.blockNumber)] = sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee
-            if self.blockNumber == 6:
-                win = random.randint(1, 6)
+            if self.blockNumber == 7:
+                win = random.randint(1, 7)
                 self.root.texts["dice"] = self.root.texts["win{}".format(win)]
                 self.root.texts["block"] = win
             self.nextFun()
@@ -532,7 +545,8 @@ class Auction(PaymentFrame):
 
 class BDM(PaymentFrame):
     def __init__(self, root):
-        super().__init__(root, text = intro_BDM, name = "BDM", height = 25)
+        text = intro_BDM if root.status["block"] == 3 else intro_BDM2
+        super().__init__(root, text = text, name = "BDM", height = 25)
 
     def write(self):        
         fee = random.randint(1, MAX_BDM_PRIZE)
@@ -590,7 +604,7 @@ class Wait(InstructionsFrame):
         if not hasattr(self.root, "fees"):
             self.root.fees = defaultdict(int)
         if nextCondition == "treatment":
-            self.root.fees[self.root.status["block"]] = int(maxoffer)
+            self.root.fees[self.root.status["block"]] = int(secondoffer)
             if sameoffers:
                 self.root.texts["auctionText"] = auction_after_same.format(secondoffer, secondoffer)
             else:
@@ -668,6 +682,9 @@ if __name__ == "__main__":
          Auction,
          Wait,
          AuctionResult,
+         Cheating,
+         BDM,
+         BDMResult,
          Cheating,
          EndCheating,
          DebriefCheating
