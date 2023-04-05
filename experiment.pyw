@@ -51,8 +51,8 @@ frames = [Login,
           Hexaco,
           Demographics,
           DebriefCheating,
-          Debriefing,
-          Ending
+          Debriefing#,
+          #Ending
          ]
 
 
