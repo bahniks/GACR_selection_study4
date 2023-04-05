@@ -9,35 +9,46 @@ sys.path.append(os.path.join(os.getcwd(), "Stuff"))
 from gui import GUI
 
 from quest import Hexaco, QuestInstructions
-from questionnaire import DarkTriad1, DarkTriad2
 from intros import Intro, Ending
 from demo import Demographics
-from cheating import Instructions1, BlockOne, Instructions2, BlockTwo, Instructions3, BlockThree
-from cheating import Instructions4, BlockFour, Estimate, Instructions5, BlockFive, EndCheating
+from cheating import Instructions1, Cheating, Instructions2, BDM, BDMResult, Auction, Wait
+from cheating import AuctionResult, EndCheating, Login
 from debriefcheating import DebriefCheating
 from debriefing import Debriefing
 from lottery import Lottery, LotteryInstructions
+from charity import Charity
 
 
-frames = [Intro,
+frames = [Login,
+          Intro,          
+          Charity,
           Instructions1,
-          BlockOne,
+          Cheating,
           Instructions2,
-          BlockTwo,
-          Instructions3,
-          BlockThree,
-          Instructions4,
-          BlockFour,
-          Estimate,
-          Instructions5,
-          BlockFive,
+          Cheating,
+          BDM,
+          BDMResult,
+          Cheating,
+          Auction,
+          Wait,
+          AuctionResult,
+          Cheating,
+          Auction,
+          Wait,
+          AuctionResult,
+          Cheating,
+          Auction,
+          Wait,
+          AuctionResult,
+          Cheating,
+          BDM,
+          BDMResult,
+          Cheating,
           EndCheating,
           LotteryInstructions,
           Lottery,
           QuestInstructions,
           Hexaco,
-          DarkTriad1,
-          DarkTriad2,
           Demographics,
           DebriefCheating,
           Debriefing,
