@@ -48,7 +48,7 @@ controlchoicetext = "verze PŘED"
 treatmentchoicetext = "verze PO"  
 
 intro_BDM = f"""
-Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
+Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
 
@@ -74,7 +74,7 @@ Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodn
 
 
 intro_BDM2 = f"""
-Toto je konec šestého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
+Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
 Nyní vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO se zpoplatněním
@@ -112,7 +112,7 @@ Ostatní členové skupiny budou hrát verzi "PŘED".
 Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verzi "PO" úlohy. Nejvýše je možné nabídnout {MAX_BDM_PRIZE} Kč.
 """
 
-block_numbers = ["třetího", "čtvrtého", "pátého"]
+block_numbers = ["prvního", "druhého", "třetího", "čtvrtého", "pátého", "šestého", "sedmého"]
 
 wait_text = "Prosím počkejte než se rozhodnou ostatní členové týmu."
 
@@ -150,7 +150,7 @@ intro_block_2 = """
 Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč a Vámi vybraná charita {} Kč. Nyní začne druhý blok s dvanácti koly.
 """
 
-endtext = """Toto je konec posledního bloku. Pokud bude tento blok vybrán, obdržíte {} Kč.
+endtext = """Toto je konec posledního bloku. Pokud bude tento blok vybrán, obdržíte {} Kč a Vámi vybraná charita {} Kč.
 
 Toto je konec úkolu s kostkou.
 """
@@ -386,9 +386,11 @@ class Cheating(ExperimentFrame):
         t = perf_counter()
         if answer == "win":
             self.root.wins[self.blockNumber] += 1
-        self.responses.append([self.blockNumber, self.currentTrial, self.condition,
-                               self.currentRoll, self.response,
-                               answer, t - self.time, self.firstResponse - self.time,
+        self.responses.append([self.blockNumber, self.currentTrial, self.condition, self.root.status["condition"],
+                               self.currentRoll, self.response, answer, 
+                               sum(self.rewards[:self.root.wins[self.blockNumber]]) - self.root.fees[self.blockNumber],
+                               sum(self.charityRewards[:self.root.wins[self.blockNumber]]) + self.charityEndowment,
+                               t - self.time, self.firstResponse - self.time,
                                t - self.beforeSecondResponse])
         self.bottomText["state"] = "normal"
         self.upperText["state"] = "normal"
@@ -418,7 +420,7 @@ class Cheating(ExperimentFrame):
 
 class CheatingInstructions(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = intro_block_1, height = 31, font = 15)
+        super().__init__(root, text = intro_block_1, height = 31, font = 15, width = 100)
 
         self.checkVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
@@ -461,7 +463,6 @@ class CheatingInstructions(InstructionsFrame):
     
     def nextFun(self):
         if self.checked:
-            self.write()
             super().nextFun()
         else:
             answer = int(self.checkVar.get())
@@ -474,16 +475,17 @@ class CheatingInstructions(InstructionsFrame):
             self.lowerText["state"] = "disabled"
             self.checked = True
 
-    def write(self):
-        self.file.write("Cheating estimates\n")
-        self.file.write(self.id + "\t" + "\n\n")
-
 
 
 class PaymentFrame(InstructionsFrame):
     def __init__(self, root, text, name, height = 10):
+        # for testing
+        if not "block" in root.status: 
+            root.status["block"] = 1
+
         block_num = str(root.status["block"] - 1)
-        update = ["win" + block_num, "charity" + block_num]
+        root.texts["previousBlockText"] = block_numbers[root.status["block"] - 2]
+        update = ["previousBlockText", "win" + block_num, "charity" + block_num]
         super().__init__(root, text = text, height = height, font = 15, width = 100, update = update)
 
         self.name = name
@@ -537,7 +539,7 @@ class PaymentFrame(InstructionsFrame):
   
     def write(self):
         self.file.write(self.name + "\n")
-        self.file.write(self.id + "\t" + self.offerVar.get() + "\n\n")
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.offerVar.get() + "\n\n")
 
     def nextFun(self):
         self.write()
@@ -547,11 +549,6 @@ class PaymentFrame(InstructionsFrame):
 
 class Auction(PaymentFrame):
     def __init__(self, root):
-        # for testing
-        if not "block" in root.status: 
-            root.status["block"] = 1
-
-        root.texts["previous_block"] = block_numbers[root.status["block"] - 4]
         super().__init__(root, text = intro_auction, name = "Auction")
   
     def write(self):
@@ -561,16 +558,19 @@ class Auction(PaymentFrame):
 
         data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.offerVar.get()})
         data = data.encode('ascii')
-        with urllib.request.urlopen(URL, data = data) as f:
-            if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
-                print("problem") # zmemit na opakovani a pak zavolat experimentatora
+        if URL != "TEST":
+            with urllib.request.urlopen(URL, data = data) as f:
+                if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
+                    print("problem") # zmemit na opakovani a pak zavolat experimentatora
+        else:
+            self.root.status["TESTauction"] = self.offerVar.get()
 
 
 
 class BDM(PaymentFrame):
     def __init__(self, root):
         text = intro_BDM if root.status["block"] == 3 else intro_BDM2
-        super().__init__(root, text = text, name = "BDM", height = 25)
+        super().__init__(root, text = text, name = "BDM", height = 30)
 
     def write(self):        
         fee = self.root.status["bdm1"] if self.root.status["block"] == 3 else self.root.status["bdm2"]
@@ -606,17 +606,27 @@ class Wait(InstructionsFrame):
             if count % 50 == 0:
                 data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "result"})
                 data = data.encode('ascii')
-                with urllib.request.urlopen(URL, data = data) as f:
-                    response = f.read().decode("utf-8")       
-                    if response:
-                        condition, maxoffer, secondoffer, myoffer = response.split("|")  
-                        global conditions            
-                        conditions.append(condition)
-                        sameoffers = myoffer == maxoffer and myoffer == secondoffer
-                        self.updateResults(maxoffer, secondoffer, condition, sameoffers)
-                        self.progressBar.stop()
-                        self.nextFun()  
-                        return
+                if URL == "TEST":
+                    myoffer = int(self.root.status["TESTauction"])
+                    offers = [myoffer, random.randint(1,MAX_BDM_PRIZE), random.randint(1,MAX_BDM_PRIZE), random.randint(1,MAX_BDM_PRIZE)]
+                    maxoffer = max(offers)
+                    offers.sort()
+                    secondoffer = offers[2]
+                    condition = "treatment" if myoffer == maxoffer else "control"
+                    response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
+                else:
+                    with urllib.request.urlopen(URL, data = data) as f:
+                        response = f.read().decode("utf-8")       
+                if response:
+                    condition, maxoffer, secondoffer, myoffer = response.split("|")  
+                    global conditions            
+                    conditions.append(condition)
+                    sameoffers = myoffer == maxoffer and myoffer == secondoffer
+                    self.updateResults(maxoffer, secondoffer, condition, sameoffers)
+                    self.write(response)
+                    self.progressBar.stop()
+                    self.nextFun()  
+                    return
             count += 1
             sleep(0.1)
 
@@ -639,6 +649,9 @@ class Wait(InstructionsFrame):
             else:
                 self.root.texts["auctionText"] = auction_before.format(maxoffer)           
 
+    def write(self, response):
+        self.file.write("Auction Result" + "\n")
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response.replace("|", "\t") + "\n\n")          
             
 
 class Login(InstructionsFrame):
@@ -655,8 +668,11 @@ class Login(InstructionsFrame):
             if count % 50 == 0:            
                 data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
                 data = data.encode('ascii')
-                with urllib.request.urlopen(URL, data = data) as f:
-                    response = f.read().decode("utf-8") 
+                if URL == "TEST":
+                    response = "_".join(["start", str(random.randint(1,MAX_BDM_PRIZE)), str(random.randint(1,MAX_BDM_PRIZE)), random.choice(["low", "high"])])
+                else:
+                    with urllib.request.urlopen(URL, data = data) as f:
+                        response = f.read().decode("utf-8") 
                 if "start" in response:
                     info, bdm1, bdm2, condition = response.split("_")                    
                     self.root.status["bdm1"] = int(bdm1)
@@ -664,6 +680,7 @@ class Login(InstructionsFrame):
                     self.root.status["condition"] = condition
                     self.update_intro(condition)
                     self.progressBar.stop()
+                    self.write(response)
                     self.nextFun()                      
                     break
             count += 1                  
@@ -678,6 +695,10 @@ class Login(InstructionsFrame):
         loss = CONDITION_HIGH if condition == "high" else CONDITION_LOW
         intro_block_1 = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2])
 
+    def write(self, response):
+        self.file.write("Login" + "\n")
+        self.file.write(self.id + "\t" + response.replace("_", "\t") + "\n\n")        
+
 
         
 
@@ -690,7 +711,7 @@ random.shuffle(conditions)
 Instructions1 = CheatingInstructions
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1", "charity1"]})
 BDMResult = (InstructionsFrame, {"text": bdm_result, "height": 3, "update": ["bdmFee", "bdmResponse", "bdmVersion", "bdmPaymentText"]})
-AuctionResult = (InstructionsFrame, {"text": auction_result, "height": 3, "update": ["previous_block", "auctionResponse", "auctionText"]})
+AuctionResult = (InstructionsFrame, {"text": auction_result, "height": 3, "update": ["auctionResponse", "auctionText"]})
 EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win7", "charity7"]})
 
 
