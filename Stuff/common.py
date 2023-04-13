@@ -100,6 +100,12 @@ class InstructionsFrame(ExperimentFrame):
         self.rowconfigure(2, weight = 3)
         self.rowconfigure(3, weight = 3)
 
+    def changeText(self, newtext):
+        self.text.config(state = "normal")
+        self.text.delete("1.0", "end")
+        self.text.insert("1.0", newtext)
+        self.text.config(state = "disabled")
+
     def proceed(self):
         if time() - self.t0 > 2:
             self.nextFun()

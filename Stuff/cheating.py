@@ -615,8 +615,11 @@ class Wait(InstructionsFrame):
                     condition = "treatment" if myoffer == maxoffer else "control"
                     response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
                 else:
-                    with urllib.request.urlopen(URL, data = data) as f:
-                        response = f.read().decode("utf-8")       
+                    try:
+                        with urllib.request.urlopen(URL, data = data) as f:
+                            response = f.read().decode("utf-8")       
+                    except Exception:
+                        pass
                 if response:
                     condition, maxoffer, secondoffer, myoffer = response.split("|")  
                     global conditions            
@@ -671,8 +674,11 @@ class Login(InstructionsFrame):
                 if URL == "TEST":
                     response = "_".join(["start", str(random.randint(1,MAX_BDM_PRIZE)), str(random.randint(1,MAX_BDM_PRIZE)), random.choice(["low", "high"])])
                 else:
-                    with urllib.request.urlopen(URL, data = data) as f:
-                        response = f.read().decode("utf-8") 
+                    try:
+                        with urllib.request.urlopen(URL, data = data) as f:
+                            response = f.read().decode("utf-8") 
+                    except Exception:
+                        self.changeText("Server nedostupný")
                 if "start" in response:
                     info, bdm1, bdm2, condition = response.split("_")                    
                     self.root.status["bdm1"] = int(bdm1)
@@ -683,6 +689,14 @@ class Login(InstructionsFrame):
                     self.write(response)
                     self.nextFun()                      
                     break
+                elif response == "login_successful":
+                    self.changeText("Přihlášen")
+                elif response == "ongoing":
+                    self.changeText("Do studie se již nelze připojit")
+                elif response == "no_open":
+                    self.changeText("Studie není otevřena")
+                #elif frame in response:
+                    #pass # to do?
             count += 1                  
             sleep(0.1)        
 

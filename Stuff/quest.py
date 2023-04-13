@@ -43,6 +43,7 @@ class Quest(ExperimentFrame):
         self.right = right
         self.options = options
         self.checks = checks != 0
+        self.checksNumber = checks
         self.name = name
 
         self.file.write("{}\n".format(name))
@@ -164,10 +165,17 @@ class Likert(Canvas):
 
     def write(self):
         if attentiontext in self.text:
-            if not "attention_checks" in self.root.root.texts:
-                self.root.root.texts["attention_checks"] = 0
-            if self.answer.get() != self.text[-2]:
-                self.root.root.texts["attention_checks"] += 1
+            if not "attention_checks" in self.root.root.status:
+                self.root.root.status["attention_checks"] = 0
+                self.root.root.texts["attention1"] = "Neodpověděli"
+                self.root.root.texts["attention2"] = "nevyhráváte"
+                self.root.root.status["bonus"] = 0
+            if self.answer.get() == self.text[-2]:
+                self.root.root.status["attention_checks"] += 1
+                if self.root.root.status["attention_checks"] == self.root.checksNumber:
+                    self.root.root.texts["attention1"] = "Odpověděli"
+                    self.root.root.texts["attention2"] = "vyhráváte"
+                    self.root.root.status["bonus"] = BONUS
         else:
             ans = "{}\t{}\t{}\n".format(self.short, self.answer.get(), self.text.replace("\t", " "))
             self.root.file.write(self.root.id + "\t" + ans)
