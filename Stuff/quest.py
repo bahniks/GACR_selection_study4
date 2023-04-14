@@ -8,7 +8,7 @@ import random
 from common import ExperimentFrame, InstructionsFrame
 from gui import GUI
 
-from constants import BONUS
+from constants import BONUS, TESTING
 
 
 ################################################################################
@@ -162,6 +162,9 @@ class Likert(Canvas):
         self.columnconfigure(options + 1, weight = 1)
         self.rowconfigure(0, weight = 1)
 
+        if TESTING:
+            self.answer.set(str(random.randint(1, options)))
+
 
     def write(self):
         if attentiontext in self.text:
@@ -169,13 +172,13 @@ class Likert(Canvas):
                 self.root.root.status["attention_checks"] = 0
                 self.root.root.texts["attention1"] = "Neodpověděli"
                 self.root.root.texts["attention2"] = "nevyhráváte"
-                self.root.root.status["bonus"] = 0
+                self.root.root.texts["bonus"] = 0
             if self.answer.get() == self.text[-2]:
                 self.root.root.status["attention_checks"] += 1
                 if self.root.root.status["attention_checks"] == self.root.checksNumber:
                     self.root.root.texts["attention1"] = "Odpověděli"
                     self.root.root.texts["attention2"] = "vyhráváte"
-                    self.root.root.status["bonus"] = BONUS
+                    self.root.root.texts["bonus"] = BONUS
         else:
             ans = "{}\t{}\t{}\n".format(self.short, self.answer.get(), self.text.replace("\t", " "))
             self.root.file.write(self.root.id + "\t" + ans)

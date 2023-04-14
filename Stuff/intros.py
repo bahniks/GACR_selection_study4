@@ -48,12 +48,12 @@ Centrum laboratorního a experimentálního výzkumu FPH VŠE
 
 class Ending(InstructionsFrame):
     def __init__(self, root):
-        self.root.texts["reward"] = int(self.root.texts["dice"]) + int(self.root.texts["lottery_win"]) + self.root.status["bonus"] + PARTICIPATION_FEE
-        self.root.texts["rounded_reward"] = ceil(self.root.texts["reward"] / 10) * 10
-        self.root.texts["id"] = self.root.id[:8]
-        self.root.texts["participation_fee"] = str(PARTICIPATION_FEE)
+        root.texts["reward"] = int(root.texts["dice"]) + int(root.texts["lottery_win"]) + int(root.texts["bonus"]) + PARTICIPATION_FEE
+        root.texts["rounded_reward"] = ceil(root.texts["reward"] / 10) * 10
+        root.texts["id"] = root.id[:8]
+        root.texts["participation_fee"] = str(PARTICIPATION_FEE)
         updates = ["block", "dice", "lottery_win", "attention1", "attention2", "bonus", "participation_fee", "reward", "rounded_reward", "id"]
-        super().__init__(root, text = text, keys = ["g", "G"], proceed = False, height = 30, update = updates)    
+        super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)    
 
 
 

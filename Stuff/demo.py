@@ -105,46 +105,46 @@ class Demographics(ExperimentFrame):
             self.next["state"] = "!disabled"
 
 
-    def writeWinnings(self):
-        options = os.path.join(os.path.dirname(os.path.dirname(__file__)), "options.txt")
-        if os.path.exists(options):
-            with open(options, mode = "r") as f:
-                directory = f.readline().strip()
-                station = f.readline().strip()
-            if not os.path.exists(directory):
-                directory = os.path.dirname(self.root.outputfile)
-        else:
-            directory = os.path.dirname(self.root.outputfile)
-            station = "UNKNOWN"
-        self.root.texts["station"] = station
-        filename = os.path.splitext(os.path.basename(self.root.outputfile))[0]
-        output = os.path.join(directory, filename + "_STATION_" + str(station) + ".txt")
-        if all([key in self.root.texts for key in ["dice", "lottery_win", "attention_checks"]]):
-            if self.root.texts["attention_checks"] > 0:
-                self.root.texts["attention1"] = "Neodpověděli"
-                self.root.texts["attention2"] = "nevydělali"
-            else:
-                self.root.texts["attention1"] = "Odpověděli"
-                self.root.texts["attention2"] = "vydělali"
-            self.root.texts["bonus"] = BONUS
-            dice = self.root.texts["dice"]
-            lottery = self.root.texts["lottery_win"]
-            bonus = 0 if self.root.texts["attention_checks"] else BONUS
-            with open(output, mode = "w", encoding = "utf-8") as infile:
-                reward = dice + lottery + bonus + 50
-                self.root.texts["reward"] = reward
-                reward = int(ceil(reward/10)*10)
-                self.root.texts["rounded_reward"] = reward
-                infile.write("reward: " + str(reward) + "Kč\n\n")
-            self.file.write("Winnings\n")
-            self.file.write(self.id + "\t" + str(reward) + "\n")
+    # def writeWinnings(self):
+    #     options = os.path.join(os.path.dirname(os.path.dirname(__file__)), "options.txt")
+    #     if os.path.exists(options):
+    #         with open(options, mode = "r") as f:
+    #             directory = f.readline().strip()
+    #             station = f.readline().strip()
+    #         if not os.path.exists(directory):
+    #             directory = os.path.dirname(self.root.outputfile)
+    #     else:
+    #         directory = os.path.dirname(self.root.outputfile)
+    #         station = "UNKNOWN"
+    #     self.root.texts["station"] = station
+    #     filename = os.path.splitext(os.path.basename(self.root.outputfile))[0]
+    #     output = os.path.join(directory, filename + "_STATION_" + str(station) + ".txt")
+    #     if all([key in self.root.texts for key in ["dice", "lottery_win", "attention_checks"]]):
+    #         if self.root.texts["attention_checks"] > 0:
+    #             self.root.texts["attention1"] = "Neodpověděli"
+    #             self.root.texts["attention2"] = "nevydělali"
+    #         else:
+    #             self.root.texts["attention1"] = "Odpověděli"
+    #             self.root.texts["attention2"] = "vydělali"
+    #         self.root.texts["bonus"] = BONUS
+    #         dice = self.root.texts["dice"]
+    #         lottery = self.root.texts["lottery_win"]
+    #         bonus = 0 if self.root.texts["attention_checks"] else BONUS
+    #         with open(output, mode = "w", encoding = "utf-8") as infile:
+    #             reward = dice + lottery + bonus + 50
+    #             self.root.texts["reward"] = reward
+    #             reward = int(ceil(reward/10)*10)
+    #             self.root.texts["rounded_reward"] = reward
+    #             infile.write("reward: " + str(reward) + "Kč\n\n")
+    #         self.file.write("Winnings\n")
+    #         self.file.write(self.id + "\t" + str(reward) + "\n")
 
 
     def write(self):
         self.file.write("Demographics\n")
         self.file.write("\t".join([self.id, self.sex.get(), self.age.get(), self.language.get(),
                                    self.student.get(), self.field.get()]) + "\n\n")
-        self.writeWinnings()
+        # self.writeWinnings()
 
 
 if __name__ == "__main__":
