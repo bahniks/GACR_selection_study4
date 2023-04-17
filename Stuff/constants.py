@@ -6,5 +6,5 @@ CONDITION_HIGH = (100, 200, 300)
 
 TESTING = True
 #URL = "https://bahnik.pythonanywhere.com/"
-#URL = "TEST"
-URL = "http://127.0.0.1:8000/"
+URL = "TEST"
+#URL = "http://127.0.0.1:8000/"
