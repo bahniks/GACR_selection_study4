@@ -695,6 +695,8 @@ class Login(InstructionsFrame):
                     self.changeText("Do studie se již nelze připojit")
                 elif response == "no_open":
                     self.changeText("Studie není otevřena")
+                elif response == "closed":
+                    self.changeText("Studie je uzavřena pro přihlašování")
                 #elif frame in response:
                     #pass # to do?
             count += 1                  

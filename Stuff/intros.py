@@ -1,13 +1,15 @@
 #! python3
 
 import os
+import urllib.request
+import urllib.parse
 
 from math import ceil
 
 from common import InstructionsFrame
 from gui import GUI
 
-from constants import BONUS, PARTICIPATION_FEE
+from constants import BONUS, PARTICIPATION_FEE, URL
 
 
 ################################################################################
@@ -53,7 +55,30 @@ class Ending(InstructionsFrame):
         root.texts["id"] = root.id[:8]
         root.texts["participation_fee"] = str(PARTICIPATION_FEE)
         updates = ["block", "dice", "lottery_win", "attention1", "attention2", "bonus", "participation_fee", "reward", "rounded_reward", "id"]
-        super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)    
+        super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)
+
+    def run(self):
+        self.sendInfo()
+
+    def sendInfo(self):
+        count = 0
+        while True:
+            self.update()
+            if count % 50 == 0:       
+                data = urllib.parse.urlencode({'id': self.root.id, 'round': -99, 'offer': self.root.texts["rounded_reward"]})
+                data = data.encode('ascii')
+                if URL == "TEST":
+                    response = "ok"
+                else:
+                    try:
+                        with urllib.request.urlopen(URL, data = data) as f:
+                            response = f.read().decode("utf-8") 
+                    except Exception:
+                        pass
+                if "ok" in response:                     
+                    break
+            count += 1                  
+            sleep(0.1)  
 
 
 
