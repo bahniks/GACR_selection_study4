@@ -674,6 +674,7 @@ class Login(InstructionsFrame):
                 if URL == "TEST":
                     response = "_".join(["start", str(random.randint(1,MAX_BDM_PRIZE)), str(random.randint(1,MAX_BDM_PRIZE)), random.choice(["low", "high"])])
                 else:
+                    response = ""
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:
                             response = f.read().decode("utf-8") 
@@ -689,7 +690,7 @@ class Login(InstructionsFrame):
                     self.write(response)
                     self.nextFun()                      
                     break
-                elif response == "login_successful":
+                elif response == "login_successful" or response == "already_logged":
                     self.changeText("Přihlášen")
                 elif response == "ongoing":
                     self.changeText("Do studie se již nelze připojit")
