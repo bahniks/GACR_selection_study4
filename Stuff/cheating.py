@@ -427,7 +427,7 @@ class Cheating(ExperimentFrame):
             wins = self.root.wins[self.blockNumber]
             reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
             charity = sum(self.charityRewards[:self.root.wins[self.blockNumber]])
-            outcome = "outcome" + "_".join([str(wins), str(reward), str(charity)]) 
+            outcome = "outcome_" + "_".join([str(wins), str(reward), str(charity)]) 
             while True:
                 data = urllib.parse.urlencode({'id': self.id, 'round': self.blockNumber, 'offer': outcome})
                 data = data.encode('ascii')
@@ -582,10 +582,10 @@ class Auction(PaymentFrame):
     def __init__(self, root):
         global conditions
         if "info" in root.status["condition"] and root.status["block"] > 4 and conditions[root.status["block"]-2] != "treatment":
-            text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:])
+            text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
         else:
             text = intro_auction
-        super().__init__(root, text = text, name = "Auction")
+        super().__init__(root, text = text, name = "Auction", height = 20)
   
     def write(self):
         self.root.texts["auctionResponse"] = self.offerVar.get()
@@ -656,12 +656,11 @@ class Wait(InstructionsFrame):
                         condition = "treatment" if myoffer == maxoffer else "control"
                         response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
                     elif self.what == "outcome":
-                        #global conditions
                         if conditions[self.root.status["block"]-2] == "treatment":
-                            self.root.texts["outcome"] = self.root.texts["testOutcome"] + "_4" # jde upravit
+                            response = self.root.texts["testOutcome"] + "_4"
                         else:
                             charity = -25 if "low" in self.root.status["condition"] else -100
-                            self.root.texts["outcome"] = "outcome_{}_{}_{}_4".format(10, 275, -25) # jde upravit
+                            response = "outcome_{}_{}_{}_4".format(10, 275, charity)
                 else:
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:
@@ -670,15 +669,14 @@ class Wait(InstructionsFrame):
                         pass
                 if response:
                     if self.what == "auction":
-                        condition, maxoffer, secondoffer, myoffer = response.split("|")  
-                        #global conditions            
+                        condition, maxoffer, secondoffer, myoffer = response.split("|")           
                         conditions.append(condition)
                         sameoffers = myoffer == maxoffer and myoffer == secondoffer
                         self.updateResults(maxoffer, secondoffer, condition, sameoffers)
                         self.write(response)
                     elif self.what == "outcome":
                         _, wins, reward, charity, completed = response.split("_")
-                        if completed != "4":
+                        if int(completed) < 4:
                             continue
                         else:
                             self.root.texts["outcome"] = response
