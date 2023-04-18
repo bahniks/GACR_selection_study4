@@ -112,9 +112,14 @@ Ostatní členové skupiny budou hrát verzi "PŘED".
 Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verzi "PO" úlohy. Nejvýše je možné nabídnout {MAX_BDM_PRIZE} Kč.
 """
 
+auction_info = """
+Hráč, který hrál verzi “PO” v minulém kole, uvedl, že správně uhodl {} hodů kostkou a vyhrál tedy {} Kč a charita ztratila z přiděleného příspěvku {} Kč.
+"""
+
+
 block_numbers = ["prvního", "druhého", "třetího", "čtvrtého", "pátého", "šestého", "sedmého"]
 
-wait_text = "Prosím počkejte než se rozhodnou ostatní členové týmu."
+wait_text = "Prosím počkejte na ostatní členy týmu."
 
 
 auction_result = 'Za verzi "PO" jste nabídli {} Kč. {}.'
@@ -174,7 +179,8 @@ class Cheating(ExperimentFrame):
         self.fakeRolling = not TESTING
         self.diesize = 240
         self.rewards = [i*5 + 5 for i in range(self.trials)]
-        self.charityRewards = [(i-10)*50 if i > 9 else 0 for i in range(self.trials)]
+        charityRewards = CONDITION_HIGH if "high" in self.root.status["condition"] else CONDITION_LOW
+        self.charityRewards = [charityRewards[i-10] if i > 9 else 0 for i in range(self.trials)] 
         self.charityEndowment = 100
         #######################
 
@@ -415,7 +421,32 @@ class Cheating(ExperimentFrame):
             begin = [self.id]
             self.file.write("\t".join(map(str, begin + response)) + "\n")
 
-     
+    
+    def nextFun(self):
+        if self.blockNumber > 3 and self.blockNumber < 6:            
+            wins = self.root.wins[self.blockNumber]
+            reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
+            charity = sum(self.charityRewards[:self.root.wins[self.blockNumber]])
+            outcome = "outcome" + "_".join([str(wins), str(reward), str(charity)]) 
+            while True:
+                data = urllib.parse.urlencode({'id': self.id, 'round': self.blockNumber, 'offer': outcome})
+                data = data.encode('ascii')
+                if URL == "TEST":
+                    self.root.texts["testOutcome"] = outcome                   
+                    response = "ok"
+                else:
+                    try:
+                        with urllib.request.urlopen(URL, data = data) as f:
+                            response = f.read().decode("utf-8")       
+                    except Exception:
+                        pass
+                if response:                    
+                    super().nextFun()  
+                    return            
+                sleep(0.1)
+        else:
+            super().nextFun()  
+    
     
 
 class CheatingInstructions(InstructionsFrame):
@@ -549,7 +580,12 @@ class PaymentFrame(InstructionsFrame):
 
 class Auction(PaymentFrame):
     def __init__(self, root):
-        super().__init__(root, text = intro_auction, name = "Auction")
+        global conditions
+        if "info" in root.status["condition"] and root.status["block"] > 4 and conditions[root.status["block"]-2] != "treatment":
+            text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:])
+        else:
+            text = intro_auction
+        super().__init__(root, text = text, name = "Auction")
   
     def write(self):
         self.root.texts["auctionResponse"] = self.offerVar.get()
@@ -561,7 +597,7 @@ class Auction(PaymentFrame):
         if URL != "TEST":
             with urllib.request.urlopen(URL, data = data) as f:
                 if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
-                    print("problem") # zmemit na opakovani a pak zavolat experimentatora
+                    print("problem") # zmenit na opakovani a pak zavolat experimentatora
         else:
             self.root.status["TESTauction"] = self.offerVar.get()
 
@@ -593,27 +629,39 @@ class BDM(PaymentFrame):
 
 
 class Wait(InstructionsFrame):
-    def __init__(self, root):
+    def __init__(self, root, what = "auction"):
         super().__init__(root, text = wait_text, height = 3, font = 15, proceed = False, width = 45)
-
+        self.what = what
         self.progressBar = ttk.Progressbar(self, orient = HORIZONTAL, length = 400, mode = 'indeterminate')
         self.progressBar.grid(row = 2, column = 1, sticky = N)
 
     def checkOffers(self):
         count = 0
+        global conditions
         while True:
             self.update()
             if count % 50 == 0:
-                data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "result"})
+                if self.what == "auction":
+                    data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "result"})
+                elif self.what == "outcome":
+                    data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "outcome"})
                 data = data.encode('ascii')
                 if URL == "TEST":
-                    myoffer = int(self.root.status["TESTauction"])
-                    offers = [myoffer, random.randint(1,MAX_BDM_PRIZE), random.randint(1,MAX_BDM_PRIZE), random.randint(1,MAX_BDM_PRIZE)]
-                    maxoffer = max(offers)
-                    offers.sort()
-                    secondoffer = offers[2]
-                    condition = "treatment" if myoffer == maxoffer else "control"
-                    response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
+                    if self.what == "auction":
+                        myoffer = int(self.root.status["TESTauction"])
+                        offers = [myoffer, random.randint(1,MAX_BDM_PRIZE), random.randint(1,MAX_BDM_PRIZE), random.randint(1,MAX_BDM_PRIZE)]
+                        maxoffer = max(offers)
+                        offers.sort()
+                        secondoffer = offers[2]
+                        condition = "treatment" if myoffer == maxoffer else "control"
+                        response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
+                    elif self.what == "outcome":
+                        #global conditions
+                        if conditions[self.root.status["block"]-2] == "treatment":
+                            self.root.texts["outcome"] = self.root.texts["testOutcome"] + "_4" # jde upravit
+                        else:
+                            charity = -25 if "low" in self.root.status["condition"] else -100
+                            self.root.texts["outcome"] = "outcome_{}_{}_{}_4".format(10, 275, -25) # jde upravit
                 else:
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:
@@ -621,12 +669,19 @@ class Wait(InstructionsFrame):
                     except Exception:
                         pass
                 if response:
-                    condition, maxoffer, secondoffer, myoffer = response.split("|")  
-                    global conditions            
-                    conditions.append(condition)
-                    sameoffers = myoffer == maxoffer and myoffer == secondoffer
-                    self.updateResults(maxoffer, secondoffer, condition, sameoffers)
-                    self.write(response)
+                    if self.what == "auction":
+                        condition, maxoffer, secondoffer, myoffer = response.split("|")  
+                        #global conditions            
+                        conditions.append(condition)
+                        sameoffers = myoffer == maxoffer and myoffer == secondoffer
+                        self.updateResults(maxoffer, secondoffer, condition, sameoffers)
+                        self.write(response)
+                    elif self.what == "outcome":
+                        _, wins, reward, charity, completed = response.split("_")
+                        if completed != "4":
+                            continue
+                        else:
+                            self.root.texts["outcome"] = response
                     self.progressBar.stop()
                     self.nextFun()  
                     return
@@ -672,7 +727,7 @@ class Login(InstructionsFrame):
                 data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
                 data = data.encode('ascii')
                 if URL == "TEST":
-                    response = "_".join(["start", str(random.randint(1,MAX_BDM_PRIZE)), str(random.randint(1,MAX_BDM_PRIZE)), random.choice(["low", "high"])])
+                    response = "_".join(["start", str(random.randint(1,MAX_BDM_PRIZE)), str(random.randint(1,MAX_BDM_PRIZE)), random.choice(["lowinfo", "highinfo", "lowcontrol", "highcontrol"])])
                 else:
                     response = ""
                     try:
@@ -698,6 +753,8 @@ class Login(InstructionsFrame):
                     self.changeText("Studie není otevřena")
                 elif response == "closed":
                     self.changeText("Studie je uzavřena pro přihlašování")
+                elif response == "not_grouped":
+                    self.changeText("Nebyla Vám přiřazena žádná skupina") # TO DO
                 #elif frame in response:
                     #pass # to do?
             count += 1                  
@@ -709,7 +766,7 @@ class Login(InstructionsFrame):
 
     def update_intro(self, condition):        
         global intro_block_1
-        loss = CONDITION_HIGH if condition == "high" else CONDITION_LOW
+        loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
         intro_block_1 = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2])
 
     def write(self, response):
@@ -717,12 +774,10 @@ class Login(InstructionsFrame):
         self.file.write(self.id + "\t" + response.replace("_", "\t") + "\n\n")        
 
 
-        
-
 
 
 conditions = ["treatment", "control"]
-random.shuffle(conditions)
+random.shuffle(conditions)  
 
 
 Instructions1 = CheatingInstructions
@@ -730,6 +785,7 @@ Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update
 BDMResult = (InstructionsFrame, {"text": bdm_result, "height": 3, "update": ["bdmFee", "bdmResponse", "bdmVersion", "bdmPaymentText"]})
 AuctionResult = (InstructionsFrame, {"text": auction_result, "height": 3, "update": ["auctionResponse", "auctionText"]})
 EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win7", "charity7"]})
+AuctionWait = (Wait, {"what": "outcome"})
 
 
 
@@ -748,10 +804,12 @@ if __name__ == "__main__":
          Wait,
          AuctionResult,
          Cheating,
+         AuctionWait,
          Auction,
          Wait,
          AuctionResult,
          Cheating,
+         AuctionWait,
          Auction,
          Wait,
          AuctionResult,

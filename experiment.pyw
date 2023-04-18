@@ -12,7 +12,7 @@ from quest import Hexaco, QuestInstructions
 from intros import Intro, Ending
 from demo import Demographics
 from cheating import Instructions1, Cheating, Instructions2, BDM, BDMResult, Auction, Wait
-from cheating import AuctionResult, EndCheating, Login
+from cheating import AuctionResult, EndCheating, Login, AuctionWait
 from debriefcheating import DebriefCheating
 from debriefing import Debriefing
 from lottery import Lottery, LotteryInstructions
@@ -33,10 +33,12 @@ frames = [Login,
           Wait,
           AuctionResult,
           Cheating,
+          AuctionWait,
           Auction,
           Wait,
           AuctionResult,
           Cheating,
+          AuctionWait,
           Auction,
           Wait,
           AuctionResult,
