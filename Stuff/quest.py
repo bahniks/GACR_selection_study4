@@ -110,7 +110,7 @@ class Quest(ExperimentFrame):
             self.file.write("\n")
             if self.checks:
                 self.file.write("Attention checks\n")
-                wrong_checks = str(self.root.texts["attention_checks"])
+                wrong_checks = str(self.root.status["attention_checks"])
                 self.file.write(self.id + "\t" + self.name + "\t" + wrong_checks + "\n\n")
             self.destroy()
             self.root.nextFrame()
