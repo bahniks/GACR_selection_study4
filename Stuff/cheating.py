@@ -1,6 +1,7 @@
 #! python3
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 from time import perf_counter, sleep
 from collections import defaultdict
 
@@ -175,7 +176,7 @@ class Cheating(ExperimentFrame):
 
         #######################
         # adjustable parameters
-        self.trials = 12 if not TESTING else 2 # change for testing
+        self.trials = 12 if not TESTING else 2
         self.pause_after_roll = 0.5
         self.pause_before_trial = 0.2
         self.displayNum = self.createDots # self.createDots or self.createText
@@ -637,9 +638,18 @@ class Auction(PaymentFrame):
         data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.offerVar.get()})
         data = data.encode('ascii')
         if URL != "TEST":
-            with urllib.request.urlopen(URL, data = data) as f:
-                if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
-                    print("problem") # zmenit na opakovani a pak zavolat experimentatora
+            for i in range(60):                
+                with urllib.request.urlopen(URL, data = data) as f:
+                    if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
+                        self.root.config(cursor = "wait")
+                        self.root.update()
+                        sleep(1)
+                    else:
+                        self.root.config(cursor = "")
+                        break
+            else:
+                messagebox.showinfo(message = "Zavolejte prosím experimentátora.", icon = "error", parent = self.root, 
+                                  detail = "Pravděpodobně je problém se serverem.", title = "Problém")
         else:
             self.root.status["TESTauction"] = self.offerVar.get()
 

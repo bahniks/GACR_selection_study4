@@ -56,31 +56,28 @@ class Ending(InstructionsFrame):
         root.texts["participation_fee"] = str(PARTICIPATION_FEE)
         updates = ["block", "dice", "lottery_win", "attention1", "attention2", "bonus", "participation_fee", "reward", "rounded_reward", "id"]
         super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)
-        self.file.write(self.name + "\n")
+        self.file.write("Ending\n")
         self.file.write(self.id + "\t" + "\t".join([str(root.texts["rounded_reward"]), str(root.texts["block"])]) + "\n\n")
 
     def run(self):
         self.sendInfo()
 
     def sendInfo(self):
-        count = 0
         while True:
-            self.update()
-            if count % 50 == 0:       
-                data = urllib.parse.urlencode({'id': self.root.id, 'round': -99, 'offer': self.root.texts["rounded_reward"]})
-                data = data.encode('ascii')
-                if URL == "TEST":
-                    response = "ok"
-                else:
-                    try:
-                        with urllib.request.urlopen(URL, data = data) as f:
-                            response = f.read().decode("utf-8") 
-                    except Exception:
-                        pass
-                if "ok" in response:                     
-                    break
-            count += 1                  
-            sleep(0.1)
+            self.update()    
+            data = urllib.parse.urlencode({'id': self.root.id, 'round': -99, 'offer': self.root.texts["rounded_reward"]})
+            data = data.encode('ascii')
+            if URL == "TEST":
+                response = "ok"
+            else:
+                try:
+                    with urllib.request.urlopen(URL, data = data) as f:
+                        response = f.read().decode("utf-8") 
+                except Exception:
+                    pass
+            if "ok" in response:                     
+                break              
+            sleep(5)
 
 
 
