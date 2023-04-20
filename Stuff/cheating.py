@@ -545,6 +545,7 @@ class PaymentFrame(InstructionsFrame):
         self.next["state"] = "disabled"        
 
         self.rowconfigure(0, weight = 2)
+        self.rowconfigure(2, weight = 1)
         self.rowconfigure(3, weight = 1)
         self.rowconfigure(4, weight = 1)
         self.rowconfigure(5, weight = 1)
@@ -589,20 +590,20 @@ class Auction(PaymentFrame):
             text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
         else:
             text = intro_auction
-        super().__init__(root, text = text, name = "Auction", height = 20)
+        super().__init__(root, text = text, name = "Auction", height = 15)
 
         self.state = "bid"
 
         self.predictionVar = StringVar()
         self.vcmd2 = (self.register(self.onValidatePrediction), '%P')
         self.predictionFrame = Canvas(self, background = "white", highlightbackground = "white",
-                                 highlightcolor = "white")
+                                 highlightcolor = "white", height = 150)
+        self.predictionFrame.create_rectangle(0, 1, 0, 100, outline="white", fill="red")
         self.predictionFrame.grid(row = 3, column = 1)
-        self.predictionTextLab = ttk.Label(self.predictionFrame, text = "", font = "helvetica 16", background = "white")
+        self.predictionTextLab = ttk.Label(self.predictionFrame, text = " \n ", font = "helvetica 16", background = "white")
         self.predictionTextLab.grid(row = 1, column = 0, padx = 6, sticky = E)
-        self.entry = ttk.Entry(self.predictionFrame, textvariable = self.predictionVar, width = 10, justify = "right",
-                               font = "helvetica 15", validate = "key", validatecommand = self.vcmd2)
-
+        self.predictionEntry = ttk.Entry(self.predictionFrame, textvariable = self.predictionVar, width = 10, justify = "right",
+                                font = "helvetica 15", validate = "key", validatecommand = self.vcmd2)
 
 
     def onValidatePrediction(self, P):
@@ -610,10 +611,10 @@ class Auction(PaymentFrame):
             if "," in P or "." in P:
                 raise ValueError()            
             if "-" in P:
-                raise Exception("Není možné odhadnout záporné množství hodů.")
+                raise Exception("Není možné správně odhadnout záporné množství hodů.")
             offer = int(P)
             if offer < 0:
-                raise Exception("Není možné odhadnout záporné množství hodů.")
+                raise Exception("Není možné správně odhadnout záporné množství hodů.")
             elif offer > 12:
                 raise Exception("Není možné odhadnout správně více než 12 hodů.")
             else:
@@ -631,7 +632,8 @@ class Auction(PaymentFrame):
     def write(self):
         self.root.texts["auctionResponse"] = self.offerVar.get()
 
-        super().write()
+        self.file.write(self.name + "\n")
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.offerVar.get() + "\t" + self.predictionVar.get() + "\n\n")
 
         data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.offerVar.get()})
         data = data.encode('ascii')
@@ -642,17 +644,14 @@ class Auction(PaymentFrame):
         else:
             self.root.status["TESTauction"] = self.offerVar.get()
 
-    def write(self):
-        self.file.write(self.name + "\n")
-        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.offerVar.get() + "\t" + self.predictionVar.get() + "\n\n")
 
     def nextFun(self):
         if self.state == "bid":
             self.state = "prediction"
             self.predictionTextLab["text"] = auction_prediction
-            self.entry.grid(row = 2, column = 1, padx = 6)
+            self.predictionEntry.grid(row = 2, column = 0, pady = 10)
         else:
-            super().nextFun(self)
+            super().nextFun()
 
 
 
