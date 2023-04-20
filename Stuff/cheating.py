@@ -116,6 +116,9 @@ auction_info = """
 Hráč, který hrál verzi “PO” v minulém kole, uvedl, že správně uhodl {} hodů kostkou a vyhrál tedy {} Kč a charita ztratila z přiděleného příspěvku {} Kč.
 """
 
+auction_prediction = 'Pokud nebudete hrát "PO" verzi úlohy Vy, kolik očekáváte,\nže nahlásí správných předpovědí člen týmu, který bude hrát verzi "PO"?'
+
+
 
 block_numbers = ["prvního", "druhého", "třetího", "čtvrtého", "pátého", "šestého", "sedmého"]
 
@@ -536,15 +539,16 @@ class PaymentFrame(InstructionsFrame):
         self.currencyLabel.grid(row = 2, column = 2, sticky = NSEW)
 
         self.problem = ttk.Label(self, text = "", font = "helvetica 16", background = "white", foreground = "red")
-        self.problem.grid(row = 3, column = 1)
+        self.problem.grid(row = 4, column = 1)
                
-        self.next.grid(row = 4, column = 1)
+        self.next.grid(row = 5, column = 1)
         self.next["state"] = "disabled"        
 
-        self.rowconfigure(0, weight = 1)
+        self.rowconfigure(0, weight = 2)
         self.rowconfigure(3, weight = 1)
         self.rowconfigure(4, weight = 1)
-        self.rowconfigure(5, weight = 1)        
+        self.rowconfigure(5, weight = 1)
+        self.rowconfigure(6, weight = 2)        
       
     def onValidate(self, P):
         try:
@@ -586,6 +590,43 @@ class Auction(PaymentFrame):
         else:
             text = intro_auction
         super().__init__(root, text = text, name = "Auction", height = 20)
+
+        self.state = "bid"
+
+        self.predictionVar = StringVar()
+        self.vcmd2 = (self.register(self.onValidatePrediction), '%P')
+        self.predictionFrame = Canvas(self, background = "white", highlightbackground = "white",
+                                 highlightcolor = "white")
+        self.predictionFrame.grid(row = 3, column = 1)
+        self.predictionTextLab = ttk.Label(self.predictionFrame, text = "", font = "helvetica 16", background = "white")
+        self.predictionTextLab.grid(row = 1, column = 0, padx = 6, sticky = E)
+        self.entry = ttk.Entry(self.predictionFrame, textvariable = self.predictionVar, width = 10, justify = "right",
+                               font = "helvetica 15", validate = "key", validatecommand = self.vcmd2)
+
+
+
+    def onValidatePrediction(self, P):
+        try:
+            if "," in P or "." in P:
+                raise ValueError()            
+            if "-" in P:
+                raise Exception("Není možné odhadnout záporné množství hodů.")
+            offer = int(P)
+            if offer < 0:
+                raise Exception("Není možné odhadnout záporné množství hodů.")
+            elif offer > 12:
+                raise Exception("Není možné odhadnout správně více než 12 hodů.")
+            else:
+                self.next["state"] = "!disabled"
+                self.problem["text"] = ""
+        except ValueError:
+            self.next["state"] = "disabled"
+            self.problem["text"] = "Do textového pole je potřeba uvést celé číslo."
+        except Exception as e:
+            self.next["state"] = "disabled"
+            self.problem["text"] = e
+        return True
+
   
     def write(self):
         self.root.texts["auctionResponse"] = self.offerVar.get()
@@ -600,6 +641,18 @@ class Auction(PaymentFrame):
                     print("problem") # zmenit na opakovani a pak zavolat experimentatora
         else:
             self.root.status["TESTauction"] = self.offerVar.get()
+
+    def write(self):
+        self.file.write(self.name + "\n")
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.offerVar.get() + "\t" + self.predictionVar.get() + "\n\n")
+
+    def nextFun(self):
+        if self.state == "bid":
+            self.state = "prediction"
+            self.predictionTextLab["text"] = auction_prediction
+            self.entry.grid(row = 2, column = 1, padx = 6)
+        else:
+            super().nextFun(self)
 
 
 
@@ -791,6 +844,7 @@ AuctionWait = (Wait, {"what": "outcome"})
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
+         Auction, #
          Instructions1,
          Cheating,
          Instructions2,
