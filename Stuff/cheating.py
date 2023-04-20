@@ -597,8 +597,7 @@ class Auction(PaymentFrame):
         self.predictionVar = StringVar()
         self.vcmd2 = (self.register(self.onValidatePrediction), '%P')
         self.predictionFrame = Canvas(self, background = "white", highlightbackground = "white",
-                                 highlightcolor = "white", height = 150)
-        self.predictionFrame.create_rectangle(0, 1, 0, 100, outline="white", fill="red")
+                                 highlightcolor = "white")
         self.predictionFrame.grid(row = 3, column = 1)
         self.predictionTextLab = ttk.Label(self.predictionFrame, text = " \n ", font = "helvetica 16", background = "white")
         self.predictionTextLab.grid(row = 1, column = 0, padx = 6, sticky = E)
@@ -649,7 +648,7 @@ class Auction(PaymentFrame):
         if self.state == "bid":
             self.state = "prediction"
             self.predictionTextLab["text"] = auction_prediction
-            self.predictionEntry.grid(row = 2, column = 0, pady = 10)
+            self.predictionEntry.grid(row = 1, column = 1, padx = 10)
         else:
             super().nextFun()
 
@@ -843,7 +842,6 @@ AuctionWait = (Wait, {"what": "outcome"})
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
-         Auction, #
          Instructions1,
          Cheating,
          Instructions2,
