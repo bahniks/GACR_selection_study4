@@ -17,6 +17,7 @@ from debriefcheating import DebriefCheating
 from debriefing import Debriefing
 from lottery import Lottery, LotteryInstructions
 from charity import Charity
+from questionnaire import Prosociality
 
 
 frames = [Login,
@@ -51,6 +52,7 @@ frames = [Login,
           Lottery,
           QuestInstructions,
           Hexaco,
+          Prosociality,
           Demographics,
           DebriefCheating,
           Debriefing,
