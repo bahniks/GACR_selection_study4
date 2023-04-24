@@ -5,9 +5,10 @@ from time import localtime, strftime, time
 from collections import defaultdict
 from uuid import uuid4
 
-from constants import TESTING
-
+import urllib.request
 import os
+
+from constants import TESTING, URL
 
 
 class GUI(Tk):
@@ -50,7 +51,14 @@ class GUI(Tk):
         with open(self.outputfile, mode = "w") as self.file:
             self.nextFrame()
             self.mainloop()
-        
+            
+
+    def destroy(self):
+        self.file.close()
+        if URL != "TEST":
+            self.uploadResults()        
+        super().destroy()
+
 
     def nextFrame(self):
         self.file.write("time: " + str(time()) + "\n")
@@ -79,4 +87,40 @@ class GUI(Tk):
         ans = messagebox.askyesno(message = message, icon = "question", parent = self,
                                   title = "Ukončit studii?")
         if ans:
-            self.destroy() 
+            self.destroy()
+
+
+    def uploadResults(self):
+        for i in range(5):
+            # Set the URL of the Django app that handles file uploads
+            url = URL + "results/"
+
+            # Open the file and read its contents
+            with open(self.outputfile, "rb") as f:
+                file_contents = f.read()
+
+            # Encode the file contents as multipart/form-data
+            boundary = b"----WebKitFormBoundary7MA4YWxkTrZu0gW"
+            data = b""
+            data += b"--" + boundary + b"\r\n"
+            filename = os.path.basename(self.outputfile)
+            data += bytes('Content-Disposition: form-data; name="results"; filename="{}"\r\n'.format(filename), 'UTF-8')
+            data += b"Content-Type: text/plain\r\n\r\n"
+            data += file_contents + b"\r\n"
+            data += b"--" + boundary + b"--\r\n"
+
+            # Set the headers and data for the request
+            headers = {
+                "Content-Type": "multipart/form-data; boundary=" + boundary.decode(),
+                "Content-Length": str(len(data)),
+            }
+            request_data = urllib.request.Request(url, data, headers)
+            
+            try:
+                # Send the file to the Django app
+                response = urllib.request.urlopen(request_data)
+                # Print the response from the Django app
+                if response.read().decode() == "ok":
+                    break
+            except Exception:
+                sleep(0.5)
