@@ -1,6 +1,8 @@
 #! python3
 from tkinter import *
 from tkinter import ttk
+from collections import defaultdict
+from copy import deepcopy
 
 import os
 import random
@@ -28,7 +30,7 @@ Přečtěte si prosím každé prohlášení a rozhodněte se, do jaké míry s 
 
 attentiontext = "Chcete-li prokázat, že zadání věnujete pozornost, vyberte možnost "
 
-
+# hexaco_feedback_text = "Níže naleznete vaše výsledky z dokončeného dotazníku."
 ################################################################################
 
 
@@ -182,6 +184,10 @@ class Likert(Canvas):
         else:
             ans = "{}\t{}\t{}\n".format(self.short, self.answer.get(), self.text.replace("\t", " "))
             self.root.file.write(self.root.id + "\t" + ans)
+            # if self.root.name == "Hexaco":
+            #     if not "hexaco" in self.root.root.status:
+            #         self.root.root.status["hexaco"] = {}
+            #     self.root.root.status["hexaco"][self.text] = int(self.answer.get())
 
 
     def check(self):
@@ -196,6 +202,29 @@ class Hexaco(Quest):
         super().__init__(root, 9, "hexaco.txt", "Hexaco", instructions = hexacoinstructions, width = 85,
                          left = "silně nesouhlasím", right = "silně souhlasím", checks = 3,
                          height = 3, options = 5, center = True)
+
+
+
+# class HexacoFeedback(InstructionsFrame):
+#     def __init__(self, root, text = hexaco_feedback_text):
+#         traits = defaultdict(list)
+#         currentTrait = ""
+#         with open("Stuff/hexaco_scoring.txt") as f:    
+#             for line in f:
+#                 line = line.strip()
+#                 if not "\t" in line:
+#                     currentTrait = line
+#                 else:
+#                     subTrait, items = line.split("\t")
+#                     items = [i.strip() for i in items.split(",")]
+#                     traits[currentTrait].extend(items)
+#                     traits[subTrait] = items
+#         scores = deepcopy(traits)
+#         with open("Stuff/hexaco.txt") as f:
+#             for i, line in enumerate(f, start = 1):
+#                 pass # to do
+
+
 
 
 

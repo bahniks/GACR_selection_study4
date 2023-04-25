@@ -1,0 +1,30 @@
+Honesty-Humility
+Sincerity	6, 30R, 54
+Fairness	12R, 36, 60R
+Greed-Avoidance	18, 42R
+Modesty	24R, 48R
+Emotionality
+Fearfulness	5, 29, 53R
+Anxiety	11, 35R
+Dependence	17, 41R
+Sentimentality	23, 47, 59R
+Extraversion
+Social Self-Esteem	4, 28R, 52R
+Social Boldness	10R, 34, 58
+Sociability	16, 40
+Liveliness	22, 46R
+Agreeableness
+Forgiveness	3, 27
+Gentleness	9R, 33, 51
+Flexibility	15R, 39, 57R
+Patience	21R, 45
+Conscientiousness
+Organization	2, 26R
+Diligence	8, 32R
+Perfectionism	14R, 38, 50
+Prudence	20R, 44R, 56R
+Openness to Experience
+Aesthetic Appreciation	1R, 25
+Inquisitiveness	7, 31R
+Creativity	13, 37, 49R
+Unconventionality	19R, 43, 55R
