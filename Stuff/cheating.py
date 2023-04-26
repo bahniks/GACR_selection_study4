@@ -190,10 +190,12 @@ class Cheating(ExperimentFrame):
 
         if not "block" in self.root.status:
             self.root.status["block"] = 1
+            conditions = ["treatment", "control"]
+            random.shuffle(conditions)  
+            self.root.status["conditions"] = conditions
         self.blockNumber = self.root.status["block"]      
-
-        global conditions
-        self.condition = conditions[self.blockNumber - 1]
+        
+        self.condition = self.root.status["conditions"][self.blockNumber - 1]
 
         self.width = self.root.screenwidth
         self.height = self.root.screenheight
@@ -455,7 +457,7 @@ class Cheating(ExperimentFrame):
 
 class CheatingInstructions(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = intro_block_1, height = 31, font = 15, width = 100)
+        super().__init__(root, text = root.texts["intro_block_1"], height = 31, font = 15, width = 100)
 
         self.checkVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
@@ -586,8 +588,7 @@ class PaymentFrame(InstructionsFrame):
 
 class Auction(PaymentFrame):
     def __init__(self, root):
-        global conditions
-        if "info" in root.status["condition"] and root.status["block"] > 4 and conditions[root.status["block"]-2] != "treatment":
+        if "info" in root.status["condition"] and root.status["block"] > 4 and root.status["conditions"][root.status["block"]-2] != "treatment":
             text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
         else:
             text = intro_auction
@@ -671,18 +672,17 @@ class BDM(PaymentFrame):
 
     def write(self):        
         fee = self.root.status["bdm1"] if self.root.status["block"] == 3 else self.root.status["bdm2"]
-        global conditions
         if int(self.offerVar.get()) >= fee:
             condition = "after"
             self.root.texts["bdmVersion"] = "PO"
             self.root.texts["bdmPaymentText"] = bdm_after
-            conditions.append("treatment")
+            self.root.status["conditions"].append("treatment")
             self.root.fees[self.root.status["block"]] = fee
         else:
             condition = "before"
             self.root.texts["bdmVersion"] = "PŘED"
             self.root.texts["bdmPaymentText"] = bdm_before
-            conditions.append("control")
+            self.root.status["conditions"].append("control")
         self.root.texts["bdmFee"] = fee
         self.root.texts["bdmResponse"] = int(self.offerVar.get())                
 
@@ -698,7 +698,6 @@ class Wait(InstructionsFrame):
 
     def checkOffers(self):
         count = 0
-        global conditions
         while True:
             self.update()
             if count % 50 == 0:
@@ -717,7 +716,7 @@ class Wait(InstructionsFrame):
                         condition = "treatment" if myoffer == maxoffer else "control"
                         response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
                     elif self.what == "outcome":
-                        if conditions[self.root.status["block"]-2] == "treatment":
+                        if self.root.status["conditions"][self.root.status["block"]-2] == "treatment":
                             response = self.root.texts["testOutcome"] + "_4"
                         else:
                             charity = -25 if "low" in self.root.status["condition"] else -100
@@ -731,7 +730,7 @@ class Wait(InstructionsFrame):
                 if response:
                     if self.what == "auction":
                         condition, maxoffer, secondoffer, myoffer = response.split("|")           
-                        conditions.append(condition)
+                        self.root.status["conditions"].append(condition)
                         sameoffers = myoffer == maxoffer and myoffer == secondoffer
                         self.updateResults(maxoffer, secondoffer, condition, sameoffers)
                         self.write(response)
@@ -824,9 +823,8 @@ class Login(InstructionsFrame):
         self.login()
 
     def update_intro(self, condition):        
-        global intro_block_1
         loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
-        intro_block_1 = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2])
+        self.root.texts["intro_block_1"] = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2])
 
     def write(self, response):
         self.file.write("Login" + "\n")
@@ -834,9 +832,6 @@ class Login(InstructionsFrame):
 
 
 
-
-conditions = ["treatment", "control"]
-random.shuffle(conditions)  
 
 
 Instructions1 = CheatingInstructions
