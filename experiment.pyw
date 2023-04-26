@@ -15,7 +15,7 @@ from cheating import Instructions1, Cheating, Instructions2, BDM, BDMResult, Auc
 from cheating import AuctionResult, EndCheating, Login, AuctionWait
 from debriefcheating import DebriefCheating
 from debriefing import Debriefing
-from lottery import Lottery, LotteryInstructions
+from lottery import Lottery, LotteryWin
 from charity import Charity
 from questionnaire import Prosociality
 
@@ -48,8 +48,8 @@ frames = [Login,
           BDMResult,
           Cheating,
           EndCheating,
-          LotteryInstructions,
           Lottery,
+          LotterWin,
           QuestInstructions,
           Hexaco,
           Prosociality,
