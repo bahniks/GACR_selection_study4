@@ -6,13 +6,15 @@ from collections import defaultdict
 from uuid import uuid4
 
 import urllib.request
+import urllib.parse
 import os
+import json
 
 from constants import TESTING, URL
 
 
 class GUI(Tk):
-    def __init__(self, frames):
+    def __init__(self, frames, load = False):
         super().__init__()
         
         self.title("Experiment")
@@ -47,8 +49,20 @@ class GUI(Tk):
 
         self.columnconfigure(0, weight = 1)
         self.rowconfigure(0, weight = 1)
+
+        if load and URL != "TEST":            
+            with open('temp.json') as f:
+                data = json.load(f)            
+            message = urllib.parse.urlencode({"id": data["id"], "round": data["count"], "offer": "continue"})
+            message = message.encode('ascii')
+            with urllib.request.urlopen(URL, data = message) as f:
+                response = f.read().decode("utf-8")                
+            if response == "continue":
+                for key, value in data.items():
+                    setattr(self, key, value)    
                       
-        with open(self.outputfile, mode = "w") as self.file:
+        mode = "a" if load else "w"
+        with open(self.outputfile, mode = mode) as self.file:
             self.nextFrame()
             self.mainloop()
             
@@ -60,10 +74,25 @@ class GUI(Tk):
         super().destroy()
 
 
+    def removeJson(self):
+        if os.path.exists("temp.json"):
+            os.remove("temp.json")
+
+
     def nextFrame(self):
+        self.removeJson()
+        with open("temp.json", mode = "w") as f:
+            json.dump({"id": self.id,
+                       "outputfile": self.outputfile,
+                       "texts": self.texts,
+                       "status": self.status,
+                       "count": self.count}, 
+                       f)
+
         self.file.write("time: " + str(time()) + "\n")
-        self.count += 1
+        self.count += 1       
         if self.count >= len(self.order):
+            self.removeJson()
             self.destroy()
         else:
             nxt = self.order[self.count]

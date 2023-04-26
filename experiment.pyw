@@ -49,7 +49,7 @@ frames = [Login,
           Cheating,
           EndCheating,
           Lottery,
-          LotterWin,
+          LotteryWin,
           QuestInstructions,
           Hexaco,
           Prosociality,
@@ -59,5 +59,5 @@ frames = [Login,
           Ending
          ]
 
-
-GUI(frames)
+if __name__ == "__main__":
+    GUI(frames, load = os.path.exists("temp.json"))

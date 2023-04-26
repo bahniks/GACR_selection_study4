@@ -1,3 +1,4 @@
+temp.json
 Data/*.txt
 !Data/extract.py
 Data/Auction/*.txt
