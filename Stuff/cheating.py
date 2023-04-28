@@ -736,7 +736,7 @@ class Wait(InstructionsFrame):
                         self.write(response)
                     elif self.what == "outcome":
                         _, wins, reward, charity, completed = response.split("_")
-                        if int(completed) < 4:
+                        if not bool(completed):
                             continue
                         else:
                             self.root.texts["outcome"] = response
