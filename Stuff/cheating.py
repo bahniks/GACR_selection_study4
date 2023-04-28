@@ -589,7 +589,10 @@ class PaymentFrame(InstructionsFrame):
 class Auction(PaymentFrame):
     def __init__(self, root):
         if "info" in root.status["condition"] and root.status["block"] > 4 and root.status["conditions"][root.status["block"]-2] != "treatment":
-            text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
+            if int(root.texts["outcome"].split("_")[1]) == -99:
+                text = intro_auction    
+            else:
+                text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
         else:
             text = intro_auction
         super().__init__(root, text = text, name = "Auction", height = 15)
@@ -658,6 +661,8 @@ class Auction(PaymentFrame):
     def nextFun(self):
         if self.state == "bid":
             self.state = "prediction"
+            self.entry["state"] = "disabled"
+            self.next["state"] = "disabled"
             self.predictionTextLab["text"] = auction_prediction
             self.predictionEntry.grid(row = 1, column = 1, padx = 10)
         else:
@@ -736,7 +741,7 @@ class Wait(InstructionsFrame):
                         self.write(response)
                     elif self.what == "outcome":
                         _, wins, reward, charity, completed = response.split("_")
-                        if not bool(completed):
+                        if completed != "True":
                             continue
                         else:
                             self.root.texts["outcome"] = response
