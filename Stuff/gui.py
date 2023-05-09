@@ -20,14 +20,14 @@ class GUI(Tk):
         self.title("Experiment")
         self.config(bg = "white")
         if TESTING:
-            self.geometry("1680x1050")
+            self.geometry("1280x1024")
         self.attributes("-fullscreen", not TESTING)
         self.attributes("-topmost", not TESTING)
         self.overrideredirect(not TESTING)
         self.protocol("WM_DELETE_WINDOW", lambda: self.closeFun())
 
-        self.screenwidth = 1680 # adjust
-        self.screenheight = 1050 # adjust
+        self.screenwidth = 1280 # adjust
+        self.screenheight = 1024 # adjust
 
         os.chdir(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
         filepath = os.path.join(os.getcwd(), "Data")

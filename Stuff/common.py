@@ -10,12 +10,11 @@ from constants import TESTING
 
 class ExperimentFrame(Canvas):
     def __init__(self, root):
-        super().__init__(root)
+        super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
         
         self.root = root
         self.file = self.root.file
         self.id = self.root.id #os.path.basename(self.root.outputfile)
-        self["background"] = "white"           
 
     def nextFun(self):
         if self.check():
