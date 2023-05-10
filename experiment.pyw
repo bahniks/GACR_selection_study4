@@ -18,6 +18,7 @@ from debriefing import Debriefing
 from lottery import Lottery, LotteryWin
 from charity import Charity
 from questionnaire import Prosociality
+from anchoring import AnchoringInstructions, Anchoring
 
 
 frames = [Login,
@@ -50,12 +51,14 @@ frames = [Login,
           EndCheating,
           Lottery,
           LotteryWin,
+          AnchoringInstructions, 
+          Anchoring,
           QuestInstructions,
           Hexaco,
           Prosociality,
           Demographics,
-          DebriefCheating,
-          Debriefing,
+          DebriefCheating, # ?
+          Debriefing, # ?
           Ending
          ]
 

@@ -12,7 +12,7 @@ from gui import GUI
 from constants import TESTING
 
 
-intro1 = """V následující úloze budete srovnávat vlasnosti různých objektů s náhodnými hodnotami.
+intro1 = """V následující úloze budete srovnávat vlasnosti různých objektů s náhodnými hodnotami a činit odhady týkajících se těchto vlastností.
 
 Náhodné hodnoty jsou generovány po zmáčknutí tlačítka 'Znáhodnit' a jsou určeny hodnotami zobrazených na třech "kotoučích" s číslicemi (obrázek kotoučů lze vidět níže). Tyto hodnoty budou v rozsahu od 1 do 1000. S hodnotou 1000 budete srovnávat objekt, pokud bude na všech kotoučích zobrazeno '0'.
 """
@@ -39,8 +39,10 @@ items = [["subway", "vzdálenost tratě metra mezi stanicemi metra Muzeum a Hlav
          ]
 
 
-againText = "Představte si, že Váš první odhad je špatný. Myslíte si, že v tom případě je {} menší nebo větší než Váš původní odhad {}?"
-
+againText = "Představte si, že Váš první odhad je špatný. Myslíte si, že v tom případě je {} menší nebo větší než Váš původní odhad {} m?"
+bootstrappingText = "Nejprve předpokládejte, že je Váš první odhad zcela špatný. Za druhé, přemýšlejte o několika důvodech, proč by to tak mohlo být. Které předpoklady a úvahy mohly být špatné? Za třetí, co tyto nové úvahy naznačují? Na základě této nové perspektivy utvořte odlišnou odpověď."
+absoluteQuestion2 = "Nyní bychom Vás rádi požádali, abyste uvedli novou, odlišnou odpověď.\nPokud byste měli uvést jiný odhad, jaká je podle Vás {} v metrech?"
+warningText = "Odpověď musí být kladné číslo!"
 
 
 class Anchoring(ExperimentFrame):
@@ -65,6 +67,7 @@ class Anchoring(ExperimentFrame):
         # comparison question
         self.comparisonFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.comparisonFrame.grid(row = 1, column = 1)
+        self.comparisonFrame.rowconfigure(5, weight = 1)
 
         self.random = ttk.Button(self.comparisonFrame, text = "Znáhodnit", command = self.randomize)
         self.random.grid(row = 1, column = 1, columnspan = 2, pady = 10)
@@ -94,7 +97,7 @@ class Anchoring(ExperimentFrame):
         self.lower = ttk.Button(self.comparisonFrame, text = "Menší", command = self.lowerResponse)
         self.higher = ttk.Button(self.comparisonFrame, text = "Větší", command = self.higherResponse)
 
-        self.blank = Canvas(self.comparisonFrame, height = 310, width = 1, background = "yellow",
+        self.blank = Canvas(self.comparisonFrame, height = 340, width = 1, background = "white",
                            highlightbackground = "white")
         self.blank.grid(row = 0, column = 0, rowspan = 6)
 
@@ -109,58 +112,44 @@ class Anchoring(ExperimentFrame):
         self.absoluteText.tag_configure("center", justify = "center")
 
         self.absoluteEntry1 = ttk.Entry(self.absoluteFrame, textvariable = self.firstAnswerVar, font = "helvetica 16", width = 8)
-        # self.absoluteEntry1.grid(row = 2, column = 1, sticky = E, pady = 10)
 
         self.meters = ttk.Label(self.absoluteFrame, text = "m", font = "helvetica 16", background = "white", foreground = "white")
         self.meters.grid(row = 2, column = 2, sticky = W, pady = 10, padx = 5)
 
-        self.warning = ttk.Label(self.absoluteFrame, text = "Odpověď musí být kladné číslo!\n(pro desetinná místa použijte tečku)", font = "helvetica 16",
+        self.warning = ttk.Label(self.absoluteFrame, text = warningText, font = "helvetica 16",
                                  background = "white", foreground = "white", justify = "center", state = "disabled")
-        self.warning.grid(row = 4, column = 1, columnspan = 2)
+        self.warning.grid(row = 4, column = 1, columnspan = 2, padx = 5)
   
         self.next = ttk.Button(self.absoluteFrame, text = "Pokračovat", command = self.absoluteAnswered)
-        # self.next.grid(row = 3, column = 1, columnspan = 2, pady = 50)
 
-        self.blank2 = Canvas(self.absoluteFrame, height = 220, width = 1, background = "pink",
+        self.blank2 = Canvas(self.absoluteFrame, height = 220, width = 1, background = "white",
                            highlightbackground = "white")
         self.blank2.grid(row = 0, column = 0, rowspan = 5)   
-
 
         # intervention
         self.interventionFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.interventionFrame.grid(row = 3, column = 1)
 
         self.interventionText = Text(self.interventionFrame, font = "helvetica 16", relief = "flat", background = "white",
-                          width = 80, height = 2, pady = 7, wrap = "word")
+                          width = 80, height = 3, wrap = "word", pady = 7)
         self.interventionText.grid(row = 0, column = 1, columnspan = 2, sticky = S)
         self.interventionText.tag_configure("center", justify = "center")
         self.interventionText["state"] = "disabled"
 
-        # self.comparisonQuestion = "Je {} menší nebo větší než {} m?"
-        # self.comparisonText = Text(self.comparisonFrame, font = "helvetica 20", relief = "flat", background = "white",
-        #                  width = 85, height = 1, pady = 7, wrap = "word")
-        # self.comparisonText.grid(row = 3, column = 1, columnspan = 2, sticky = S)
-        # self.comparisonText.tag_configure("center", justify = "center")
         self.lower2 = ttk.Button(self.interventionFrame, text = "Menší", command = self.lowerResponse2)
         self.higher2 = ttk.Button(self.interventionFrame, text = "Větší", command = self.higherResponse2)
-        self.next2 = ttk.Button(self.interventionFrame, text = "Pokračovat", command = self.interventionResponse)
-        
-        # self.lower = ttk.Button(self.comparisonFrame, text = "Menší", command = self.lowerResponse)
-        # self.higher = ttk.Button(self.comparisonFrame, text = "Větší", command = self.higherResponse)
+        self.interventionNext = ttk.Button(self.interventionFrame, text = "Pokračovat", command = self.bootstrappingResponse)
 
-        self.blank3 = Canvas(self.interventionFrame, height = 120, width = 1, background = "blue",
+        self.blank3 = Canvas(self.interventionFrame, height = 150, width = 1, background = "white",
                            highlightbackground = "white")
         self.blank3.grid(row = 0, column = 0, rowspan = 6)        
-
-
 
         # second absolute question
         self.absoluteFrame2 = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.absoluteFrame2.grid(row = 4, column = 1)
-
-        self.absoluteQuestion2 = "Představte si, že Váš původní odhad je špatný. Jaká je {} v metrech?"
+      
         self.absoluteText2 = Text(self.absoluteFrame2, font = "helvetica 16", relief = "flat", background = "white", foreground = "white",
-                         width = 80, height = 1, pady = 7, wrap = "word")
+                         width = 80, height = 2, pady = 7, wrap = "word")
         self.absoluteText2.grid(row = 1, column = 1, columnspan = 2, sticky = S)
         self.absoluteText2.tag_configure("center", justify = "center")
 
@@ -169,13 +158,13 @@ class Anchoring(ExperimentFrame):
         self.meters2 = ttk.Label(self.absoluteFrame2, text = "m", font = "helvetica 16", background = "white", foreground = "white")
         self.meters2.grid(row = 2, column = 2, sticky = W, pady = 10, padx = 5)
 
-        self.warning2 = ttk.Label(self.absoluteFrame2, text = "Odpověď musí být kladné číslo!\n(pro desetinná místa použijte tečku)", font = "helvetica 16",
+        self.warning2 = ttk.Label(self.absoluteFrame2, text = warningText, font = "helvetica 16",
                                  background = "white", foreground = "white", justify = "center", state = "disabled")
-        self.warning2.grid(row = 3, column = 1, columnspan = 2)
+        self.warning2.grid(row = 3, column = 1, columnspan = 2, pady = 5)
   
         self.next2 = ttk.Button(self.absoluteFrame2, text = "Pokračovat", command = self.absoluteAnswered2)
 
-        self.blank4 = Canvas(self.absoluteFrame2, height = 250, width = 1, background = "red",
+        self.blank4 = Canvas(self.absoluteFrame2, height = 250, width = 1, background = "white",
                            highlightbackground = "white")
         self.blank4.grid(row = 0, column = 0, rowspan = 5)   
 
@@ -183,8 +172,12 @@ class Anchoring(ExperimentFrame):
         self.columnconfigure(0, weight = 1)
         self.columnconfigure(2, weight = 1)
         
-        self.rowconfigure(0, weight = 1)
-        self.rowconfigure(5, weight = 1)
+        self.rowconfigure(0, weight = 5)
+        self.rowconfigure(1, weight = 1)
+        self.rowconfigure(2, weight = 1)
+        self.rowconfigure(3, weight = 1)
+        self.rowconfigure(4, weight = 1)        
+        self.rowconfigure(5, weight = 5)
         
 
         self.number = 0
@@ -266,15 +259,16 @@ class Anchoring(ExperimentFrame):
         self.displayComparisonQuestion()
         
 
-    def displayComparisonQuestion(self):
+    def displayComparisonQuestion(self):        
         self.comparisonText["state"] = "normal"
         self.comparisonText.insert("end", self.comparisonQuestion.format(self.items[self.number][1], self.anchor), "center")
         self.comparisonText["state"] = "disabled"
 
-        self.lower.grid(row = 5, column = 1, sticky = E, padx = 20, pady = 10)
-        self.higher.grid(row = 5, column = 2, sticky = W, padx = 20, pady = 10)
+        self.lower.grid(row = 5, column = 1, sticky = E, padx = 20)
+        self.higher.grid(row = 5, column = 2, sticky = W, padx = 20)
         self.lower["state"] = "!disabled"
         self.higher["state"] = "!disabled"
+        self.t0 = perf_counter()
 
 
     def lowerResponse(self):
@@ -287,30 +281,27 @@ class Anchoring(ExperimentFrame):
         self.lower["state"] = "disabled"
         self.higher["state"] = "disabled"
         self.higher["style"] = "Selected.TButton"
-        self.response("higher")        
+        self.response("higher")
 
     def response(self, answer):
+        self.t1 = perf_counter()
         self.comparisonJudgment = answer
         self.next["state"] = "!disabled"
 
         self.absoluteEntry1.grid(row = 2, column = 1, sticky = E, pady = 10)
-        self.next.grid(row = 3, column = 1, columnspan = 2, pady = 10)
+        self.next.grid(row = 3, column = 1, columnspan = 2)
         self.absoluteText["foreground"] = "black"
         self.meters["foreground"] = "black"
-        #self.file.write("\t".join([self.id, self.items[self.number][0], str(self.anchor), answer, str(perf_counter() - self.t0)]) + "\n")
-        # self.number += 1        
-        #self.proceed()
 
         self.absoluteText["state"] = "normal"
         self.absoluteText.insert("1.0", self.absoluteQuestion.format(self.items[self.number][1]), "center")
         self.absoluteText["state"] = "disabled"
-        # self.t0 = perf_counter()
 
 
     def absoluteAnswered(self):
         try:
-            float(self.firstAnswerVar.get())
-            if float(self.firstAnswerVar.get()) < 0:
+            answer = float(self.firstAnswerVar.get().replace(",", "."))
+            if answer < 0:
                 self.warning["foreground"] = "red"
                 return
         except:
@@ -319,14 +310,32 @@ class Anchoring(ExperimentFrame):
         else:
             self.warning["foreground"] = "white"     
 
-        self.interventionText["state"] = "normal"
-        self.interventionText.insert("1.0", againText.format(self.items[self.number][1], self.firstAnswerVar.get()), "center")
-        self.interventionText["state"] = "disabled"
-        self.lower2.grid(row = 5, column = 1, sticky = E, padx = 20)
-        self.higher2.grid(row = 5, column = 2, sticky = W, padx = 20)
-        self.lower2["state"] = "!disabled"
-        self.higher2["state"] = "!disabled"
+        self.t2 = perf_counter()
         self.next["state"] = "disabled"
+
+        if self.conditions[self.number] == "control":
+            self.interventionResponse()
+        elif self.conditions[self.number] == "bootstrapping":
+            self.interventionText["state"] = "normal"
+            self.interventionText.insert("1.0", bootstrappingText, "center")
+            self.interventionText["state"] = "disabled"
+            self.interventionNext.grid(row = 5, column = 1, columnspan = 2, sticky = N)
+            self.interventionNext["state"] = "disabled"
+            if TESTING:
+                self.enableInterventionNext()
+            else:
+                self.root.after(8000, self.enableInterventionNext)
+        elif self.conditions[self.number] == "comparison":            
+            self.interventionText["state"] = "normal"
+            self.interventionText.insert("1.0", againText.format(self.items[self.number][1], self.firstAnswerVar.get()), "center")
+            self.interventionText["state"] = "disabled"
+            self.lower2.grid(row = 5, column = 1, sticky = E, padx = 20)
+            self.higher2.grid(row = 5, column = 2, sticky = W, padx = 20)
+            self.lower2["state"] = "!disabled"
+            self.higher2["state"] = "!disabled"
+
+    def enableInterventionNext(self):
+        self.interventionNext["state"] = "!disabled"
 
     def lowerResponse2(self):
         self.lower2["state"] = "disabled"
@@ -338,29 +347,45 @@ class Anchoring(ExperimentFrame):
         self.lower2["state"] = "disabled"
         self.higher2["state"] = "disabled"
         self.higher2["style"] = "Selected.TButton"
-        self.interventionResponse("higher")       
+        self.interventionResponse("higher")
 
-    def interventionResponse(self, answer = None):
+    def bootstrappingResponse(self):
+        self.interventionNext["state"] = "disabled"                
+        self.interventionResponse()       
+
+    def interventionResponse(self, answer = "NA"):
+        self.interventionAnswer = answer
+        self.t3 = perf_counter()
         self.absoluteEntry2.grid(row = 2, column = 1, sticky = E, pady = 10)
-        self.next2.grid(row = 4, column = 1, columnspan = 2, pady = 10)
+        self.next2.grid(row = 4, column = 1, columnspan = 2, pady = 10, sticky = N)
         self.absoluteText2["foreground"] = "black"
         self.meters2["foreground"] = "black"
         self.absoluteText2["state"] = "normal"
-        self.absoluteText2.insert("1.0", self.absoluteQuestion2.format(self.items[self.number][1]), "center")
+        self.absoluteText2.insert("1.0", absoluteQuestion2.format(self.items[self.number][1]), "center")
         self.absoluteText2["state"] = "disabled"
 
 
     def absoluteAnswered2(self):
         try:
-            float(self.secondAnswerVar.get())
-            if float(self.secondAnswerVar.get()) < 0:
+            answer = float(self.secondAnswerVar.get().replace(",", "."))
+            if answer < 0:
+                self.warning2["text"] = warningText
+                self.warning2["foreground"] = "red"
+                return
+            elif abs(answer - float(self.firstAnswerVar.get().replace(",", "."))) < 0.1:
+                self.warning2["text"] = "Váš druhý odhad musí být odlišný od prvního."
                 self.warning2["foreground"] = "red"
                 return
         except:
-            self.warning2["foreground"] = "red"            
+            self.warning2["text"] = warningText
+            self.warning2["foreground"] = "red"
             return
         else:
             self.warning2["foreground"] = "white"  
+
+        self.t4 = perf_counter()
+
+        self.file.write("\t".join([self.id, str(self.number + 1), self.items[self.number][0], str(self.anchor), self.comparisonJudgment, str(self.t1 - self.t0), self.firstAnswerVar.get().replace(",", "."), str(self.t2 - self.t1), self.conditions[self.number], self.interventionAnswer, str(self.t3 - self.t2), self.secondAnswerVar.get().replace(",", "."), str(self.t4 - self.t3)]) + "\n")
 
         self.number += 1
         self.proceed()
@@ -386,6 +411,7 @@ class Anchoring(ExperimentFrame):
             self.higher.grid_forget()
             self.lower2.grid_forget()
             self.higher2.grid_forget()
+            self.interventionNext.grid_forget()
             self.lower["state"] = "disabled"
             self.higher["state"] = "disabled"
             self.lower["style"] = "TButton"
@@ -467,12 +493,12 @@ class SlotInstructions(InstructionsFrame):
 
     
 
-AnchoringInstructions = (SlotInstructions, {"text": intro1, "height": 7, "font": 20})
+AnchoringInstructions = (SlotInstructions, {"text": intro1, "height": 7, "font": 16})
 
       
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([Anchoring,
-         AnchoringInstructions])
+    GUI([AnchoringInstructions, 
+         Anchoring])
 

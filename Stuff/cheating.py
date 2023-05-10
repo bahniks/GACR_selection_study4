@@ -672,7 +672,7 @@ class Auction(PaymentFrame):
 
 class BDM(PaymentFrame):
     def __init__(self, root):
-        text = intro_BDM if root.status["block"] == 3 else intro_BDM2
+        text = intro_BDM if (not "block" in root.status) or root.status["block"] == 3 else intro_BDM2
         super().__init__(root, text = text, name = "BDM", height = 30)
 
     def write(self):        
@@ -851,7 +851,8 @@ AuctionWait = (Wait, {"what": "outcome"})
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([Login,
+    GUI([BDM, #
+        Login,
          Instructions1,
          Cheating,
          Instructions2,
