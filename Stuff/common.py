@@ -239,8 +239,7 @@ class Measure(Canvas):
 
         if text:        
             if questionPosition == "next":
-                self.question = ttk.Label(self, text = text, background = "white", anchor = "e",
-                                          width = len(text) + 15, font = "helvetica 14")
+                self.question = ttk.Label(self, text = text, background = "white", anchor = "e", font = "helvetica 14")
                 self.question.grid(column = 0, row = 2, sticky = E, padx = 5)
             elif questionPosition == "above":
                 self.question = ttk.Label(self, text = text, background = "white", anchor = "center",

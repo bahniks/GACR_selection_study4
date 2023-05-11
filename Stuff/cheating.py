@@ -851,7 +851,7 @@ AuctionWait = (Wait, {"what": "outcome"})
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([BDM, #
+    GUI([#BDM, #
         Login,
          Instructions1,
          Cheating,
