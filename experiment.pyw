@@ -13,8 +13,7 @@ from intros import Intro, Ending
 from demo import Demographics
 from cheating import Instructions1, Cheating, Instructions2, BDM, BDMResult, Auction, Wait
 from cheating import AuctionResult, EndCheating, Login, AuctionWait
-from debriefcheating import DebriefCheating
-from debriefing import Debriefing
+#from debriefcheating import DebriefCheating
 from lottery import Lottery, LotteryWin
 from charity import Charity
 from questionnaire import Prosociality
