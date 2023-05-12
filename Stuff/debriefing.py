@@ -57,6 +57,25 @@ debriefdimensions = ["svůj očekávaný peněžní výdělek",
                      "snaha překonat ostatní"]
 
 
+q5 = "Jak moc souhlasíte nebo nesouhlasíte s následujícími tvrzeními:"
+dimensions2 = ["Dražba verze PŘED byla nespravedlivá.",
+               "Dražba verze PŘED byla riskantní.",
+               "Nerozuměl jsem účelu dražeb.",
+               "Dražba verze PŘED mi připadala komplikovaná.",
+               "Stanovení maximální ceny za verzi PŘED bylo nespravedlivé.",
+               "Stanovení maximální ceny za verzi PŘED bylo riskantní.",
+               "Nerozuměl jsem účelu stanovení maximální ceny za verzi PŘED.",
+               "Stanovení maximální ceny za verzi PŘED mi připadalo komplikované."]
+ds1 = "rozhodně\nnesouhlasím"
+ds2 = "nesouhlasím"
+ds3 = "spíše\nnesouhlasím"
+ds4 = "spíše\nsouhlasím"
+ds5 = "souhlasím"
+ds6 = "rozhodně\nsouhlasím"
+
+
+
+
 
        
 class DebriefCheating1(ExperimentFrame):
@@ -143,10 +162,14 @@ class Question(Canvas):
 class DebriefCheating2(ExperimentFrame):
     def __init__(self, root):
         super().__init__(root)
-        self.frame1 = OneFrame(self, q3)
+
+        items = debriefdimensions
+        scale = [debriefscale1, debriefscale2, debriefscale3, debriefscale4, debriefscale5]
+
+        self.frame1 = OneFrame(self, q3, items, scale)
         self.frame1.grid(row = 1, column = 1)
 
-        self.frame2 = OneFrame(self, q4)
+        self.frame2 = OneFrame(self, q4, items, scale)
         self.frame2.grid(row = 2, column = 1)            
 
         ttk.Style().configure("TButton", font = "helvetica 16")
@@ -175,26 +198,53 @@ class DebriefCheating2(ExperimentFrame):
             self.file.write("\n")
 
 
+class DebriefCheating3(ExperimentFrame):
+    def __init__(self, root):
+        super().__init__(root)       
+        self.frame = OneFrame(self, q5, dimensions2, [ds1, ds2, ds3, ds4, ds5, ds6], wrap = 300)
+        self.frame.grid(row = 1, column = 1)            
+
+        ttk.Style().configure("TButton", font = "helvetica 16")
+        self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun, state = "disabled")
+        self.next.grid(row = 2, column = 1)
+
+        self.rowconfigure(0, weight = 2)
+        self.rowconfigure(1, weight = 1)        
+        self.rowconfigure(2, weight = 2)
+        self.columnconfigure(0, weight = 1)
+        self.columnconfigure(2, weight = 1)
+
+    def check(self):
+        if self.frame.check():
+            self.next["state"] = "!disabled"
+            return True
+
+    def write(self):
+        if self.check():
+            self.file.write("Debriefing3\n" + self.id + "\t")
+            self.frame.write()
+            self.file.write("\n")
+
+
 
 class OneFrame(Canvas):
-    def __init__(self, root, question):
+    def __init__(self, root, question, items, scale, wrap = 480):
         super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
 
         self.root = root
         self.file = self.root.file
 
-        self.answers = [debriefscale1, debriefscale2, debriefscale3, debriefscale4, debriefscale5]
+        self.answers = scale
         
         self.lab1 = ttk.Label(self, text = question, font = "helvetica 16", background = "white")
         self.lab1.grid(row = 2, column = 1, pady = 10, columnspan = 2)
         self.measures = []
-        for count, word in enumerate(debriefdimensions):
+        for count, word in enumerate(items):
             self.measures.append(Measure(self, word, self.answers, "", "", function = self.root.check,
                                          labelPosition = "none"))
             self.measures[count].grid(row = count + 3, column = 1, columnspan = 2, sticky = E)
-            self.measures[count].question["wraplength"] = 480
+            self.measures[count].question["wraplength"] = wrap
             self.measures[count].question["justify"] = "right"
-
 
     def check(self):
         for measure in self.measures:
@@ -210,7 +260,10 @@ class OneFrame(Canvas):
                 self.file.write("\t")
 
 
-class Debriefing(ExperimentFrame):
+
+
+class DebriefCheating4(ExperimentFrame):
+    # smazat
     def __init__(self, root):
         super().__init__(root)
 
@@ -287,6 +340,88 @@ class Debriefing(ExperimentFrame):
         self.question5.write()
         self.file.write("\n")
 
+
+
+
+
+# class Debriefing(ExperimentFrame):
+#     # smazat
+#     def __init__(self, root):
+#         super().__init__(root)
+
+#         self.file.write("Debriefing\n")
+
+#         self.text = Text(self, font = "helvetica 15", relief = "flat",
+#                          background = "white", width = 80, height = 3, wrap = "word",
+#                          highlightbackground = "white")
+#         self.text.grid(row = 0, column = 1, sticky = S)
+#         self.text.insert("1.0", intro)
+#         self.text["state"] = "disabled"
+
+#         self.question1 = Question(self, q1, alines = 2, qlines = 3)
+#         self.question2 = Question(self, q2, alines = 2)
+#         self.question3 = Question(self, q3, alines = 2)
+#         self.question3b = Measure(self, q3b, values = q3bvalues, questionPosition = "above",
+#                                  left = "", right = "", labelPosition = "next")
+#         self.question3b.question["font"] = "helvetica 15"
+#         self.question4 = Question(self, q4, alines = 2)
+#         self.question5 = Measure(self, q5, values = q5values, questionPosition = "above",
+#                                  left = "", right = "", labelPosition = "next", filler = 550)
+#         self.question5.question.grid(column = 0, row = 0, columnspan = 2, pady = 6)
+#         self.question5.question["font"] = "helvetica 15"
+
+#         self.question1.grid(row = 1, column = 1)
+#         self.question2.grid(row = 2, column = 1)
+#         self.question3.grid(row = 3, column = 1)
+#         self.question3b.grid(row = 4, column = 1)
+#         self.question4.grid(row = 5, column = 1)
+#         self.question5.grid(row = 6, column = 1)
+        
+#         ttk.Style().configure("TButton", font = "helvetica 15")
+#         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun)
+#         self.next.grid(row = 7, column = 1)
+
+#         self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
+#                                  background = "white", font = "helvetica 15", foreground = "white")
+#         self.warning.grid(row = 8, column = 1)
+
+#         self.columnconfigure(0, weight = 1)
+#         self.columnconfigure(2, weight = 1)
+#         self.rowconfigure(0, weight = 2)
+#         self.rowconfigure(1, weight = 1)
+#         self.rowconfigure(2, weight = 1)
+#         self.rowconfigure(3, weight = 1)
+#         self.rowconfigure(4, weight = 1)
+#         self.rowconfigure(5, weight = 1)
+#         self.rowconfigure(6, weight = 1)
+#         self.rowconfigure(7, weight = 1)
+#         self.rowconfigure(8, weight = 1)
+#         self.rowconfigure(9, weight = 2)
+
+        
+#     def check(self):
+#         return self.question1.check() and self.question2.check() and \
+#                self.question3.check() and self.question4.check() and \
+#                self.question3b.answer.get() and self.question5.answer.get()
+
+#     def back(self):
+#         self.warning.config(foreground = "red")
+
+#     def write(self):
+#         self.file.write(self.id + "\t")
+#         self.question1.write(newline = False)
+#         self.file.write("\t")
+#         self.question2.write(newline = False)
+#         self.file.write("\t")
+#         self.question3.write(newline = False)
+#         self.file.write("\t")
+#         self.question3b.write()
+#         self.file.write("\t")
+#         self.question4.write(newline = False)
+#         self.file.write("\t")
+#         self.question5.write()
+#         self.file.write("\n")
+
        
 
 
@@ -295,7 +430,7 @@ class Debriefing(ExperimentFrame):
 
 def main():
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([DebriefCheating2])
+    GUI([DebriefCheating4])
 
 
 if __name__ == "__main__":
