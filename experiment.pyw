@@ -57,8 +57,8 @@ frames = [Login,
           Hexaco,
           Prosociality,
           Demographics,
-          DebriefCheating, # ?
-          Debriefing, # ?
+          #DebriefCheating, # ?
+          #Debriefing, # ?
           Ending
          ]
 
