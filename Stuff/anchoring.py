@@ -36,6 +36,11 @@ items = [["subway", "vzdálenost tratě metra mezi stanicemi metra Muzeum a Hlav
          ["pyramid", "výška nejvyšší (Chufuovy) pyramidy v Gíze"],
          ["petrin", "délka lanové dráhy na Petřín"],
          ["strahov", "délka Velkého strahovského stadionu"]
+         ["orlik", "délka betonové hráze vodní nádrže Orlík"],
+         ["strelecky", "délka Střeleckého ostrova v Praze"],
+         ["baikal", "průměrná hloubka jezera Bajkal"],
+         ["skybridge", "délka nejdelšího pěšího visutého mostu v ČR Sky Bridge u obce Dolní Morava"],
+         ["tocna", "délka vzletové a přistávací dráhy na letišti Točná"]
          ]
 
 
