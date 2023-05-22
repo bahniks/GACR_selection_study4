@@ -839,7 +839,6 @@ class Login(InstructionsFrame):
 
 
 
-Instructions1 = CheatingInstructions
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1", "charity1"]})
 BDMResult = (InstructionsFrame, {"text": bdm_result, "height": 3, "update": ["bdmFee", "bdmResponse", "bdmVersion", "bdmPaymentText"]})
 AuctionResult = (InstructionsFrame, {"text": auction_result, "height": 3, "update": ["auctionResponse", "auctionText"]})
@@ -851,9 +850,9 @@ AuctionWait = (Wait, {"what": "outcome"})
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([#BDM, #
+    GUI([BDM, #
         Login,
-         Instructions1,
+         CheatingInstructions,
          Cheating,
          Instructions2,
          Cheating,

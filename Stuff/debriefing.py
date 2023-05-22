@@ -17,18 +17,7 @@ from gui import GUI
 ##################################################################################################################
 # TEXTS #
 #########
-
-intro = "V této a následující části máme zájem zjistit vaše názory na tento experiment. Prosím, napište svůj názor v několika bodech či větách."
-q1 = "Máte nějaké připomínky k průběhu experimentu? (Například: nejasné pokyny, nepřehledné uživatelské rozhraní, problematické chování experimentátorů nebo jiných účastníků, cokoliv, co byste udělali jinak apod.)"
-q2 = "Jaký byl podle vašeho názoru výzkumný záměr v úkolu, ve kterém jste museli předpovídat, zda na kostce padne liché, nebo sudé číslo?"
-q3 = "Myslíte si, že jste správně odhadli, jaký je výzkumný záměr experimentátorů v  úkolu s hádáním strany u kostky?"
-q3b = "Snažili jste se vyjít vstříc výzkumnému záměru experimentátorů v úkolu s hádáním hodu u kostky nebo jste se naopak chovali opačně?"
-q3bvalues = ["nezvažoval(a) jsem záměr experimentátorů", "chtěl(a) jsem vyjít vstříc experimentátorům", "nechtěl(a) jsem vyjít vstříc experimentátorům"]
-q4 = 'Myslíte si, že by bylo nemorální ve verzi "PO" uvádět větší počet správně uhodnutých hodů, abyste vydělali více peněz? Uveďte prosím také důvod své odpovědi.'
-q5 = "Myslíte si, že byly všechny informace, jež jste během experimentu dostali, pravdivé?"
-q5values = ["ano", "nejsem si jist/a", "ne"]
-
-
+debriefingIntro = "V následující části se Vás zeptáme na Váš pohled na předchozí úlohu a na Vaše rozhodování v ní."
 
 
 q1 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při stanovení maximální ceny, co jste byli ochotni zaplatit za verzi PŘED úlohy:"
@@ -74,7 +63,20 @@ ds5 = "souhlasím"
 ds6 = "rozhodně\nsouhlasím"
 
 
+q6 = "Jak moc se podle Vás účastníci z Vaší skupiny zajímali o to,\nkolik charitativní organizace v experimentu ztratily?"
+q7 = "Jak moc Vám záleželo na tom, kolik charitativní organizace v experimentu ztratily?"
+dsb1 = "Vůbec ne"
+dsb2 = "Jen trochu"
+dsb3 = "Do určité míry"
+dsb4 = "Spíše hodně"
+dsb5 = "Velmi"
 
+q8 = "Napadlo Vás, že je možné ve verzi PŘED podvádět; tedy stanovit,\nže jste uhodli hod kostky, i když jste jej neuhodli."
+q9 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PŘED, abyste zabránili\nostatním účastníkům brát peníze od charitativních organizací?"
+q10 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PŘED, abyste mohli nahlásit,\nže jste neuhodli hod kostky, když byste jinak mohli způsobit ztrátu charitě?"
+yes = "Ano, napadlo mě to"
+no = "Ne, nenapadlo mě to"
+##################################################################################################################
 
 
        
@@ -267,41 +269,31 @@ class DebriefCheating4(ExperimentFrame):
     def __init__(self, root):
         super().__init__(root)
 
-        self.file.write("Debriefing\n")
+        self.question1 = Measure(self, q6, values = [dsb1, dsb2, dsb3, dsb4, dsb5], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)        
+        self.question2 = Measure(self, q7, values = [dsb1, dsb2, dsb3, dsb4, dsb5], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)
+        self.question3 = Measure(self, q8, values = [yes, no], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 650)
+        self.question4 = Measure(self, q9, values = [yes, no], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 650)
+        self.question5 = Measure(self, q10, values = [yes, no], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 650)        
 
-        self.text = Text(self, font = "helvetica 15", relief = "flat",
-                         background = "white", width = 80, height = 3, wrap = "word",
-                         highlightbackground = "white")
-        self.text.grid(row = 0, column = 1, sticky = S)
-        self.text.insert("1.0", intro)
-        self.text["state"] = "disabled"
-
-        self.question1 = Question(self, q1, alines = 2, qlines = 3)
-        self.question2 = Question(self, q2, alines = 2)
-        self.question3 = Question(self, q3, alines = 2)
-        self.question3b = Measure(self, q3b, values = q3bvalues, questionPosition = "above",
-                                 left = "", right = "", labelPosition = "next")
-        self.question3b.question["font"] = "helvetica 15"
-        self.question4 = Question(self, q4, alines = 2)
-        self.question5 = Measure(self, q5, values = q5values, questionPosition = "above",
-                                 left = "", right = "", labelPosition = "next", filler = 550)
-        self.question5.question.grid(column = 0, row = 0, columnspan = 2, pady = 6)
-        self.question5.question["font"] = "helvetica 15"
+        self.question1.question["font"] = "helvetica 16"
+        self.question2.question["font"] = "helvetica 16"
+        self.question3.question["font"] = "helvetica 16"
+        self.question4.question["font"] = "helvetica 16"
+        self.question5.question["font"] = "helvetica 16"
 
         self.question1.grid(row = 1, column = 1)
         self.question2.grid(row = 2, column = 1)
-        self.question3.grid(row = 3, column = 1)
-        self.question3b.grid(row = 4, column = 1)
-        self.question4.grid(row = 5, column = 1)
-        self.question5.grid(row = 6, column = 1)
+        self.question3.grid(row = 3, column = 1)        
+        self.question4.grid(row = 4, column = 1)
+        self.question5.grid(row = 5, column = 1)
         
         ttk.Style().configure("TButton", font = "helvetica 15")
         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun)
-        self.next.grid(row = 7, column = 1)
+        self.next.grid(row = 6, column = 1)
 
         self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
-                                 background = "white", font = "helvetica 15", foreground = "white")
-        self.warning.grid(row = 8, column = 1)
+                                 background = "white", font = "helvetica 16", foreground = "white")
+        self.warning.grid(row = 7, column = 1)
 
         self.columnconfigure(0, weight = 1)
         self.columnconfigure(2, weight = 1)
@@ -313,124 +305,33 @@ class DebriefCheating4(ExperimentFrame):
         self.rowconfigure(5, weight = 1)
         self.rowconfigure(6, weight = 1)
         self.rowconfigure(7, weight = 1)
-        self.rowconfigure(8, weight = 1)
-        self.rowconfigure(9, weight = 2)
+        self.rowconfigure(8, weight = 2)
 
         
     def check(self):
-        return self.question1.check() and self.question2.check() and \
-               self.question3.check() and self.question4.check() and \
-               self.question3b.answer.get() and self.question5.answer.get()
+        return self.question1.answer.get() and self.question2.answer.get() and \
+               self.question3.answer.get() and self.question4.answer.get() and \
+               self.question5.answer.get()
 
     def back(self):
         self.warning.config(foreground = "red")
 
     def write(self):
-        self.file.write(self.id + "\t")
-        self.question1.write(newline = False)
-        self.file.write("\t")
-        self.question2.write(newline = False)
-        self.file.write("\t")
-        self.question3.write(newline = False)
-        self.file.write("\t")
-        self.question3b.write()
-        self.file.write("\t")
-        self.question4.write(newline = False)
-        self.file.write("\t")
-        self.question5.write()
+        self.file.write("Debriefing4\n")
+        self.file.write(self.id + "\t".join([self.question1.answer.get(), self.question2.answer.get(), self.question3.answer.get(), self.question4.answer.get(), self.question5.answer.get()]))
         self.file.write("\n")
 
 
+DebriefingInstructions = (InstructionsFrame, {"text": debriefingIntro, "height": 3})
 
-
-
-# class Debriefing(ExperimentFrame):
-#     # smazat
-#     def __init__(self, root):
-#         super().__init__(root)
-
-#         self.file.write("Debriefing\n")
-
-#         self.text = Text(self, font = "helvetica 15", relief = "flat",
-#                          background = "white", width = 80, height = 3, wrap = "word",
-#                          highlightbackground = "white")
-#         self.text.grid(row = 0, column = 1, sticky = S)
-#         self.text.insert("1.0", intro)
-#         self.text["state"] = "disabled"
-
-#         self.question1 = Question(self, q1, alines = 2, qlines = 3)
-#         self.question2 = Question(self, q2, alines = 2)
-#         self.question3 = Question(self, q3, alines = 2)
-#         self.question3b = Measure(self, q3b, values = q3bvalues, questionPosition = "above",
-#                                  left = "", right = "", labelPosition = "next")
-#         self.question3b.question["font"] = "helvetica 15"
-#         self.question4 = Question(self, q4, alines = 2)
-#         self.question5 = Measure(self, q5, values = q5values, questionPosition = "above",
-#                                  left = "", right = "", labelPosition = "next", filler = 550)
-#         self.question5.question.grid(column = 0, row = 0, columnspan = 2, pady = 6)
-#         self.question5.question["font"] = "helvetica 15"
-
-#         self.question1.grid(row = 1, column = 1)
-#         self.question2.grid(row = 2, column = 1)
-#         self.question3.grid(row = 3, column = 1)
-#         self.question3b.grid(row = 4, column = 1)
-#         self.question4.grid(row = 5, column = 1)
-#         self.question5.grid(row = 6, column = 1)
-        
-#         ttk.Style().configure("TButton", font = "helvetica 15")
-#         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun)
-#         self.next.grid(row = 7, column = 1)
-
-#         self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
-#                                  background = "white", font = "helvetica 15", foreground = "white")
-#         self.warning.grid(row = 8, column = 1)
-
-#         self.columnconfigure(0, weight = 1)
-#         self.columnconfigure(2, weight = 1)
-#         self.rowconfigure(0, weight = 2)
-#         self.rowconfigure(1, weight = 1)
-#         self.rowconfigure(2, weight = 1)
-#         self.rowconfigure(3, weight = 1)
-#         self.rowconfigure(4, weight = 1)
-#         self.rowconfigure(5, weight = 1)
-#         self.rowconfigure(6, weight = 1)
-#         self.rowconfigure(7, weight = 1)
-#         self.rowconfigure(8, weight = 1)
-#         self.rowconfigure(9, weight = 2)
-
-        
-#     def check(self):
-#         return self.question1.check() and self.question2.check() and \
-#                self.question3.check() and self.question4.check() and \
-#                self.question3b.answer.get() and self.question5.answer.get()
-
-#     def back(self):
-#         self.warning.config(foreground = "red")
-
-#     def write(self):
-#         self.file.write(self.id + "\t")
-#         self.question1.write(newline = False)
-#         self.file.write("\t")
-#         self.question2.write(newline = False)
-#         self.file.write("\t")
-#         self.question3.write(newline = False)
-#         self.file.write("\t")
-#         self.question3b.write()
-#         self.file.write("\t")
-#         self.question4.write(newline = False)
-#         self.file.write("\t")
-#         self.question5.write()
-#         self.file.write("\n")
-
-       
-
-
-
-            
 
 def main():
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([DebriefCheating4])
+    GUI([DebriefingInstructions,
+         DebriefCheating1, 
+         DebriefCheating2, 
+         DebriefCheating3, 
+         DebriefCheating4])
 
 
 if __name__ == "__main__":

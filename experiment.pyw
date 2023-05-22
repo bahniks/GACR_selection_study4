@@ -11,9 +11,9 @@ from gui import GUI
 from quest import Hexaco, QuestInstructions
 from intros import Intro, Ending
 from demo import Demographics
-from cheating import Instructions1, Cheating, Instructions2, BDM, BDMResult, Auction, Wait
+from cheating import CheatingInstructions, Cheating, Instructions2, BDM, BDMResult, Auction, Wait
 from cheating import AuctionResult, EndCheating, Login, AuctionWait
-#from debriefcheating import DebriefCheating
+from debriefing import DebriefingInstructions, DebriefCheating1, DebriefCheating2, DebriefCheating3, DebriefCheating4
 from lottery import Lottery, LotteryWin
 from charity import Charity
 from questionnaire import Prosociality
@@ -23,7 +23,7 @@ from anchoring import AnchoringInstructions, Anchoring
 frames = [Login,
           Intro,          
           Charity,
-          Instructions1,
+          CheatingInstructions,
           Cheating,
           Instructions2,
           Cheating,
@@ -47,7 +47,12 @@ frames = [Login,
           BDM,
           BDMResult,
           Cheating,
-          EndCheating,
+          EndCheating,    
+          DebriefingInstructions,      
+          DebriefCheating1,
+          DebriefCheating2,
+          DebriefCheating3,
+          DebriefCheating4,
           Lottery,
           LotteryWin,
           AnchoringInstructions, 
@@ -56,8 +61,6 @@ frames = [Login,
           Hexaco,
           Prosociality,
           Demographics,
-          #DebriefCheating, # ?
-          #Debriefing, # ?
           Ending
          ]
 

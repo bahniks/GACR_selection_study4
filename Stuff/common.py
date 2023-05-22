@@ -244,7 +244,7 @@ class Measure(Canvas):
             elif questionPosition == "above":
                 self.question = ttk.Label(self, text = text, background = "white", anchor = "center",
                                           font = "helvetica 14")
-                self.question.grid(column = 0, row = 0, columnspan = 4)
+                self.question.grid(column = 0, row = 0, columnspan = 4, pady = 5)
 
         if labelPosition != "none":
             self.left = ttk.Label(self, text = "{:>15}".format(left), background = "white",
