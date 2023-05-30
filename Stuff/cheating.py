@@ -10,7 +10,7 @@ import os
 import urllib.request
 import urllib.parse
 
-from common import ExperimentFrame, InstructionsFrame, Measure
+from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice
 from gui import GUI
 from debriefcheating import DebriefCheating
 from constants import MAX_BDM_PRIZE, TESTING, URL, CONDITION_LOW, CONDITION_HIGH
@@ -102,6 +102,7 @@ Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplatit {} Kč. V nás
 bdm_after = "z vaší výhry bude poplatek odečten"
 bdm_before = "nezaplatíte žádný poplatek"
 
+decisionText = "Nyní se rozhodněte, kolik jste ochotni zaplatit za verzi PŘED úlohy."
 offerText = "Jsem ochoten/ochotna zaplatit:"
 
 intro_auction = f"""
@@ -165,6 +166,38 @@ Toto je konec úkolu s kostkou.
 """
 
 
+BDMcontrol1 = "Zda budete hrát v následujícím kole verzi PŘED úlohy závisí na kterých faktorech:"
+BDManswers1 = ["Náhodně vybrané částce a částce, kterou uvedete, že jste ochotni zaplatit",
+"Náhodně vybrané částce a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu",
+"Částce, kterou uvedete, že jste ochotni zaplatit, a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu"]
+BDMfeedback1 = ["Ano, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka.", 
+"Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka.", 
+"Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka."]
+
+BDMcontrol2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PŘED úlohy, tak platí, že:"
+BDManswers2 = ["Se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
+"Se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude náhodně vybraná částka nižší,\nnež nakolik si hraní verze PŘED ceníte, či stejná.",
+"Se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
+BDMfeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy. Nikdy nebudete platit více než náhodně vybranou částku.",
+"Ano, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy.",
+"Ne, pokud nabídnete vyšší částku, může se stát, že zaplatíte za hraní verze PŘED úlohy více, než nakolik si ji ceníte."]
+
+AuctionControl1 = "Zda budete hrát v následujícím kole verzi PŘED úlohy závisí na kterých faktorech:"
+AuctionAnswers1 = ["Náhodně vybrané částce a částce, kterou uvedete, že jste ochotni zaplatit",
+"Náhodně vybrané částce a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu",
+"Částce, kterou uvedete, že jste ochotni zaplatit, a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu"]
+AuctionFeedback1 = ["Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny.",
+"Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny.",
+"Ano, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny."]
+
+AuctionControl2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PŘED úlohy, tak platí, že:"
+AuctionAnswers2 = ["Se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
+"Se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude částka nabídnutá\nostatními členy Vaší skupiny nižší než X.",
+"Se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
+AuctionFeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy. Jinak je možné, že jiný člen Vaší skupiny zaplatí více než Vy, ale méně než X, a tudíž byste mohli hrát verzi PŘED za částku nižší než X, pokud byste ji nabídli.",
+"Ano, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy.",
+"Ne, pokud nabídnete vyšší částku, může se stát, že zaplatíte za hraní verze PŘED úlohy více, než nakolik si ji ceníte."]
+
 
 ################################################################################
 
@@ -202,13 +235,13 @@ class Cheating(ExperimentFrame):
 
         self.file.write("Cheating {}\n".format(self.blockNumber))
 
-        self.upperText = Text(self, height = 5, width = 80, relief = "flat", font = "helvetica 15",
+        self.upperText = Text(self, height = 5, width = 60, relief = "flat", font = "helvetica 15",
                               wrap = "word")
         self.upperButtonFrame = Canvas(self, highlightbackground = "white", highlightcolor = "white",
                                        background = "white", height = 100)
         self.die = Canvas(self, highlightbackground = "white", highlightcolor = "white",
                           background = "white", width = self.diesize, height = self.diesize)
-        self.bottomText = Text(self, height = 3, width = 80, relief = "flat", font = "helvetica 15",
+        self.bottomText = Text(self, height = 3, width = 60, relief = "flat", font = "helvetica 15",
                                wrap = "word")
         self.bottomButtonFrame = Canvas(self, highlightbackground = "white", highlightcolor = "white",
                                         background = "white", height = 100)
@@ -221,7 +254,7 @@ class Cheating(ExperimentFrame):
                                   background = "white", width = 200, height = 1)
         self.infoWinnings.grid(row = 1, column = 2, sticky = NW)
         self.fillerLeft.grid(column = 0, row = 0)
-        self.fillerRight.grid(column = 0, row = 0)
+        self.fillerRight.grid(column = 2, row = 0)
 
         self.upperText.grid(column = 1, row = 1)
         self.upperButtonFrame.grid(column = 1, row = 2)
@@ -467,7 +500,7 @@ class CheatingInstructions(InstructionsFrame):
         self.entry = ttk.Entry(self.checkFrame, textvariable = self.checkVar, width = 10, justify = "right",
                                font = "helvetica 15", validate = "key", validatecommand = self.vcmd)
         self.entry.grid(row = 2, column = 1, padx = 6)
-        self.currencyLabel = ttk.Label(self.checkFrame, text = "Kč", font = "helvetica 16",
+        self.currencyLabel = ttk.Label(self.checkFrame, text = "Kč", font = "helvetica 15",
                                        background = "white")
         self.currencyLabel.grid(row = 2, column = 2, sticky = NSEW)
 
@@ -527,25 +560,37 @@ class PaymentFrame(InstructionsFrame):
 
         self.name = name
 
+        # offer frame
         self.offerVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
         self.offerFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
-        self.offerFrame.grid(row = 2, column = 1)
-        self.offerTextLab = ttk.Label(self.offerFrame, text = offerText, font = "helvetica 16", background = "white")
+        self.filler1 = Canvas(self.offerFrame, background = "white", width = 1, height = 250,
+                                highlightbackground = "white", highlightcolor = "white")
+        self.filler1.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
+        if self.controlQuestions:
+            self.decisionTextLab = ttk.Label(self.offerFrame, text = decisionText, font = "helvetica 15", background = "white")
+            self.decisionTextLab.grid(row = 1, column = 0, columnspan = 3, pady = 10)        
+        self.offerTextLab = ttk.Label(self.offerFrame, text = offerText, font = "helvetica 15", background = "white")
         self.offerTextLab.grid(row = 2, column = 0, padx = 6, sticky = E)
         self.entry = ttk.Entry(self.offerFrame, textvariable = self.offerVar, width = 10, justify = "right",
                                font = "helvetica 15", validate = "key", validatecommand = self.vcmd)
         self.entry.grid(row = 2, column = 1, padx = 6)
-        self.currencyLabel = ttk.Label(self.offerFrame, text = "Kč", font = "helvetica 16",
-                                       background = "white")
+        self.currencyLabel = ttk.Label(self.offerFrame, text = "Kč", font = "helvetica 15", background = "white")
         self.currencyLabel.grid(row = 2, column = 2, sticky = NSEW)
+        
+        self.problem = ttk.Label(self.offerFrame, text = "", font = "helvetica 15", background = "white", foreground = "red")
+        self.problem.grid(row = 4, column = 0, columnspan = 3, pady = 10)
 
-        self.problem = ttk.Label(self, text = "", font = "helvetica 16", background = "white", foreground = "red")
-        self.problem.grid(row = 4, column = 1)
-               
+        # control question frame
+        self.controlFrame = Canvas(self, background = "white", highlightbackground = "white",
+                                 highlightcolor = "white")
+        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = 250,
+                                highlightbackground = "white", highlightcolor = "white")
+        self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
+                     
         self.next.grid(row = 5, column = 1)
-        self.next["state"] = "disabled"        
+   
 
         self.rowconfigure(0, weight = 2)
         self.rowconfigure(2, weight = 1)
@@ -553,7 +598,29 @@ class PaymentFrame(InstructionsFrame):
         self.rowconfigure(4, weight = 1)
         self.rowconfigure(5, weight = 1)
         self.rowconfigure(6, weight = 2)        
-      
+
+        self.controlNum = 0
+        self.createQuestion()
+
+
+    def createQuestion(self):
+        self.next["state"] = "disabled"     
+        if self.controlQuestions and self.controlNum < len(self.controlTexts):            
+            self.createControlQuestion()            
+            self.controlFrame.grid(row = 2, column = 1)
+        else:
+            self.controlFrame.grid_forget()
+            self.offerFrame.grid(row = 2, column = 1)
+
+
+    def createControlQuestion(self):
+        if self.controlNum:
+            self.controlQuestion.grid_forget()
+        texts = self.controlTexts[self.controlNum]
+        self.controlQuestion = MultipleChoice(self.controlFrame, text = texts[0], answers = texts[1], feedback = texts[2])
+        self.controlQuestion.grid(row = 0, column = 0)
+        self.controlNum += 1        
+
     def onValidate(self, P):
         try:
             if "," in P or "." in P:
@@ -577,12 +644,16 @@ class PaymentFrame(InstructionsFrame):
         return True
   
     def write(self):
-        self.file.write(self.name + "\n")
+        self.file.write("\n" + self.name + "\n")
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.offerVar.get() + "\n\n")
 
-    def nextFun(self):
-        self.write()
-        super().nextFun()   
+    def nextFun(self):        
+        if (not self.controlQuestions) or (self.controlNum == len(self.controlTexts) and self.offerVar.get()):
+            self.write()
+            super().nextFun()   
+        else:
+            self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.answer.get() + "\n")
+            self.createQuestion()
 
 
 
@@ -595,16 +666,23 @@ class Auction(PaymentFrame):
                 text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
         else:
             text = intro_auction
+
+        self.controlQuestions = root.status["block"] == 4
+        self.controlTexts = [[AuctionControl1, AuctionAnswers1, AuctionFeedback1], [AuctionControl2, AuctionAnswers2, AuctionFeedback2]]
+
         super().__init__(root, text = text, name = "Auction", height = 15)
+
+        if self.controlQuestions:
+            self.file.write("Auction Control Questions" + "\n")
 
         self.state = "bid"
 
         self.predictionVar = StringVar()
         self.vcmd2 = (self.register(self.onValidatePrediction), '%P')
-        self.predictionFrame = Canvas(self, background = "white", highlightbackground = "white",
+        self.predictionFrame = Canvas(self.offerFrame, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
-        self.predictionFrame.grid(row = 3, column = 1)
-        self.predictionTextLab = ttk.Label(self.predictionFrame, text = " \n ", font = "helvetica 16", background = "white")
+        self.predictionFrame.grid(row = 3, column = 0, columnspan = 3, pady = 20)
+        self.predictionTextLab = ttk.Label(self.predictionFrame, text = " \n \n ", font = "helvetica 15", background = "white")
         self.predictionTextLab.grid(row = 1, column = 0, padx = 6, sticky = E)
         self.predictionEntry = ttk.Entry(self.predictionFrame, textvariable = self.predictionVar, width = 10, justify = "right",
                                 font = "helvetica 15", validate = "key", validatecommand = self.vcmd2)
@@ -659,7 +737,7 @@ class Auction(PaymentFrame):
 
 
     def nextFun(self):
-        if self.state == "bid":
+        if self.state == "bid" and ((not self.controlQuestions) or (self.controlNum == len(self.controlTexts) and self.offerVar.get())):
             self.state = "prediction"
             self.entry["state"] = "disabled"
             self.next["state"] = "disabled"
@@ -672,8 +750,19 @@ class Auction(PaymentFrame):
 
 class BDM(PaymentFrame):
     def __init__(self, root):
-        text = intro_BDM if (not "block" in root.status) or root.status["block"] == 3 else intro_BDM2
+        if (not "block" in root.status) or root.status["block"] == 3:
+            self.controlQuestions = True
+            text = intro_BDM  
+        else: 
+            self.controlQuestions = False
+            text = intro_BDM2        
+
+        self.controlTexts = [[BDMcontrol1, BDManswers1, BDMfeedback1], [BDMcontrol2, BDManswers2, BDMfeedback2]]
+
         super().__init__(root, text = text, name = "BDM", height = 30)
+
+        if self.controlQuestions:
+            self.file.write("BDM Control Questions" + "\n")
 
     def write(self):        
         fee = self.root.status["bdm1"] if self.root.status["block"] == 3 else self.root.status["bdm2"]
@@ -850,8 +939,7 @@ AuctionWait = (Wait, {"what": "outcome"})
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([BDM, #
-        Login,
+    GUI([Login,
          CheatingInstructions,
          Cheating,
          Instructions2,

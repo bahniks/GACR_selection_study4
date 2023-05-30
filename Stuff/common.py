@@ -39,7 +39,7 @@ class ExperimentFrame(Canvas):
 
 class InstructionsFrame(ExperimentFrame):
     def __init__(self, root, text, proceed = True, firstLine = None, end = False, height = 12,
-                 font = 18, space = False, width = 90, keys = None, update = None, bold = None):
+                 font = 15, space = False, width = 80, keys = None, update = None, bold = None):
         super().__init__(root)
 
         self.root = root
@@ -301,6 +301,44 @@ class Measure(Canvas):
         else:
             ans = self.answer.get()
         self.root.file.write(ans)
+
+
+
+class MultipleChoice(Canvas):
+    def __init__(self, root, text, answers, feedback):
+        super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
+
+        self.root = root.master
+        self.answer = StringVar()
+        self.feedbackTexts = feedback
+        
+        
+        self.question = ttk.Label(self, text = text, background = "white", anchor = "center",
+                                          font = "helvetica 15 bold")
+        self.question.grid(column = 0, row = 0, pady = 5, sticky = W)
+        self.columnconfigure(0, weight = 1)
+
+        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
+        self.radios = []
+        for row, answer in enumerate(answers):            
+            self.radios.append(ttk.Radiobutton(self, text = answer, value = row + 1,
+                                               command = self.answerFunction, variable = self.answer))
+            self.radios[row].grid(row = row + 1, column = 0, pady = 3, sticky = W)
+            self.columnconfigure(row + 1, weight = 1)
+
+        self.feedback = ttk.Label(self, text = " \n ", background = "white", anchor = "center",
+                                          font = "helvetica 15", wraplength = 1000)
+        self.feedback.grid(column = 0, row = len(answers) + 1, pady = 5, sticky = W)
+
+
+    def answerFunction(self):
+        self.feedback["text"] = self.feedbackTexts[int(self.answer.get()) - 1]
+        for radio in self.radios:
+            radio["state"] = "disabled"
+        self.root.next["state"] = "normal"
+        
+        
+
 
 
 
