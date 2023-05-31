@@ -811,10 +811,12 @@ class Wait(InstructionsFrame):
                         response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
                     elif self.what == "outcome":
                         if self.root.status["conditions"][self.root.status["block"]-2] == "treatment":
-                            response = self.root.texts["testOutcome"] + "_4"
+                            #response = self.root.texts["testOutcome"] + "_4"
+                            response = self.root.texts["testOutcome"] + "_True"
                         else:
                             charity = -25 if "low" in self.root.status["condition"] else -100
-                            response = "outcome_{}_{}_{}_4".format(10, 275, charity)
+                            #response = "outcome_{}_{}_{}_4".format(10, 275, charity)
+                            response = "outcome_{}_{}_{}_True".format(10, 275, charity)
                 else:
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:

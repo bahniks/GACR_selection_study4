@@ -35,7 +35,7 @@ items = [["subway", "vzdálenost tratě metra mezi stanicemi metra Muzeum a Hlav
          ["bridge", "délka Nuselského mostu"],
          ["pyramid", "výška nejvyšší (Chufuovy) pyramidy v Gíze"],
          ["petrin", "délka lanové dráhy na Petřín"],
-         ["strahov", "délka Velkého strahovského stadionu"]
+         ["strahov", "délka Velkého strahovského stadionu"],
          ["orlik", "délka betonové hráze vodní nádrže Orlík"],
          ["strelecky", "délka Střeleckého ostrova v Praze"],
          ["baikal", "průměrná hloubka jezera Bajkal"],
