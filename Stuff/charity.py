@@ -18,7 +18,7 @@ charities = ["Červený kříž",
              "Konto bariér"]
 
 instructions = """
-V následující úloze máte možnost získat peníze pro sebe a pro charitativní organizaci dle vašeho výběru. 
+V následující úloze máte možnost získat peníze pro sebe a pro charitativní organizaci dle Vašeho výběru. 
 
 Na výběr máte z následujících čtyř charitativních organizací:
 
@@ -26,8 +26,7 @@ Na výběr máte z následujících čtyř charitativních organizací:
 
 Člověk v tísni: Poskytuje okamžitou humanitární pomoc a pomáhá lidem postavit se na vlastní nohy. Podporuje vzdělávání dětí, pomáhá nejchudším a nejzranitelnějším, podporuje obránce lidských práv.
 
-Charita Česká republika: Hlavní náplní její činnosti je zpoplatněná pomoc potřebným v ČR, mimo to ale také organizuje humanitární pomoc a dobročinné programy pro zahraničí (např. sbírky v případě živelních katastrof nebo adopce na dálku).
-
+Charita Česká republika: Hlavní náplní její činnosti je pomoc potřebným v ČR, mimo to ale také organizuje humanitární pomoc a dobročinné programy pro zahraničí (např. sbírky v případě živelních katastrof nebo adopce na dálku).
 Konto bariér: Pomáhá lidem s handicapem a organizacím, které o ně pečují. Jejím cílem je vracet handicapované zpět do života.
 
 
@@ -45,7 +44,7 @@ class Charity(ExperimentFrame):
       
         self.charity = StringVar()
 
-        self.text = Text(self, font = "helvetica 18", relief = "flat", background = "white", height = 22,
+        self.text = Text(self, font = "helvetica 15", relief = "flat", background = "white", height = 22,
                          wrap = "word", highlightbackground = "white", width = 80)
         self.text.grid(row = 1, column = 0, columnspan = 4)
         self.text.insert("1.0", instructions)
@@ -62,7 +61,7 @@ class Charity(ExperimentFrame):
             self.rbuttons[i].grid(column = 2, row = row, sticky = W)
 
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 18")
-        ttk.Style().configure("TButton", font = "helvetica 18")
+        ttk.Style().configure("TButton", font = "helvetica 15")
 
         self.columnconfigure(0, weight = 1)
         self.columnconfigure(3, weight = 1)

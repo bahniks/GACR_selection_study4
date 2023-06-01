@@ -76,6 +76,7 @@ q9 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PŘED, abyste 
 q10 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PŘED, abyste mohli nahlásit,\nže jste neuhodli hod kostky, když byste jinak mohli způsobit ztrátu charitě?"
 yes = "Ano, napadlo mě to"
 no = "Ne, nenapadlo mě to"
+
 ##################################################################################################################
 
 

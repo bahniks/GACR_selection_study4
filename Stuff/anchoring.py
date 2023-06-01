@@ -154,7 +154,7 @@ class Anchoring(ExperimentFrame):
         self.absoluteFrame2.grid(row = 4, column = 1)
       
         self.absoluteText2 = Text(self.absoluteFrame2, font = "helvetica 16", relief = "flat", background = "white", foreground = "white",
-                         width = 80, height = 2, pady = 7, wrap = "word")
+                         width = 80, height = 3, pady = 7, wrap = "word")
         self.absoluteText2.grid(row = 1, column = 1, columnspan = 2, sticky = S)
         self.absoluteText2.tag_configure("center", justify = "center")
 

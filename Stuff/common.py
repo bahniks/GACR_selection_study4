@@ -77,7 +77,7 @@ class InstructionsFrame(ExperimentFrame):
         self.text.config(state = "disabled")
 
         if proceed:
-            ttk.Style().configure("TButton", font = "helvetica 18")
+            ttk.Style().configure("TButton", font = "helvetica 15")
             self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun)
             self.next.grid(row = 2, column = 1)
         elif space:

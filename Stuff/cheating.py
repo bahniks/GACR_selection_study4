@@ -29,7 +29,7 @@ predictiontext = "Zvolil/a jsem, jestli na kostce padne liché nebo sudé čísl
 
 treatmenttext = '''Kolo {}
 
-Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodě padne liché nebo sudé číslo, zapamatujte si svoji volbu a poté klikněte na tlačítko Hodit kostkou.
+Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodu padne liché nebo sudé číslo, zapamatujte si svoji volbu a poté klikněte na tlačítko Hodit kostkou.
 '''
 
 treatmenttext2 = "Zvolte, zda jste hádali správně a vydělali v tomto kole {} Kč nebo zda jste hádali špatně a nevydělali jste v tomto kole nic."
@@ -39,7 +39,7 @@ controltext = """Kolo {}
 Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodě padne liché nebo sudé číslo, a poté klikněte na tlačítko Hodit kostkou.
 """
 
-controltext2 = "V tomto kole byla vaše předpověď {}"
+controltext2 = "V tomto kole byla Vaše předpověď {}"
 wintext = "správná a vydělali jste {} Kč."
 losstext = "špatná a nevydělali jste možných {} Kč."
 
@@ -53,11 +53,11 @@ Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, o
 
 Jak jste zaznamenali, úkol měl dvě verze:
 
-<b>Verzi “PŘED”</b>, ve které činíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli či nikoliv, a kolik jste vydělali.
+<b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli či nikoliv, a kolik jste vydělali.
 <b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
-Nyní vás čeká třetí blok s dvanácti pokusy. Pro tento blok máte možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
-- verze PO se zpoplatněním
+Nyní Vás čeká třetí blok s dvanácti pokusy. Pro tento blok máte možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
+- verze PO se zpoplatněním,
 - verze PŘED bez poplatku.
 
 V následujícím kole budete hrát jednu z verzí úlohy.
@@ -68,7 +68,7 @@ Pokud tato částka bude vyšší nebo rovná náhodně vybrané velikosti popla
 
 Pokud Vámi uvedená částka bude nižší než náhodně vybraná velikost poplatku, platit jej nebudete a budete hrát verzi "PŘED".
 
-Nikdy nebudete platit více než, kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč.
+Nikdy nebudete platit více, než kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je pro Vás tedy rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč.
 
 Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {MAX_BDM_PRIZE}, budete určitě hrát verzi "PO".
 """
@@ -77,8 +77,8 @@ Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodn
 intro_BDM2 = f"""
 Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
-Nyní vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
-- verze PO se zpoplatněním
+Nyní Vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
+- verze PO se zpoplatněním,
 - verze PŘED bez poplatku.
 
 V následujícím kole budete hrát jednu z verzí úlohy.
@@ -89,7 +89,7 @@ Pokud tato částka bude vyšší nebo rovná náhodně vybrané velikosti popla
 
 Pokud Vámi uvedená částka bude nižší než náhodně vybraná velikost poplatku, platit jej nebudete a budete hrát verzi "PŘED".
 
-Nikdy nebudete platit více než, kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč.
+Nikdy nebudete platit více, než kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro Vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč.
 
 Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {MAX_BDM_PRIZE}, budete určitě hrát verzi "PO".
 """
@@ -99,7 +99,7 @@ bdm_result = """
 Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplatit {} Kč. V následujícím kole tedy budete hrát verzi "{}" a {}.
 """
 
-bdm_after = "z vaší výhry bude poplatek odečten"
+bdm_after = "z Vaší výhry bude poplatek odečten"
 bdm_before = "nezaplatíte žádný poplatek"
 
 decisionText = "Nyní se rozhodněte, kolik jste ochotni zaplatit za verzi PŘED úlohy."
@@ -108,19 +108,18 @@ offerText = "Jsem ochoten/ochotna zaplatit:"
 intro_auction = f"""
 Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
-Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech lidech. Z každé skupiny bude v následujícím kole jeden hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
-Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku rovnou druhé nejvyšší nabídce ve skupině.
+Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech. Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
+
+Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně.
+
 Ostatní členové skupiny budou hrát verzi "PŘED".
-Nyní uveďte svou nabídku, kolik jste ochotní zaplatit za možnost hrát verzi "PO" úlohy. Nejvýše je možné nabídnout {MAX_BDM_PRIZE} Kč.
+
+Nyní uveďte svou nabídku, kolik jste ochotni zaplatit za možnost hrát verzi "PO" úlohy. Nejvýše je možné nabídnout {MAX_BDM_PRIZE} Kč.
 """
 
 auction_info = """
 Hráč, který hrál verzi “PO” v minulém kole, uvedl, že správně uhodl {} hodů kostkou a vyhrál tedy {} Kč a charita ztratila z přiděleného příspěvku {} Kč.
 """
-
-auction_prediction = 'Pokud nebudete hrát "PO" verzi úlohy Vy, kolik očekáváte,\nže nahlásí správných předpovědí člen týmu, který bude hrát verzi "PO"?'
-
-
 
 block_numbers = ["prvního", "druhého", "třetího", "čtvrtého", "pátého", "šestého", "sedmého"]
 
@@ -135,6 +134,10 @@ auction_after_same = 'Druhá nejvyšší nabídka byla také {} Kč. Verze hry b
 auction_before = 'Nejvyšší nabídka byla {} Kč. Budete tedy hrát verzi "PŘED" a nezaplatíte žádný poplatek'
 auction_before_same = 'Druhá nejvyšší nabídka byla také {} Kč. Verze hry byly tedy mezi Vámi a členem skupiny, který nabídl stejnou částku, rozřazeny náhodně. Budete hrát verzi "PŘED" a nezaplatíte žádný poplatek'
 
+auction_prediction = 'Pokud nebudete hrát "PO" verzi úlohy Vy, kolik očekáváte,\nže v 12 kolech nahlásí správných předpovědí člen týmu, který bude hrát verzi "PO"?'
+
+
+
 
 intro_block_1 = """
 V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
@@ -145,7 +148,9 @@ Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, zí
 
 Charita, kterou jste dříve vybrali, obdrží na začátku experimentu 100 Kč. Pokud uhodnete v rámci jednoho bloku správně 10 hodů, charita ztratí {} Kč z tohoto počátečního příspěvku. Pokud uhodnete 11 hodů, charita ztratí dalších {} Kč. Pokud uhodnete správně všech 12 hodů v rámci jednoho bloku, charita ztratí dalších {} Kč. Charita tedy z počátečního příspěvku může ztratit až {} Kč ({}+{}+{}). Když je ztráta vyšší než počáteční příspěvek, který charita obdržela díky Vaší volbě, tato ztráta se odečte z příspěvků, které obdrží od ostatních účastníků výzkumu.
 
-Poté, co dokončíte všech sedm bloků, bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Charita taktéž ztrácí peníze z počátečního příspěvku jen dle počtu správně uhodnutých hodů v rámci tohoto vylosovaného bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč a charita ztratí ze svého počátečního příspěvku 300 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte Vy nebo Vámi vybraná charita.
+Poté, co dokončíte všech sedm bloků, bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Charita taktéž ztrácí peníze z počátečního příspěvku jen dle počtu správně uhodnutých hodů v rámci tohoto vylosovaného bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč a charita ztratí ze svého počátečního příspěvku {} Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte Vy nebo Vámi vybraná charita.
+
+Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
 
 Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na následující otázku:
 Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku a 8 hodů ve čtvrtém a pátém bloku, 4 hody v šestém bloku a 11 hodů v sedmém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
@@ -921,7 +926,7 @@ class Login(InstructionsFrame):
 
     def update_intro(self, condition):        
         loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
-        self.root.texts["intro_block_1"] = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2])
+        self.root.texts["intro_block_1"] = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2], sum(loss))
 
     def write(self, response):
         self.file.write("Login" + "\n")

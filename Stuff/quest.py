@@ -16,14 +16,14 @@ from constants import BONUS, TESTING
 ################################################################################
 # TEXTS
 questintro = """
-V následující části studie odpovíte na několik otázek o sobě, vašich postojích a názorech. Tato část by měla trvat asi 10-15 minut.
+V následující části studie odpovíte na několik otázek o sobě, Vašich postojích a názorech. Tato část by měla trvat asi 10-15 minut.
 
 Za účelem ověření, zda otázkám věnujete pozornost, je mezi otázkami umístěno i několik kontrolních otázek. Pokud odpovíte na všechny kontrolní otázky správně, můžete získat dalších {} Kč.
 
-Každou otázku si proto pečlivě přečtěte. Snažte se však na otázky nemyslet příliš dlouho; první odpověď, která vám přijde na mysl, je obvykle nejlepší.
+Každou otázku si proto pečlivě přečtěte. Snažte se však na otázky nemyslet příliš dlouho; první odpověď, která Vám přijde na mysl, je obvykle nejlepší.
 """.format(BONUS)
 
-hexacoinstructions = """Na následujících stránkách najdete řadu prohlášení o vaší osobě.
+hexacoinstructions = """Na následujících stránkách najdete řadu prohlášení o Vaší osobě.
 
 Přečtěte si prosím každé prohlášení a rozhodněte se, do jaké míry s ním souhlasíte, nebo nesouhlasíte.
 """
