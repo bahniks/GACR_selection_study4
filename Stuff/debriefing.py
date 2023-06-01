@@ -24,8 +24,8 @@ q1 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při stan
 q2 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při dražbě verze PŘED úlohy:"
 
 
-q3 = "Ohodnoťte do jaké míry jste zvažovali při dražbě verze PŘED úlohy následující faktory:"
-q4 = "Ohodnoťte do jaké míry jste zvažovali při stanovení maximální ceny,\nco jste byli ochotni zaplatit za verzi PŘED úlohy následující faktory:"
+q3 = "Ohodnoťte do jaké míry jste zvažovali při stanovení maximální ceny,\nco jste byli ochotni zaplatit za verzi PŘED úlohy následující faktory:"
+q4 = "Ohodnoťte do jaké míry jste zvažovali při dražbě verze PŘED úlohy následující faktory:"
 
 debriefscale1 = "Vůbec ne"
 debriefscale2 = "Jen trochu"
@@ -42,8 +42,8 @@ debriefdimensions = ["svůj očekávaný peněžní výdělek",
                      "nakolik je jednoduché hrát obě verze úlohy",
                      "schopnost ovlivnit velikost svého peněžního výdělku",
                      "schopnost ovlivnit velikost ztráty charity",
-                     "snaha být vítězem",
-                     "snaha překonat ostatní"]
+                     "snahu být vítězem",
+                     "snahu překonat ostatní"]
 
 
 q5 = "Jak moc souhlasíte nebo nesouhlasíte s následujícími tvrzeními:"
@@ -93,12 +93,12 @@ class DebriefCheating1(ExperimentFrame):
         self.question1.grid(row = 1, column = 1)
         self.question2.grid(row = 2, column = 1)
         
-        ttk.Style().configure("TButton", font = "helvetica 16")
+        ttk.Style().configure("TButton", font = "helvetica 15")
         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun)
         self.next.grid(row = 3, column = 1)
 
         self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
-                                 background = "white", font = "helvetica 16", foreground = "white")
+                                 background = "white", font = "helvetica 15", foreground = "white")
         self.warning.grid(row = 4, column = 1)
 
         self.columnconfigure(0, weight = 1)
@@ -136,14 +136,14 @@ class Question(Canvas):
 
         self.answer = StringVar()
 
-        self.label = Text(self, width = width, wrap = "word", font = "helvetica 16",
+        self.label = Text(self, width = width, wrap = "word", font = "helvetica 15",
                           relief = "flat", height = qlines, cursor = "arrow",
                           selectbackground = "white", selectforeground = "black")
         self.label.insert("1.0", text)
         self.label.config(state = "disabled")
         self.label.grid(column = 0, row = 0)
 
-        self.field = Text(self, width = int(width*1.2), wrap = "word", font = "helvetica 16",
+        self.field = Text(self, width = int(width*1.2), wrap = "word", font = "helvetica 15",
                           height = alines, relief = "solid")
         self.field.grid(column = 0, row = 1, pady = 6)
 
@@ -175,7 +175,7 @@ class DebriefCheating2(ExperimentFrame):
         self.frame2 = OneFrame(self, q4, items, scale)
         self.frame2.grid(row = 2, column = 1)            
 
-        ttk.Style().configure("TButton", font = "helvetica 16")
+        ttk.Style().configure("TButton", font = "helvetica 15")
         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun,
                                state = "disabled")
         self.next.grid(row = 3, column = 1)
@@ -207,7 +207,7 @@ class DebriefCheating3(ExperimentFrame):
         self.frame = OneFrame(self, q5, dimensions2, [ds1, ds2, ds3, ds4, ds5, ds6], wrap = 300)
         self.frame.grid(row = 1, column = 1)            
 
-        ttk.Style().configure("TButton", font = "helvetica 16")
+        ttk.Style().configure("TButton", font = "helvetica 15")
         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun, state = "disabled")
         self.next.grid(row = 2, column = 1)
 
@@ -239,7 +239,7 @@ class OneFrame(Canvas):
 
         self.answers = scale
         
-        self.lab1 = ttk.Label(self, text = question, font = "helvetica 16", background = "white")
+        self.lab1 = ttk.Label(self, text = question, font = "helvetica 15", background = "white")
         self.lab1.grid(row = 2, column = 1, pady = 10, columnspan = 2)
         self.measures = []
         for count, word in enumerate(items):
@@ -276,11 +276,11 @@ class DebriefCheating4(ExperimentFrame):
         self.question4 = Measure(self, q9, values = [yes, no], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 650)
         self.question5 = Measure(self, q10, values = [yes, no], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 650)        
 
-        self.question1.question["font"] = "helvetica 16"
-        self.question2.question["font"] = "helvetica 16"
-        self.question3.question["font"] = "helvetica 16"
-        self.question4.question["font"] = "helvetica 16"
-        self.question5.question["font"] = "helvetica 16"
+        self.question1.question["font"] = "helvetica 15"
+        self.question2.question["font"] = "helvetica 15"
+        self.question3.question["font"] = "helvetica 15"
+        self.question4.question["font"] = "helvetica 15"
+        self.question5.question["font"] = "helvetica 15"
 
         self.question1.grid(row = 1, column = 1)
         self.question2.grid(row = 2, column = 1)
@@ -293,7 +293,7 @@ class DebriefCheating4(ExperimentFrame):
         self.next.grid(row = 6, column = 1)
 
         self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
-                                 background = "white", font = "helvetica 16", foreground = "white")
+                                 background = "white", font = "helvetica 15", foreground = "white")
         self.warning.grid(row = 7, column = 1)
 
         self.columnconfigure(0, weight = 1)
@@ -319,7 +319,7 @@ class DebriefCheating4(ExperimentFrame):
 
     def write(self):
         self.file.write("Debriefing4\n")
-        self.file.write(self.id + "\t".join([self.question1.answer.get(), self.question2.answer.get(), self.question3.answer.get(), self.question4.answer.get(), self.question5.answer.get()]))
+        self.file.write(self.id + "\t" + "\t".join([self.question1.answer.get(), self.question2.answer.get(), self.question3.answer.get(), self.question4.answer.get(), self.question5.answer.get()]))
         self.file.write("\n")
 
 

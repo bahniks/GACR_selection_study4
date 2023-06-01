@@ -27,6 +27,7 @@ Na výběr máte z následujících čtyř charitativních organizací:
 Člověk v tísni: Poskytuje okamžitou humanitární pomoc a pomáhá lidem postavit se na vlastní nohy. Podporuje vzdělávání dětí, pomáhá nejchudším a nejzranitelnějším, podporuje obránce lidských práv.
 
 Charita Česká republika: Hlavní náplní její činnosti je pomoc potřebným v ČR, mimo to ale také organizuje humanitární pomoc a dobročinné programy pro zahraničí (např. sbírky v případě živelních katastrof nebo adopce na dálku).
+
 Konto bariér: Pomáhá lidem s handicapem a organizacím, které o ně pečují. Jejím cílem je vracet handicapované zpět do života.
 
 
@@ -54,21 +55,21 @@ class Charity(ExperimentFrame):
         self.rbuttons = {}
         for i, char in enumerate(charities):
             row = i + 4
-            self.labels[i] = ttk.Label(self, text = char, background = "white", font = "helvetica 18")
+            self.labels[i] = ttk.Label(self, text = char, background = "white", font = "helvetica 15")
             self.labels[i].grid(column = 1, row = row, pady = 2, sticky = W, padx = 20)
             self.rbuttons[i] = ttk.Radiobutton(self, text = "", variable = self.charity,
                                                value = char, command = self.checkCharity)
             self.rbuttons[i].grid(column = 2, row = row, sticky = W)
 
-        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 18")
+        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
         ttk.Style().configure("TButton", font = "helvetica 15")
 
         self.columnconfigure(0, weight = 1)
         self.columnconfigure(3, weight = 1)
-        self.rowconfigure(0, weight = 1)
+        self.rowconfigure(0, weight = 2)
         self.rowconfigure(1, weight = 1)
-        self.rowconfigure(9, weight = 1)
-        self.rowconfigure(10, weight = 1)
+        self.rowconfigure(9, weight = 2)
+        self.rowconfigure(10, weight = 2)
 
         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun)
         self.next["state"] = "disabled"

@@ -12,7 +12,6 @@ import urllib.parse
 
 from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice
 from gui import GUI
-from debriefcheating import DebriefCheating
 from constants import MAX_BDM_PRIZE, TESTING, URL, CONDITION_LOW, CONDITION_HIGH
 
 
@@ -48,11 +47,9 @@ losstext = "špatná a nevydělali jste možných {} Kč."
 controlchoicetext = "verze PŘED"
 treatmentchoicetext = "verze PO"  
 
-intro_BDM = f"""
-Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
+intro_BDM = f"""Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
-
 <b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli či nikoliv, a kolik jste vydělali.
 <b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
@@ -62,20 +59,19 @@ Nyní Vás čeká třetí blok s dvanácti pokusy. Pro tento blok máte možnost
 
 V následujícím kole budete hrát jednu z verzí úlohy.
 Za verzi "PO" je nutné zaplatit poplatek, jehož výše bude náhodně určena z intervalu od 1 do {MAX_BDM_PRIZE} Kč.
-Do textového pole níže uveďte, kolik jste ochotni za hraní verze "PO" zaplatit.
+Po zodpovězení kontrolních otázek uvedete do textového pole níže, kolik jste ochotni za hraní verze "PO" zaplatit.
 
 Pokud tato částka bude vyšší nebo rovná náhodně vybrané velikosti poplatku, poplatek zaplatíte a budete hrát verzi "PO".
 
 Pokud Vámi uvedená částka bude nižší než náhodně vybraná velikost poplatku, platit jej nebudete a budete hrát verzi "PŘED".
 
-Nikdy nebudete platit více, než kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je pro Vás tedy rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč.
+Nikdy nebudete platit více, než kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je pro Vás tedy rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč. Poplatek se strhává z výhry v tomto bloku. Žádný poplatek tedy nebudete platit, pokud tento blok úlohy nebude na konci experimentu vylosován k proplacení.
 
 Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {MAX_BDM_PRIZE}, budete určitě hrát verzi "PO".
 """
 
 
-intro_BDM2 = f"""
-Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
+intro_BDM2 = f"""Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
 Nyní Vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO se zpoplatněním,
@@ -89,14 +85,13 @@ Pokud tato částka bude vyšší nebo rovná náhodně vybrané velikosti popla
 
 Pokud Vámi uvedená částka bude nižší než náhodně vybraná velikost poplatku, platit jej nebudete a budete hrát verzi "PŘED".
 
-Nikdy nebudete platit více, než kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro Vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč.
+Nikdy nebudete platit více, než kolik je výše poplatku. I pokud uvedete, že jste ochotni zaplatit více, zaplatíte pouze výši poplatku. Je tedy pro Vás rozumné uvést maximální cenu, kterou jste ochotni zaplatit. Nejvýše je možné uvést cenu {MAX_BDM_PRIZE} Kč. Poplatek se strhává z výhry v tomto bloku. Žádný poplatek tedy nebudete platit, pokud tento blok úlohy nebude na konci experimentu vylosován k proplacení.
 
 Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodnotu {MAX_BDM_PRIZE}, budete určitě hrát verzi "PO".
 """
 
 
-bdm_result = """
-Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplatit {} Kč. V následujícím kole tedy budete hrát verzi "{}" a {}.
+bdm_result = """Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplatit {} Kč. V následujícím kole tedy budete hrát verzi "{}" a {}.
 """
 
 bdm_after = "z Vaší výhry bude poplatek odečten"
@@ -105,19 +100,21 @@ bdm_before = "nezaplatíte žádný poplatek"
 decisionText = "Nyní se rozhodněte, kolik jste ochotni zaplatit za verzi PŘED úlohy."
 offerText = "Jsem ochoten/ochotna zaplatit:"
 
-intro_auction = f"""
-Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
+intro_auction = """Toto je konec {} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a Vámi vybraná charita {} Kč.
 
 Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech. Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
 
-Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně.
+Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně. Pokud nebudete hrát verzi "PO", žádný poplatek neplatíte. Žádný poplatek také neplatíte, pokud tento blok nebude po dokončení úlohy vylosován k proplacení. 
 
 Ostatní členové skupiny budou hrát verzi "PŘED".
 
-Nyní uveďte svou nabídku, kolik jste ochotni zaplatit za možnost hrát verzi "PO" úlohy. Nejvýše je možné nabídnout {MAX_BDM_PRIZE} Kč.
-"""
+{}, kolik jste ochotni zaplatit za možnost hrát verzi "PO" úlohy. Nejvýše je možné nabídnout {} Kč."""
+
+firstauction = "Po zodpovězení kontrolních otázek uvedete níže svou nabídku"
+laterauction = "Níže uveďte svou nabídku"
 
 auction_info = """
+
 Hráč, který hrál verzi “PO” v minulém kole, uvedl, že správně uhodl {} hodů kostkou a vyhrál tedy {} Kč a charita ztratila z přiděleného příspěvku {} Kč.
 """
 
@@ -134,13 +131,12 @@ auction_after_same = 'Druhá nejvyšší nabídka byla také {} Kč. Verze hry b
 auction_before = 'Nejvyšší nabídka byla {} Kč. Budete tedy hrát verzi "PŘED" a nezaplatíte žádný poplatek'
 auction_before_same = 'Druhá nejvyšší nabídka byla také {} Kč. Verze hry byly tedy mezi Vámi a členem skupiny, který nabídl stejnou částku, rozřazeny náhodně. Budete hrát verzi "PŘED" a nezaplatíte žádný poplatek'
 
-auction_prediction = 'Pokud nebudete hrát "PO" verzi úlohy Vy, kolik očekáváte,\nže v 12 kolech nahlásí správných předpovědí člen týmu, který bude hrát verzi "PO"?'
+auction_prediction = 'Pokud nebudete hrát "PO" verzi úlohy Vy, kolik očekáváte,že v 12 kolech\nnahlásí správných předpovědí člen týmu, který bude hrát verzi "PO"?'
 
 
 
 
-intro_block_1 = """
-V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
+intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
 
 Úkol je rozdělen do sedmi samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednoho hodu kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Po každém bloku bude krátká přestávka.
 
@@ -148,12 +144,12 @@ Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, zí
 
 Charita, kterou jste dříve vybrali, obdrží na začátku experimentu 100 Kč. Pokud uhodnete v rámci jednoho bloku správně 10 hodů, charita ztratí {} Kč z tohoto počátečního příspěvku. Pokud uhodnete 11 hodů, charita ztratí dalších {} Kč. Pokud uhodnete správně všech 12 hodů v rámci jednoho bloku, charita ztratí dalších {} Kč. Charita tedy z počátečního příspěvku může ztratit až {} Kč ({}+{}+{}). Když je ztráta vyšší než počáteční příspěvek, který charita obdržela díky Vaší volbě, tato ztráta se odečte z příspěvků, které obdrží od ostatních účastníků výzkumu.
 
-Poté, co dokončíte všech sedm bloků, bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Charita taktéž ztrácí peníze z počátečního příspěvku jen dle počtu správně uhodnutých hodů v rámci tohoto vylosovaného bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč a charita ztratí ze svého počátečního příspěvku {} Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte Vy nebo Vámi vybraná charita.
+Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Charita taktéž ztrácí peníze z počátečního příspěvku jen dle počtu správně uhodnutých hodů v rámci tohoto vylosovaného bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč a charita ztratí ze svého počátečního příspěvku {} Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte Vy nebo Vámi vybraná charita.
 
 Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
 
 Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na následující otázku:
-Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku a 8 hodů ve čtvrtém a pátém bloku, 4 hody v šestém bloku a 11 hodů v sedmém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
+Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku, 8 hodů ve čtvrtém a pátém bloku, 4 hody v šestém bloku a 11 hodů v sedmém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
 """
 
 wrong_answer = "{} Kč je chybná odpověď, správná odpověď je 15 Kč. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
@@ -495,7 +491,7 @@ class Cheating(ExperimentFrame):
 
 class CheatingInstructions(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = root.texts["intro_block_1"], height = 31, font = 15, width = 100)
+        super().__init__(root, text = root.texts["intro_block_1"], height = 33, font = 15, width = 100)
 
         self.checkVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
@@ -510,7 +506,7 @@ class CheatingInstructions(InstructionsFrame):
         self.currencyLabel.grid(row = 2, column = 2, sticky = NSEW)
 
         self.lowerText = Text(self, font = "helvetica 15", relief = "flat", background = "white",
-                              width = 90, height = 3, wrap = "word", highlightbackground = "white")
+                              width = 100, height = 2, wrap = "word", highlightbackground = "white")
         self.lowerText.grid(row = 3, column = 1, pady = 15)
         self.lowerText["state"] = "disabled"
         
@@ -561,7 +557,7 @@ class PaymentFrame(InstructionsFrame):
         block_num = str(root.status["block"] - 1)
         root.texts["previousBlockText"] = block_numbers[root.status["block"] - 2]
         update = ["previousBlockText", "win" + block_num, "charity" + block_num]
-        super().__init__(root, text = text, height = height, font = 15, width = 100, update = update)
+        super().__init__(root, text = text, height = height, font = 15, width = 105, update = update)
 
         self.name = name
 
@@ -569,11 +565,11 @@ class PaymentFrame(InstructionsFrame):
         self.offerVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
         self.offerFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
-        self.filler1 = Canvas(self.offerFrame, background = "white", width = 1, height = 250,
+        self.filler1 = Canvas(self.offerFrame, background = "white", width = 1, height = 255,
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler1.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
         if self.controlQuestions:
-            self.decisionTextLab = ttk.Label(self.offerFrame, text = decisionText, font = "helvetica 15", background = "white")
+            self.decisionTextLab = ttk.Label(self.offerFrame, text = decisionText, font = "helvetica 15 bold", background = "white")
             self.decisionTextLab.grid(row = 1, column = 0, columnspan = 3, pady = 10)        
         self.offerInnerFrame = Canvas(self.offerFrame, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.offerInnerFrame.grid(row = 2, column = 0, columnspan = 3, sticky = EW)
@@ -593,7 +589,7 @@ class PaymentFrame(InstructionsFrame):
         # control question frame
         self.controlFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
-        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = 250,
+        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = 255,
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
                      
@@ -616,6 +612,7 @@ class PaymentFrame(InstructionsFrame):
             self.createControlQuestion()            
             self.controlFrame.grid(row = 2, column = 1)
         else:
+            self.file.write("\n")
             self.controlFrame.grid_forget()
             self.offerFrame.grid(row = 2, column = 1)
 
@@ -650,7 +647,7 @@ class PaymentFrame(InstructionsFrame):
         return True
   
     def write(self):
-        self.file.write("\n" + self.name + "\n")
+        self.file.write(self.name + "\n")
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.offerVar.get() + "\n\n")
 
     def nextFun(self):        
@@ -665,18 +662,23 @@ class PaymentFrame(InstructionsFrame):
 
 class Auction(PaymentFrame):
     def __init__(self, root):
+        self.controlQuestions = root.status["block"] == 4
+        if self.controlQuestions:
+            introAuction = intro_auction.format("{}", "{}", "{}", firstauction, MAX_BDM_PRIZE)
+        else:
+            introAuction = intro_auction.format("{}", "{}", "{}", laterauction, MAX_BDM_PRIZE)
+
         if "info" in root.status["condition"] and root.status["block"] > 4 and root.status["conditions"][root.status["block"]-2] != "treatment":
             if int(root.texts["outcome"].split("_")[1]) == -99:
-                text = intro_auction    
+                text = introAuction    
             else:
-                text = intro_auction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
+                text = introAuction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
         else:
-            text = intro_auction
+            text = introAuction
 
-        self.controlQuestions = root.status["block"] == 4
         self.controlTexts = [[AuctionControl1, AuctionAnswers1, AuctionFeedback1], [AuctionControl2, AuctionAnswers2, AuctionFeedback2]]
 
-        super().__init__(root, text = text, name = "Auction", height = 15)
+        super().__init__(root, text = text, name = "Auction", height = 18)
 
         if self.controlQuestions:
             self.file.write("Auction Control Questions" + "\n")
@@ -767,7 +769,8 @@ class BDM(PaymentFrame):
 
         self.controlTexts = [[BDMcontrol1, BDManswers1, BDMfeedback1], [BDMcontrol2, BDManswers2, BDMfeedback2]]
 
-        super().__init__(root, text = text, name = "BDM", height = 30)
+        height = 29 if self.controlQuestions else 23
+        super().__init__(root, text = text, name = "BDM", height = height)
 
         if self.controlQuestions:
             self.file.write("BDM Control Questions" + "\n")
@@ -972,6 +975,5 @@ if __name__ == "__main__":
          BDM,
          BDMResult,
          Cheating,
-         EndCheating,
-         DebriefCheating
+         EndCheating
          ])

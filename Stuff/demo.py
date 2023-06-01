@@ -58,13 +58,13 @@ class Demographics(ExperimentFrame):
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
         ttk.Style().configure("TButton", font = "helvetica 15")
 
-        self.ageCB = ttk.Combobox(self, textvariable = self.age, width = 6, font = "helvetica 14",
+        self.ageCB = ttk.Combobox(self, textvariable = self.age, width = 6, font = "helvetica 15",
                                   state = "readonly")
         self.ageCB["values"] = tuple([""] + [str(i) for i in range(18, 80)])
         self.ageCB.bind("<<ComboboxSelected>>", lambda e: self.checkAllFilled())
 
         self.fieldCB = ttk.Combobox(self, textvariable = self.field, width = 15,
-                                    font = "helvetica 14", state = "readonly")
+                                    font = "helvetica 15", state = "readonly")
         self.fieldCB["values"] = ["Nestuduji VŠ",
                                   "Ekonomie / management",
                                   "Jazyky / mezinárodní studia",
@@ -94,6 +94,7 @@ class Demographics(ExperimentFrame):
         self.rowconfigure(0, weight = 1)
         self.rowconfigure(8, weight = 1)
 
+        ttk.Style().configure("TButton", font = "helvetica 15")
         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun,
                                state = "disabled")
         self.next.grid(row = 7, column = 2, pady = 15)

@@ -45,7 +45,7 @@ items = [["subway", "vzdálenost tratě metra mezi stanicemi metra Muzeum a Hlav
 
 
 againText = "Představte si, že Váš první odhad je špatný. Myslíte si, že v tom případě je {} menší nebo větší než Váš původní odhad {} m?"
-bootstrappingText = "Nejprve předpokládejte, že je Váš první odhad zcela špatný. Za druhé, přemýšlejte o několika důvodech, proč by to tak mohlo být. Které předpoklady a úvahy mohly být špatné? Za třetí, co tyto nové úvahy naznačují? Na základě této nové perspektivy utvořte odlišnou odpověď."
+bootstrappingText = "Nejprve předpokládejte, že je Váš první odhad zcela špatný. Za druhé přemýšlejte o několika důvodech, proč by to tak mohlo být. Které předpoklady a úvahy mohly být špatné? Za třetí co tyto nové úvahy naznačují? Na základě této nové perspektivy utvořte odlišnou odpověď."
 absoluteQuestion2 = "Nyní bychom Vás rádi požádali, abyste uvedli novou, odlišnou odpověď.\nPokud byste měli uvést jiný odhad, jaká je podle Vás {} v metrech?"
 warningText = "Odpověď musí být kladné číslo!"
 
@@ -67,7 +67,7 @@ class Anchoring(ExperimentFrame):
         self.secondAnswerVar = StringVar()
 
 
-        ttk.Style().configure("Selected.TButton", font = "helvetica 16 underline")
+        ttk.Style().configure("Selected.TButton", font = "helvetica 15 underline")
 
         # comparison question
         self.comparisonFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
@@ -84,7 +84,7 @@ class Anchoring(ExperimentFrame):
         self.slot.grid(row = 2, column = 1, columnspan = 2)
 
         self.instruction = 'Zmáčkněte tlačítko "Znáhodnit" pro výběr náhodného čísla'
-        self.upper = Text(self.comparisonFrame, font = "helvetica 16", relief = "flat", background = "white",
+        self.upper = Text(self.comparisonFrame, font = "helvetica 15", relief = "flat", background = "white",
                           width = 80, height = 1, pady = 7, wrap = "word")
         self.upper.grid(row = 0, column = 1, columnspan = 2, sticky = S)
         self.upper.tag_configure("center", justify = "center")
@@ -92,12 +92,12 @@ class Anchoring(ExperimentFrame):
         self.upper["state"] = "disabled"
 
         self.comparisonQuestion = "Je {} menší nebo větší než {} m?"
-        self.comparisonText = Text(self.comparisonFrame, font = "helvetica 16", relief = "flat", background = "white",
-                         width = 85, height = 1, pady = 7, wrap = "word")
+        self.comparisonText = Text(self.comparisonFrame, font = "helvetica 15", relief = "flat", background = "white",
+                         width = 95, height = 1, pady = 7, wrap = "word")
         self.comparisonText.grid(row = 3, column = 1, columnspan = 2, sticky = S, pady = 10)
         self.comparisonText.tag_configure("center", justify = "center")
 
-        ttk.Style().configure("TButton", font = "helvetica 16")
+        ttk.Style().configure("TButton", font = "helvetica 15")
         
         self.lower = ttk.Button(self.comparisonFrame, text = "Menší", command = self.lowerResponse)
         self.higher = ttk.Button(self.comparisonFrame, text = "Větší", command = self.higherResponse)
@@ -111,17 +111,17 @@ class Anchoring(ExperimentFrame):
         self.absoluteFrame.grid(row = 2, column = 1)
 
         self.absoluteQuestion = "Jaká je {} v metrech?"
-        self.absoluteText = Text(self.absoluteFrame, font = "helvetica 16", relief = "flat", background = "white", foreground = "white",
+        self.absoluteText = Text(self.absoluteFrame, font = "helvetica 15", relief = "flat", background = "white", foreground = "white",
                          width = 80, height = 1, pady = 7, wrap = "word")
         self.absoluteText.grid(row = 1, column = 1, columnspan = 2, sticky = S)
         self.absoluteText.tag_configure("center", justify = "center")
 
-        self.absoluteEntry1 = ttk.Entry(self.absoluteFrame, textvariable = self.firstAnswerVar, font = "helvetica 16", width = 8)
+        self.absoluteEntry1 = ttk.Entry(self.absoluteFrame, textvariable = self.firstAnswerVar, font = "helvetica 15", width = 8)
 
-        self.meters = ttk.Label(self.absoluteFrame, text = "m", font = "helvetica 16", background = "white", foreground = "white")
+        self.meters = ttk.Label(self.absoluteFrame, text = "m", font = "helvetica 15", background = "white", foreground = "white")
         self.meters.grid(row = 2, column = 2, sticky = W, pady = 10, padx = 5)
 
-        self.warning = ttk.Label(self.absoluteFrame, text = warningText, font = "helvetica 16",
+        self.warning = ttk.Label(self.absoluteFrame, text = warningText, font = "helvetica 15",
                                  background = "white", foreground = "white", justify = "center", state = "disabled")
         self.warning.grid(row = 4, column = 1, columnspan = 2, padx = 5)
   
@@ -135,8 +135,8 @@ class Anchoring(ExperimentFrame):
         self.interventionFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.interventionFrame.grid(row = 3, column = 1)
 
-        self.interventionText = Text(self.interventionFrame, font = "helvetica 16", relief = "flat", background = "white",
-                          width = 80, height = 3, wrap = "word", pady = 7)
+        self.interventionText = Text(self.interventionFrame, font = "helvetica 15", relief = "flat", background = "white",
+                          width = 95, height = 3, wrap = "word", pady = 7)
         self.interventionText.grid(row = 0, column = 1, columnspan = 2, sticky = S)
         self.interventionText.tag_configure("center", justify = "center")
         self.interventionText["state"] = "disabled"
@@ -153,17 +153,17 @@ class Anchoring(ExperimentFrame):
         self.absoluteFrame2 = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.absoluteFrame2.grid(row = 4, column = 1)
       
-        self.absoluteText2 = Text(self.absoluteFrame2, font = "helvetica 16", relief = "flat", background = "white", foreground = "white",
+        self.absoluteText2 = Text(self.absoluteFrame2, font = "helvetica 15", relief = "flat", background = "white", foreground = "white",
                          width = 80, height = 3, pady = 7, wrap = "word")
         self.absoluteText2.grid(row = 1, column = 1, columnspan = 2, sticky = S)
         self.absoluteText2.tag_configure("center", justify = "center")
 
-        self.absoluteEntry2 = ttk.Entry(self.absoluteFrame2, textvariable = self.secondAnswerVar, font = "helvetica 16", width = 8)
+        self.absoluteEntry2 = ttk.Entry(self.absoluteFrame2, textvariable = self.secondAnswerVar, font = "helvetica 15", width = 8)
 
-        self.meters2 = ttk.Label(self.absoluteFrame2, text = "m", font = "helvetica 16", background = "white", foreground = "white")
+        self.meters2 = ttk.Label(self.absoluteFrame2, text = "m", font = "helvetica 15", background = "white", foreground = "white")
         self.meters2.grid(row = 2, column = 2, sticky = W, pady = 10, padx = 5)
 
-        self.warning2 = ttk.Label(self.absoluteFrame2, text = warningText, font = "helvetica 16",
+        self.warning2 = ttk.Label(self.absoluteFrame2, text = warningText, font = "helvetica 15",
                                  background = "white", foreground = "white", justify = "center", state = "disabled")
         self.warning2.grid(row = 3, column = 1, columnspan = 2, pady = 5)
   
@@ -306,7 +306,7 @@ class Anchoring(ExperimentFrame):
     def absoluteAnswered(self):
         try:
             answer = float(self.firstAnswerVar.get().replace(",", "."))
-            if answer < 0:
+            if answer <= 0:
                 self.warning["foreground"] = "red"
                 return
         except:
@@ -373,7 +373,7 @@ class Anchoring(ExperimentFrame):
     def absoluteAnswered2(self):
         try:
             answer = float(self.secondAnswerVar.get().replace(",", "."))
-            if answer < 0:
+            if answer <= 0:
                 self.warning2["text"] = warningText
                 self.warning2["foreground"] = "red"
                 return
