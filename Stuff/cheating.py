@@ -192,7 +192,7 @@ AuctionFeedback1 = ["Ne, zda budete hrát v následujícím kole verzi PŘED úl
 
 AuctionControl2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PŘED úlohy, tak platí, že:"
 AuctionAnswers2 = ["Se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
-"Se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude částka nabídnutá\nostatními členy Vaší skupiny nižší než X.",
+"Se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude částka nabídnutá ostatními\nčleny Vaší skupiny nižší než X.",
 "Se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
 AuctionFeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy. Jinak je možné, že jiný člen Vaší skupiny zaplatí více než Vy, ale méně než X, a tudíž byste mohli hrát verzi PŘED za částku nižší než X, pokud byste ji nabídli.",
 "Ano, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy.",
@@ -563,21 +563,24 @@ class PaymentFrame(InstructionsFrame):
         # offer frame
         self.offerVar = StringVar()
         self.vcmd = (self.register(self.onValidate), '%P')
-        self.offerFrame = Canvas(self, background = "white", highlightbackground = "white",
-                                 highlightcolor = "white")
+        self.offerFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.filler1 = Canvas(self.offerFrame, background = "white", width = 1, height = 250,
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler1.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
         if self.controlQuestions:
             self.decisionTextLab = ttk.Label(self.offerFrame, text = decisionText, font = "helvetica 15", background = "white")
             self.decisionTextLab.grid(row = 1, column = 0, columnspan = 3, pady = 10)        
-        self.offerTextLab = ttk.Label(self.offerFrame, text = offerText, font = "helvetica 15", background = "white")
-        self.offerTextLab.grid(row = 2, column = 0, padx = 6, sticky = E)
-        self.entry = ttk.Entry(self.offerFrame, textvariable = self.offerVar, width = 10, justify = "right",
+        self.offerInnerFrame = Canvas(self.offerFrame, background = "white", highlightbackground = "white", highlightcolor = "white")
+        self.offerInnerFrame.grid(row = 2, column = 0, columnspan = 3, sticky = EW)
+        self.offerTextLab = ttk.Label(self.offerInnerFrame, text = offerText, font = "helvetica 15", background = "white")
+        self.offerTextLab.grid(row = 2, column = 1, padx = 6, sticky = E)
+        self.entry = ttk.Entry(self.offerInnerFrame, textvariable = self.offerVar, width = 10, justify = "right",
                                font = "helvetica 15", validate = "key", validatecommand = self.vcmd)
-        self.entry.grid(row = 2, column = 1, padx = 6)
-        self.currencyLabel = ttk.Label(self.offerFrame, text = "Kč", font = "helvetica 15", background = "white")
-        self.currencyLabel.grid(row = 2, column = 2, sticky = NSEW)
+        self.entry.grid(row = 2, column = 2, sticky = E, padx = 5)
+        self.currencyLabel = ttk.Label(self.offerInnerFrame, text = "Kč", font = "helvetica 15", background = "white")
+        self.currencyLabel.grid(row = 2, column = 3, sticky = W)
+        self.offerInnerFrame.columnconfigure(0, weight = 1)
+        self.offerInnerFrame.columnconfigure(4, weight = 1)
         
         self.problem = ttk.Label(self.offerFrame, text = "", font = "helvetica 15", background = "white", foreground = "red")
         self.problem.grid(row = 4, column = 0, columnspan = 3, pady = 10)
@@ -589,9 +592,8 @@ class PaymentFrame(InstructionsFrame):
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
                      
-        self.next.grid(row = 5, column = 1)
+        self.next.grid(row = 5, column = 1, sticky = N)
    
-
         self.rowconfigure(0, weight = 2)
         self.rowconfigure(2, weight = 1)
         self.rowconfigure(3, weight = 1)
@@ -611,7 +613,6 @@ class PaymentFrame(InstructionsFrame):
         else:
             self.controlFrame.grid_forget()
             self.offerFrame.grid(row = 2, column = 1)
-
 
     def createControlQuestion(self):
         if self.controlNum:
@@ -681,11 +682,13 @@ class Auction(PaymentFrame):
         self.vcmd2 = (self.register(self.onValidatePrediction), '%P')
         self.predictionFrame = Canvas(self.offerFrame, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
-        self.predictionFrame.grid(row = 3, column = 0, columnspan = 3, pady = 20)
-        self.predictionTextLab = ttk.Label(self.predictionFrame, text = " \n \n ", font = "helvetica 15", background = "white")
+        self.predictionFrame.grid(row = 3, column = 0, columnspan = 3, pady = 20, sticky = EW)
+        self.predictionTextLab = ttk.Label(self.predictionFrame, text = auction_prediction, font = "helvetica 15", background = "white", foreground = "white")
         self.predictionTextLab.grid(row = 1, column = 0, padx = 6, sticky = E)
         self.predictionEntry = ttk.Entry(self.predictionFrame, textvariable = self.predictionVar, width = 10, justify = "right",
                                 font = "helvetica 15", validate = "key", validatecommand = self.vcmd2)
+        self.predictionEntry.grid(row = 1, column = 1, padx = 10)
+        self.predictionEntry.grid_remove()
 
 
     def onValidatePrediction(self, P):
@@ -741,7 +744,7 @@ class Auction(PaymentFrame):
             self.state = "prediction"
             self.entry["state"] = "disabled"
             self.next["state"] = "disabled"
-            self.predictionTextLab["text"] = auction_prediction
+            self.predictionTextLab["foreground"] = "black"
             self.predictionEntry.grid(row = 1, column = 1, padx = 10)
         else:
             super().nextFun()
@@ -811,11 +814,9 @@ class Wait(InstructionsFrame):
                         response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
                     elif self.what == "outcome":
                         if self.root.status["conditions"][self.root.status["block"]-2] == "treatment":
-                            #response = self.root.texts["testOutcome"] + "_4"
                             response = self.root.texts["testOutcome"] + "_True"
                         else:
                             charity = -25 if "low" in self.root.status["condition"] else -100
-                            #response = "outcome_{}_{}_{}_4".format(10, 275, charity)
                             response = "outcome_{}_{}_{}_True".format(10, 275, charity)
                 else:
                     try:
