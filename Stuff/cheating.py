@@ -26,7 +26,7 @@ correcttext = "Správně"
 incorrecttext = "Špatně"    
 predictiontext = "Zvolil/a jsem, jestli na kostce padne liché nebo sudé číslo"
 
-treatmenttext = '''Kolo {}
+treatmenttext = '''Blok {}, Kolo {}
 
 Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodu padne liché nebo sudé číslo, zapamatujte si svoji volbu a poté klikněte na tlačítko Hodit kostkou.
 '''
@@ -36,7 +36,7 @@ treatmenttext2 = "Zvolte, zda jste hádali správně a vydělali v tomto kole {}
 treatmentcharity1 = " a charita ztratila {} Kč"
 treatmentcharity2 = " a charita neztratila nic"
 
-controltext = """Kolo {}
+controltext = """Blok {}, Kolo {}
 
 Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodě padne liché nebo sudé číslo, a poté klikněte na tlačítko Hodit kostkou.
 """
@@ -109,7 +109,7 @@ intro_auction = """Toto je konec {} bloku o dvanácti kolech. Pokud bude tento b
 
 Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech. Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
 
-Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě aukce. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně. Pokud nebudete hrát verzi "PO", žádný poplatek neplatíte. Žádný poplatek také neplatíte, pokud tento blok nebude po dokončení úlohy vylosován k proplacení. 
+Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě dražby. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně. Pokud nebudete hrát verzi "PO", žádný poplatek neplatíte. Žádný poplatek také neplatíte, pokud tento blok nebude po dokončení úlohy vylosován k proplacení. 
 
 Ostatní členové skupiny budou hrát verzi "PŘED".
 
@@ -125,7 +125,7 @@ auction_info = """
 
 block_numbers = ["prvního", "druhého", "třetího", "čtvrtého", "pátého", "šestého", "sedmého"]
 
-wait_text = "Prosím počkejte na ostatní členy týmu."
+wait_text = "Prosím počkejte na ostatní členy skupiny."
 
 
 auction_result = 'Za verzi "PO" jste nabídli {} Kč. {}.'
@@ -136,7 +136,7 @@ auction_after_same = 'Druhá nejvyšší nabídka byla také {} Kč. Verze hry b
 auction_before = 'Nejvyšší nabídka byla {} Kč. Budete tedy hrát verzi "PŘED" a nezaplatíte žádný poplatek'
 auction_before_same = 'Druhá nejvyšší nabídka byla také {} Kč. Verze hry byly tedy mezi Vámi a členem skupiny, který nabídl stejnou částku, rozřazeny náhodně. Budete hrát verzi "PŘED" a nezaplatíte žádný poplatek'
 
-auction_prediction = 'Pokud nebudete hrát "PO" verzi úlohy Vy, kolik očekáváte,že v 12 kolech\nnahlásí správných předpovědí člen týmu, který bude hrát verzi "PO"?'
+auction_prediction = 'Pokud nebudete hrát "PO" verzi úlohy Vy, kolik očekáváte, že v 12 kolech\nnahlásí správných předpovědí člen skupiny, který dražbu vyhraje a bude hrát verzi "PO"?'
 
 
 
@@ -151,7 +151,7 @@ Charita, kterou jste dříve vybrali, obdrží na začátku experimentu 100 Kč.
 
 Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Charita taktéž ztrácí peníze z počátečního příspěvku jen dle počtu správně uhodnutých hodů v rámci tohoto vylosovaného bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč a charita ztratí ze svého počátečního příspěvku {} Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte Vy nebo Vámi vybraná charita.
 
-Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
+Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
 
 Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na následující otázku:
 Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku, 8 hodů ve čtvrtém a pátém bloku, 4 hody v šestém bloku a 11 hodů v sedmém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
@@ -173,19 +173,19 @@ Toto je konec úkolu s kostkou.
 
 
 BDMcontrol1 = "Zda budete hrát v následujícím kole verzi PŘED úlohy závisí na kterých faktorech:"
-BDManswers1 = ["Náhodně vybrané částce a částce, kterou uvedete, že jste ochotni zaplatit",
-"Náhodně vybrané částce a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu",
-"Částce, kterou uvedete, že jste ochotni zaplatit, a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu"]
+BDManswers1 = ["náhodně vybrané částce a částce, kterou uvedete, že jste ochotni zaplatit.",
+"náhodně vybrané částce a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu.",
+"částce, kterou uvedete, že jste ochotni zaplatit, a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu."]
 BDMfeedback1 = ["Ano, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka.", 
 "Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka.", 
 "Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka."]
 
 BDMcontrol2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PŘED úlohy, tak platí, že:"
-BDManswers2 = ["Se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
-"Se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude náhodně vybraná částka nižší,\nnež nakolik si hraní verze PŘED ceníte, či stejná.",
-"Se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
-BDMfeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy. Nikdy nebudete platit více než náhodně vybranou částku.",
-"Ano, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy.",
+BDManswers2 = ["se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
+"se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude náhodně vybraná částka poplatku nižší,\nnež nakolik si hraní verze PŘED ceníte, či stejná.",
+"se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
+BDMfeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy. Nikdy nebudete platit více než náhodně vybranou částku poplatku.",
+"Ano, vyplatí se Vám nabídnout maximální částku poplatku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy.",
 "Ne, pokud nabídnete vyšší částku, může se stát, že zaplatíte za hraní verze PŘED úlohy více, než nakolik si ji ceníte."]
 
 AuctionControl1 = "Zda budete hrát v následujícím kole verzi PŘED úlohy závisí na kterých faktorech:"
@@ -197,12 +197,13 @@ AuctionFeedback1 = ["Ne, zda budete hrát v následujícím kole verzi PŘED úl
 "Ano, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny."]
 
 AuctionControl2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PŘED úlohy, tak platí, že:"
-AuctionAnswers2 = ["Se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
-"Se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude částka nabídnutá ostatními\nčleny Vaší skupiny nižší než X.",
-"Se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
+AuctionAnswers2 = ["se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
+"se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude částka nabídnutá ostatními\nčleny Vaší skupiny nižší než X.",
+"se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
 AuctionFeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy. Jinak je možné, že jiný člen Vaší skupiny zaplatí více než Vy, ale méně než X, a tudíž byste mohli hrát verzi PŘED za částku nižší než X, pokud byste ji nabídli.",
 "Ano, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy.",
 "Ne, pokud nabídnete vyšší částku, může se stát, že zaplatíte za hraní verze PŘED úlohy více, než nakolik si ji ceníte."]
+
 
 
 ################################################################################
@@ -215,7 +216,7 @@ class Cheating(ExperimentFrame):
 
         #######################
         # adjustable parameters
-        self.trials = 12 if not TESTING else 2
+        self.trials = 12 if not TESTING else 12
         self.pause_after_roll = 0.5
         self.pause_before_trial = 0.2
         self.displayNum = self.createDots # self.createDots or self.createText
@@ -329,7 +330,7 @@ class Cheating(ExperimentFrame):
             ttk.Style().configure("TCheckbutton", background = "white", font = "helvetica 15")
             self.predictionVar = BooleanVar()
             self.predictionVar.set(False)
-            self.upperText.insert("1.0", treatmenttext.format(self.currentTrial))
+            self.upperText.insert("1.0", treatmenttext.format(self.blockNumber, self.currentTrial))
             self.predictedCB = ttk.Checkbutton(self.upperButtonFrame, text = predictiontext,
                                                command = self.checkbuttoned, variable = self.predictionVar,
                                                onvalue = True, offvalue = False)
@@ -337,7 +338,7 @@ class Cheating(ExperimentFrame):
         elif "control" in self.condition:
             ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
             self.predictionVar = StringVar()
-            self.upperText.insert("1.0", controltext.format(self.currentTrial))
+            self.upperText.insert("1.0", controltext.format(self.blockNumber, self.currentTrial))
             self.evenButton = ttk.Radiobutton(self.upperButtonFrame, text = eventext, value = "even",
                                               variable = self.predictionVar, command = self.checked)
             self.oddButton = ttk.Radiobutton(self.upperButtonFrame, text = oddtext, value = "odd",
@@ -439,9 +440,11 @@ class Cheating(ExperimentFrame):
         self.die.create_text(x0, y0, text = str(num), font = "helvetica 70", tag = "die")
 
     def showWinnings(self):
+        wins = self.root.wins[self.blockNumber]        
+        self.infoWinnings["text"] = "Počet správných odhadů:\n{}".format(wins)
         fee = self.root.fees[self.blockNumber]
-        self.infoWinnings["text"] = "Vaše současná výhra:\n{} Kč".format(sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee)
-        self.infoWinnings["text"] += "\n\nPříspěvek charitě:\n{} Kč".format(-sum(self.charityRewards[:self.root.wins[self.blockNumber]]) + self.charityEndowment)
+        self.infoWinnings["text"] += "\n\nVaše současná výhra:\n{} Kč".format(sum(self.rewards[:wins]) - fee)
+        self.infoWinnings["text"] += "\n\nPříspěvek charitě:\n{} Kč".format(-sum(self.charityRewards[:wins]) + self.charityEndowment)
 
     def answer(self, answer = "NA"):
         t = perf_counter()
@@ -942,7 +945,7 @@ class Login(InstructionsFrame):
         self.progressBar.start()
         self.login()
 
-    def update_intro(self, condition):        
+    def update_intro(self, condition):
         loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
         self.root.texts["intro_block_1"] = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2], sum(loss))
 

@@ -18,7 +18,7 @@ from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
 from charity import Charity
 from questionnaire import Prosociality
-from anchoring import AnchoringInstructions, Anchoring
+# from anchoring import AnchoringInstructions, Anchoring
 
 
 frames = [Login,
@@ -58,8 +58,8 @@ frames = [Login,
           LotteryWin,
           LotteryInstructions,
           DiceLottery,
-          AnchoringInstructions, 
-          Anchoring,
+        #   AnchoringInstructions, 
+        #   Anchoring,
           QuestInstructions,
           Hexaco,
           Prosociality,

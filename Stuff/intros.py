@@ -21,13 +21,14 @@ Za účast na studii obdržíte {} Kč. Kromě toho můžete vydělat další pe
 Studie se skládá z několika různých úkolů a otázek. Níže je uveden přehled toho, co Vás čeká:
 1) Hod kostkou: Vaším úkolem bude uhodnout, zda na kostce padne liché nebo sudé číslo. Budete hádat v sedmi blocích, každém po dvanácti kolech. V tomto úkolu můžete vydělat peníze.
 2) Loterie: můžete se rozhodnout zúčastnit se loterie a získat další peníze v závislosti na výsledcích loterie.
-3) Odhady: budete odhadovat charakteristiky různých objektů.
-4) Dotazníky: budete odpovídat na otázky ohledně Vašich vlastností a postojů. Dotazník zahrnuje položky, které kontrolují, zda otázkám věnujete pozornost. Pokud odpovíte na tyto kontroly pozornosti správně, získáte další peníze. 
-5) Konec studie a platba: poté, co skončíte, půjdete do vedlejší místnosti, kde podepíšete pokladní dokument, na základě kterého obdržíte vydělané peníze v hotovosti. <b>Jelikož v dokumentu bude uvedena pouze celková suma, experimentátor nebude vědět, kolik jste vydělali v jednotlivých částech studie.</b>
+3) Dotazníky: budete odpovídat na otázky ohledně Vašich vlastností a postojů. Dotazník zahrnuje položky, které kontrolují, zda otázkám věnujete pozornost. Pokud odpovíte na tyto kontroly pozornosti správně, získáte další peníze. 
+4) Konec studie a platba: poté, co skončíte, půjdete do vedlejší místnosti, kde podepíšete pokladní dokument, na základě kterého obdržíte vydělané peníze v hotovosti. <b>Jelikož v dokumentu bude uvedena pouze celková suma, experimentátor, který Vám bude vyplácet odměnu, nebude vědět, kolik jste vydělali v jednotlivých částech studie.</b>
 
 Děkujeme, že jste vypnuli své mobilní telefony, a že nebudete s nikým komunikovat v průběhu studie. Pokud s někým budete komunikovat, nebo pokud budete nějakým jiným způsobem narušovat průběh studie, budete požádáni, abyste opustili laboratoř, bez nároku na vyplacení peněz.
 
 V případě, že máte otázky nebo narazíte na technický problém během úkolů, zvedněte ruku a tiše vyčkejte příchodu výzkumného asistenta.
+
+Všechny informace, které v průběhu studie uvidíte, jsou pravdivé a nebudete za žádných okolností klamáni či jinak podváděni.
 
 Nepokračujte prosím, dokud Vám výzkumný asistent nedá pokyn.
 """.format(PARTICIPATION_FEE)

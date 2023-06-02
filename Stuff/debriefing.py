@@ -20,12 +20,12 @@ from gui import GUI
 debriefingIntro = "V následující části se Vás zeptáme na Váš pohled na předchozí úlohu a na Vaše rozhodování v ní."
 
 
-q1 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při stanovení maximální ceny, co jste byli ochotni zaplatit za verzi PŘED úlohy:"
+q1 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při stanovení maximální ceny poplatku, co jste byli ochotni zaplatit za verzi PŘED úlohy:"
 q2 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při dražbě verze PŘED úlohy:"
 
 
-q3 = "Ohodnoťte do jaké míry jste zvažovali při stanovení maximální ceny,\nco jste byli ochotni zaplatit za verzi PŘED úlohy následující faktory:"
-q4 = "Ohodnoťte do jaké míry jste zvažovali při dražbě verze PŘED úlohy následující faktory:"
+q3 = "Ohodnoťte, do jaké míry jste zvažovali při stanovení maximální ceny poplatku,\nco jste byli ochotni zaplatit za verzi PŘED úlohy následující faktory:"
+q4 = "Ohodnoťte, do jaké míry jste zvažovali při dražbě verze PŘED úlohy následující faktory:"
 
 debriefscale1 = "Vůbec ne"
 debriefscale2 = "Jen trochu"
@@ -35,9 +35,9 @@ debriefscale5 = "Velmi"
 
 debriefdimensions = ["svůj očekávaný peněžní výdělek",
                      "ztrátu peněz, kterou mohu způsobit charitě",
-                     "ztrátu peněz, kterou mohou způsobit charitě ostatní členové týmu",
-                     "částku, kterou nabídnou ostatní členové týmu",
-                     "počet správných předpovědí, které uvedou ostatní členové týmu ve verzi PŘED",
+                     "ztrátu peněz, kterou mohou způsobit charitě ostatní členové skupiny",
+                     "částku, kterou nabídnou ostatní členové skupiny",
+                     "počet správných předpovědí, které uvedou ostatní členové skupiny ve verzi PŘED",
                      "nakolik je zábavné hrát obě verze úlohy",
                      "nakolik je jednoduché hrát obě verze úlohy",
                      "schopnost ovlivnit velikost svého peněžního výdělku",
@@ -47,10 +47,10 @@ debriefdimensions = ["svůj očekávaný peněžní výdělek",
 
 
 q5 = "Jak moc souhlasíte nebo nesouhlasíte s následujícími tvrzeními:"
-dimensions2 = ["Stanovení maximální ceny za verzi PŘED bylo nespravedlivé.",
-               "Stanovení maximální ceny za verzi PŘED bylo riskantní.",
-               "Nerozuměl jsem účelu stanovení maximální ceny za verzi PŘED.",
-               "Stanovení maximální ceny za verzi PŘED mi připadalo komplikované.",
+dimensions2 = ["Stanovení maximální ceny poplatku za verzi PŘED bylo nespravedlivé.",
+               "Stanovení maximální ceny poplatku za verzi PŘED bylo riskantní.",
+               "Nerozuměl jsem účelu stanovení maximální ceny poplatku za verzi PŘED.",
+               "Stanovení maximální ceny poplatku za verzi PŘED mi připadalo komplikované.",
                "Dražba verze PŘED byla nespravedlivá.",
                "Dražba verze PŘED byla riskantní.",
                "Nerozuměl jsem účelu dražeb.",

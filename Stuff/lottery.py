@@ -23,7 +23,7 @@ V následujícím úkolu uděláte 5 nezávislých rozhodnutí mezi dvěma možn
 
 Až tuto úlohu dokončíte, bude stanovena Vaše odměna. Pro to bude vybráno náhodně jedno z rozhodnutí (každé se stejnou pravděpodobností) a dostanete jistou odměnu nebo bude realizována odpovídající loterie (podle toho, zda zvolíte jistou odměnu nebo loterii). I když učiníte 5 rozhodnutí, pouze jedno z nich bude tedy rozhodovat o Vaši odměně.
 
-V každém řádku vyberte prosím, zda preferujete jistou odměnu nebo loterii.
+V každém z 5 řádků se rozhodněte a vyberte prosím, zda preferujete jistou odměnu nebo loterii.
 """
 
 wintext = """

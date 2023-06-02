@@ -30,7 +30,6 @@ Přečtěte si prosím každé prohlášení a rozhodněte se, do jaké míry s 
 
 attentiontext = "Chcete-li prokázat, že zadání věnujete pozornost, vyberte možnost "
 
-# hexaco_feedback_text = "Níže naleznete vaše výsledky z dokončeného dotazníku."
 ################################################################################
 
 
