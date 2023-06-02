@@ -89,7 +89,7 @@ class Ending(InstructionsFrame):
 
 
 
-Intro = (InstructionsFrame, {"text": intro, "proceed": True, "height": 28})
+Intro = (InstructionsFrame, {"text": intro, "proceed": True, "height": 30})
 
 
 
