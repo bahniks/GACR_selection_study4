@@ -31,7 +31,10 @@ treatmenttext = '''Kolo {}
 Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodu padne liché nebo sudé číslo, zapamatujte si svoji volbu a poté klikněte na tlačítko Hodit kostkou.
 '''
 
-treatmenttext2 = "Zvolte, zda jste hádali správně a vydělali v tomto kole {} Kč nebo zda jste hádali špatně a nevydělali jste v tomto kole nic."
+treatmenttext2 = "Zvolte, zda jste hádali správně a vydělali v tomto kole {} Kč{} nebo zda jste hádali špatně a nevydělali jste v tomto kole nic{}."
+
+treatmentcharity1 = " a charita ztratila {} Kč"
+treatmentcharity2 = " a charita neztratila nic"
 
 controltext = """Kolo {}
 
@@ -39,8 +42,10 @@ Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní pr
 """
 
 controltext2 = "V tomto kole byla Vaše předpověď {}"
-wintext = "správná a vydělali jste {} Kč."
+wintext = "správná a vydělali jste {} Kč.{}"
 losstext = "špatná a nevydělali jste možných {} Kč."
+
+charityloss = " Charita ztratila {} Kč."
 
 
 # buttons
@@ -115,7 +120,7 @@ laterauction = "Níže uveďte svou nabídku"
 
 auction_info = """
 
-Hráč, který hrál verzi “PO” v minulém kole, uvedl, že správně uhodl {} hodů kostkou a vyhrál tedy {} Kč a charita ztratila z přiděleného příspěvku {} Kč.
+<b>Hráč, který hrál verzi “PO” v minulém kole, uvedl, že správně uhodl {} hodů kostkou a vyhrál tedy {} Kč a charita ztratila z přiděleného příspěvku {} Kč.</b>
 """
 
 block_numbers = ["prvního", "druhého", "třetího", "čtvrtého", "pátého", "šestého", "sedmého"]
@@ -218,7 +223,7 @@ class Cheating(ExperimentFrame):
         self.diesize = 240
         self.rewards = [i*5 + 5 for i in range(self.trials)]
         charityRewards = CONDITION_HIGH if "high" in self.root.status["condition"] else CONDITION_LOW
-        self.charityRewards = [charityRewards[i-10] if i > 9 else 0 for i in range(self.trials)] 
+        self.charityRewards = [charityRewards[i-9] if i > 8 else 0 for i in range(self.trials)] 
         self.charityEndowment = 100
         #######################
 
@@ -297,7 +302,8 @@ class Cheating(ExperimentFrame):
         else:
             fee = self.root.fees[self.blockNumber]
             self.root.texts["win" + str(self.blockNumber)] = sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee
-            self.root.texts["charity" + str(self.blockNumber)] = sum(self.charityRewards[:self.root.wins[self.blockNumber]])  + self.charityEndowment
+            self.root.texts["charity" + str(self.blockNumber)] = -sum(self.charityRewards[:self.root.wins[self.blockNumber]]) + self.charityEndowment
+            self.root.texts["charity" + str(self.blockNumber)] = str(self.root.texts["charity" + str(self.blockNumber)]).replace("-", "ztratí ")
             if self.blockNumber == 7:
                 win = random.randint(1, 7)
                 self.root.texts["dice"] = self.root.texts["win{}".format(win)]
@@ -357,7 +363,12 @@ class Cheating(ExperimentFrame):
     def bottomPart(self):
         self.bottomText["state"] = "normal"
         if "treatment" in self.condition:
-            self.bottomText.insert("1.0", treatmenttext2.format(self.rewards[self.root.wins[self.blockNumber]]))
+            reward = self.rewards[self.root.wins[self.blockNumber]]
+            charityLoss = self.charityRewards[self.root.wins[self.blockNumber]]
+            charityLossText = treatmentcharity1.format(charityLoss) if charityLoss else ""
+            charityNoLossText = treatmentcharity2 if charityLoss else ""
+            text = treatmenttext2.format(reward, charityLossText, charityNoLossText)
+            self.bottomText.insert("1.0", text)
             ttk.Style().configure("Green.TButton", foreground = "green")
             ttk.Style().configure("Red.TButton", foreground = "red")
             self.winButton = ttk.Button(self.bottomButtonFrame, text = correcttext,
@@ -369,11 +380,15 @@ class Cheating(ExperimentFrame):
         elif "control" in self.condition:
             win = (self.response == "odd" and self.currentRoll in (1,3,5)) or (
                 self.response == "even" and self.currentRoll in (2,4,6))
-            text = wintext if win else losstext
-            text = text.format(self.rewards[self.root.wins[self.blockNumber]])
             if win:
+                charityLoss = self.charityRewards[self.root.wins[self.blockNumber]]
+                charityLossText = charityloss.format(charityLoss) if charityLoss else ""
+                text = wintext.format(self.rewards[self.root.wins[self.blockNumber]], charityLossText)
                 self.root.wins[self.blockNumber] += 1
+            else:
+                text = losstext.format(self.rewards[self.root.wins[self.blockNumber]])
             self.bottomText.insert("1.0", controltext2.format(text))
+            self.showWinnings()
             self.continueButton = ttk.Button(self.bottomButtonFrame, text = continuetext,
                                              command = self.answer)
             self.continueButton.grid(row = 0, column = 1)
@@ -426,7 +441,7 @@ class Cheating(ExperimentFrame):
     def showWinnings(self):
         fee = self.root.fees[self.blockNumber]
         self.infoWinnings["text"] = "Vaše současná výhra:\n{} Kč".format(sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee)
-        self.infoWinnings["text"] += "\n\nPříspěvek charitě:\n{} Kč".format(sum(self.charityRewards[:self.root.wins[self.blockNumber]]) + self.charityEndowment)
+        self.infoWinnings["text"] += "\n\nPříspěvek charitě:\n{} Kč".format(-sum(self.charityRewards[:self.root.wins[self.blockNumber]]) + self.charityEndowment)
 
     def answer(self, answer = "NA"):
         t = perf_counter()
@@ -435,7 +450,7 @@ class Cheating(ExperimentFrame):
         self.responses.append([self.blockNumber, self.currentTrial, self.condition, self.root.status["condition"],
                                self.currentRoll, self.response, answer, 
                                sum(self.rewards[:self.root.wins[self.blockNumber]]) - self.root.fees[self.blockNumber],
-                               sum(self.charityRewards[:self.root.wins[self.blockNumber]]) + self.charityEndowment,
+                               -sum(self.charityRewards[:self.root.wins[self.blockNumber]]) + self.charityEndowment,
                                t - self.time, self.firstResponse - self.time,
                                t - self.beforeSecondResponse])
         self.bottomText["state"] = "normal"

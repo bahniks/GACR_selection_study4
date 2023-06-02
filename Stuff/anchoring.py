@@ -12,16 +12,6 @@ from gui import GUI
 from constants import TESTING
 
 
-intro1 = """V následující úloze budete srovnávat vlasnosti různých objektů s náhodnými hodnotami a činit odhady týkajících se těchto vlastností.
-
-Náhodné hodnoty jsou generovány po zmáčknutí tlačítka 'Znáhodnit' a jsou určeny hodnotami zobrazených na třech "kotoučích" s číslicemi (obrázek kotoučů lze vidět níže). Tyto hodnoty budou v rozsahu od 1 do 1000. S hodnotou 1000 budete srovnávat objekt, pokud bude na všech kotoučích zobrazeno '0'.
-"""
-
-
-intro2 = """V následující úloze budete odhadovat vlastnosti různých objektů.
-"""
-
-
 
 items = [["subway", "vzdálenost tratě metra mezi stanicemi metra Muzeum a Hlavní nádraží"],
          ["soccer", "délka typického fotbalového hřiště"],
@@ -44,6 +34,16 @@ items = [["subway", "vzdálenost tratě metra mezi stanicemi metra Muzeum a Hlav
          ]
 
 
+intro1 = """V následující úloze budete srovnávat vlastnosti {} různých objektů s náhodnými hodnotami a činit odhady týkajících se těchto vlastností.
+
+Náhodné hodnoty jsou generovány po zmáčknutí tlačítka 'Znáhodnit' a jsou určeny hodnotami zobrazených na třech "kotoučích" s číslicemi (obrázek kotoučů lze vidět níže). Tyto hodnoty budou v rozsahu od 1 do 1000. S hodnotou 1000 budete srovnávat objekt, pokud bude na všech kotoučích zobrazeno '0'.
+""".format(len(items))
+
+
+intro2 = """V následující úloze budete odhadovat vlastnosti různých objektů.
+"""
+
+
 againText = "Představte si, že Váš první odhad je špatný. Myslíte si, že v tom případě je {} menší nebo větší než Váš původní odhad {} m?"
 bootstrappingText = "Nejprve předpokládejte, že je Váš první odhad zcela špatný. Za druhé přemýšlejte o několika důvodech, proč by to tak mohlo být. Které předpoklady a úvahy mohly být špatné? Za třetí co tyto nové úvahy naznačují? Na základě této nové perspektivy utvořte odlišnou odpověď."
 absoluteQuestion2 = "Nyní bychom Vás rádi požádali, abyste uvedli novou, odlišnou odpověď.\nPokud byste měli uvést jiný odhad, jaká je podle Vás {} v metrech?"
@@ -59,15 +59,19 @@ class Anchoring(ExperimentFrame):
         self.items = items
         random.shuffle(self.items)
 
+        self.number = 0
+
         self.conditions = ["control", "bootstrapping", "comparison"]*6
         random.shuffle(self.conditions)
-
 
         self.firstAnswerVar = StringVar()
         self.secondAnswerVar = StringVar()
 
-
         ttk.Style().configure("Selected.TButton", font = "helvetica 15 underline")
+
+        self.trialIndicator = ttk.Label(self, text = "", font = "helvetica 15", background = "white")
+        self.indicateTrial()
+        self.trialIndicator.grid(row = 1, column = 2, sticky = NW)
 
         # comparison question
         self.comparisonFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
@@ -183,11 +187,12 @@ class Anchoring(ExperimentFrame):
         self.rowconfigure(3, weight = 1)
         self.rowconfigure(4, weight = 1)        
         self.rowconfigure(5, weight = 5)
-        
-
-        self.number = 0
-
+      
         self.createSlots()
+
+
+    def indicateTrial(self):
+        self.trialIndicator["text"] = "{}/{}".format(self.number + 1, len(self.items))
 
 
     def createSlots(self):          
@@ -392,14 +397,15 @@ class Anchoring(ExperimentFrame):
 
         self.file.write("\t".join([self.id, str(self.number + 1), self.items[self.number][0], str(self.anchor), self.comparisonJudgment, str(self.t1 - self.t0), self.firstAnswerVar.get().replace(",", "."), str(self.t2 - self.t1), self.conditions[self.number], self.interventionAnswer, str(self.t3 - self.t2), self.secondAnswerVar.get().replace(",", "."), str(self.t4 - self.t3)]) + "\n")
 
-        self.number += 1
+        self.number += 1        
         self.proceed()
 
 
-    def proceed(self):
+    def proceed(self):        
         if self.number == len(items):
             self.nextFun()
         else:
+            self.indicateTrial()
             self.comparisonText["state"] = "normal"
             self.comparisonText.delete("1.0", "end")
             self.comparisonText["state"] = "disabled"

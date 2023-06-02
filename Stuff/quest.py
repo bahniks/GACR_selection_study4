@@ -52,7 +52,7 @@ class Quest(ExperimentFrame):
 
         if instructions:
             self.instructions = Text(self, height = height, relief = "flat", width = width,
-                                     font = "helvetica 16", wrap = "word")
+                                     font = "helvetica 15", wrap = "word")
             self.instructions.grid(row = 1, column = 0, columnspan = 3)
             self.instructions.insert("1.0", instructions, "text")
             if center:
@@ -143,16 +143,16 @@ class Likert(Canvas):
         self["highlightbackground"] = "white"
         self["highlightcolor"] = "white"
 
-        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 13")
+        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
 
         self.question = ttk.Label(self, text = text, background = "white",
-                                  anchor = "center", font = "helvetica 14")
+                                  anchor = "center", font = "helvetica 15")
         self.question.grid(column = 0, row = 0, columnspan = options + 2, sticky = S)
 
         self.left = ttk.Label(self, text = left, background = "white",
-                              font = "helvetica 13")
+                              font = "helvetica 14")
         self.right = ttk.Label(self, text = right, background = "white",
-                               font = "helvetica 13")
+                               font = "helvetica 14")
         self.left.grid(column = 0, row = 1, sticky = E, padx = 5)
         self.right.grid(column = options + 1, row = 1, sticky = W, padx = 5)           
 
@@ -184,16 +184,10 @@ class Likert(Canvas):
         else:
             ans = "{}\t{}\t{}\n".format(self.short, self.answer.get(), self.text.replace("\t", " "))
             self.root.file.write(self.root.id + "\t" + ans)
-            # if self.root.name == "Hexaco":
-            #     if not "hexaco" in self.root.root.status:
-            #         self.root.root.status["hexaco"] = {}
-            #     self.root.root.status["hexaco"][self.text] = int(self.answer.get())
 
 
     def check(self):
         self.root.check()
-
-
 
 
 
@@ -202,27 +196,6 @@ class Hexaco(Quest):
         super().__init__(root, 9, "hexaco.txt", "Hexaco", instructions = hexacoinstructions, width = 85,
                          left = "silně nesouhlasím", right = "silně souhlasím", checks = 3,
                          height = 3, options = 5, center = True)
-
-
-
-# class HexacoFeedback(InstructionsFrame):
-#     def __init__(self, root, text = hexaco_feedback_text):
-#         traits = defaultdict(list)
-#         currentTrait = ""
-#         with open("Stuff/hexaco_scoring.txt") as f:    
-#             for line in f:
-#                 line = line.strip()
-#                 if not "\t" in line:
-#                     currentTrait = line
-#                 else:
-#                     subTrait, items = line.split("\t")
-#                     items = [i.strip() for i in items.split(",")]
-#                     traits[currentTrait].extend(items)
-#                     traits[subTrait] = items
-#         scores = deepcopy(traits)
-#         with open("Stuff/hexaco.txt") as f:
-#             for i, line in enumerate(f, start = 1):
-#                 pass # to do
 
 
 

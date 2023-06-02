@@ -47,14 +47,14 @@ debriefdimensions = ["svůj očekávaný peněžní výdělek",
 
 
 q5 = "Jak moc souhlasíte nebo nesouhlasíte s následujícími tvrzeními:"
-dimensions2 = ["Dražba verze PŘED byla nespravedlivá.",
-               "Dražba verze PŘED byla riskantní.",
-               "Nerozuměl jsem účelu dražeb.",
-               "Dražba verze PŘED mi připadala komplikovaná.",
-               "Stanovení maximální ceny za verzi PŘED bylo nespravedlivé.",
+dimensions2 = ["Stanovení maximální ceny za verzi PŘED bylo nespravedlivé.",
                "Stanovení maximální ceny za verzi PŘED bylo riskantní.",
                "Nerozuměl jsem účelu stanovení maximální ceny za verzi PŘED.",
-               "Stanovení maximální ceny za verzi PŘED mi připadalo komplikované."]
+               "Stanovení maximální ceny za verzi PŘED mi připadalo komplikované.",
+               "Dražba verze PŘED byla nespravedlivá.",
+               "Dražba verze PŘED byla riskantní.",
+               "Nerozuměl jsem účelu dražeb.",
+               "Dražba verze PŘED mi připadala komplikovaná."]
 ds1 = "rozhodně\nnesouhlasím"
 ds2 = "nesouhlasím"
 ds3 = "spíše\nnesouhlasím"

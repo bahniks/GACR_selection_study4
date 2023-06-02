@@ -14,7 +14,7 @@ from gui import GUI
 
 
 lotteryinstructions = """
-V následující úloze “Loterie” můžete vyhrát peníze.
+V následující úloze můžete vyhrát peníze.
 
 Můžete se rozhodnout, zda hodíte virtuální kostkou.
 
