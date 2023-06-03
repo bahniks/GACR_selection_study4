@@ -483,7 +483,7 @@ class Cheating(ExperimentFrame):
 
     
     def nextFun(self):
-        if self.blockNumber > 3 and self.blockNumber < 6:            
+        if self.blockNumber > 3 and self.blockNumber <= 6:            
             wins = self.root.wins[self.blockNumber]
             reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
             charity = sum(self.charityRewards[:self.root.wins[self.blockNumber]])
