@@ -316,7 +316,6 @@ class MultipleChoice(Canvas):
         self.question = ttk.Label(self, text = text, background = "white", anchor = "center",
                                           font = "helvetica 15 bold")
         self.question.grid(column = 0, row = 0, pady = 5, sticky = W)
-        self.columnconfigure(0, weight = 1)
 
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
         self.radios = []
@@ -324,11 +323,14 @@ class MultipleChoice(Canvas):
             self.radios.append(ttk.Radiobutton(self, text = answer, value = row + 1,
                                                command = self.answerFunction, variable = self.answer))
             self.radios[row].grid(row = row + 1, column = 0, pady = 3, sticky = W)
-            self.columnconfigure(row + 1, weight = 1)
 
+        self.filler = ttk.Label(self, text = " \n ", background = "white", anchor = "center",
+                                          font = "helvetica 15", wraplength = 1000)
+        self.filler.grid(column = 0, row = len(answers) + 1, pady = 5, sticky = NW)
         self.feedback = ttk.Label(self, text = " \n ", background = "white", anchor = "center",
                                           font = "helvetica 15", wraplength = 1000)
-        self.feedback.grid(column = 0, row = len(answers) + 1, pady = 5, sticky = W)
+        self.feedback.grid(column = 0, row = len(answers) + 1, pady = 5, sticky = NW)
+        self.rowconfigure(len(answers) + 1, weight = 1)
 
 
     def answerFunction(self):

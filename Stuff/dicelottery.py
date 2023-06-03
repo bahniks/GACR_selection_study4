@@ -55,7 +55,7 @@ class DiceLottery(ExperimentFrame):
         self.width = self.root.screenwidth
         self.height = self.root.screenheight
 
-        self.file.write("Lottery\n")
+        self.file.write("Dice Lottery\n")
 
         self.upperText = Text(self, height = 7, width = 80, relief = "flat", font = "helvetica 15",
                               wrap = "word")

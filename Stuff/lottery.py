@@ -107,7 +107,7 @@ class Lottery(ExperimentFrame):
             win = self.options[0][selected - 1]
         self.file.write("Lottery\n")
         self.root.texts["lottery_win"] = win
-        self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()]) + "\n")
+        self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected), str(win)]) + "\n")
 
 
 

@@ -78,7 +78,7 @@ Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodn
 
 intro_BDM2 = f"""Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
-Nyní Vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
+Nyní Vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO”, ve které uvádíte, zda jste uhodli či nikoliv, až poté, co vidíte výsledek hodu kostkou, je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO se zpoplatněním,
 - verze PŘED bez poplatku.
 
@@ -107,7 +107,7 @@ offerText = "Jsem ochoten/ochotna zaplatit:"
 
 intro_auction = """Toto je konec {} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a Vámi vybraná charita {} Kč.
 
-Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech. Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" a zbývající účastníci budou hrát verzi "PŘED".
+{} Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO", ve které se uvádí, zda jste uhodli či nikoli, až po zobrazení výsledku hodu kostkou, a zbývající účastníci budou hrát verzi "PŘED". Všichni členové skupiny jinak hrají úlohu za stejných podmínek.
 
 Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě dražby. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně. Pokud nebudete hrát verzi "PO", žádný poplatek neplatíte. Žádný poplatek také neplatíte, pokud tento blok nebude po dokončení úlohy vylosován k proplacení. 
 
@@ -117,6 +117,8 @@ Ostatní členové skupiny budou hrát verzi "PŘED".
 
 firstauction = "Po zodpovězení kontrolních otázek uvedete níže svou nabídku"
 laterauction = "Níže uveďte svou nabídku"
+firstgroups = "Před následujícím kolem byli všichni účastníci studie rozděleni do skupin o čtyřech."
+latergroups = "V tomto kole jste opět rozděleni do stejných skupin o čtyřech."
 
 auction_info = """
 
@@ -216,7 +218,7 @@ class Cheating(ExperimentFrame):
 
         #######################
         # adjustable parameters
-        self.trials = 12 if not TESTING else 12
+        self.trials = 12 if not TESTING else 2
         self.pause_after_roll = 0.5
         self.pause_before_trial = 0.2
         self.displayNum = self.createDots # self.createDots or self.createText
@@ -682,9 +684,9 @@ class Auction(PaymentFrame):
     def __init__(self, root):
         self.controlQuestions = root.status["block"] == 4
         if self.controlQuestions:
-            introAuction = intro_auction.format("{}", "{}", "{}", firstauction, MAX_BDM_PRIZE)
+            introAuction = intro_auction.format("{}", "{}", "{}", firstgroups, firstauction, MAX_BDM_PRIZE)
         else:
-            introAuction = intro_auction.format("{}", "{}", "{}", laterauction, MAX_BDM_PRIZE)
+            introAuction = intro_auction.format("{}", "{}", "{}", latergroups, laterauction, MAX_BDM_PRIZE)
 
         if "info" in root.status["condition"] and root.status["block"] > 4 and root.status["conditions"][root.status["block"]-2] != "treatment":
             if int(root.texts["outcome"].split("_")[1]) == -99:
@@ -696,7 +698,7 @@ class Auction(PaymentFrame):
 
         self.controlTexts = [[AuctionControl1, AuctionAnswers1, AuctionFeedback1], [AuctionControl2, AuctionAnswers2, AuctionFeedback2]]
 
-        super().__init__(root, text = text, name = "Auction", height = 18)
+        super().__init__(root, text = text, name = "Auction", height = 20)
 
         if self.controlQuestions:
             self.file.write("Auction Control Questions" + "\n")
@@ -787,7 +789,7 @@ class BDM(PaymentFrame):
 
         self.controlTexts = [[BDMcontrol1, BDManswers1, BDMfeedback1], [BDMcontrol2, BDManswers2, BDMfeedback2]]
 
-        height = 29 if self.controlQuestions else 23
+        height = 30 if self.controlQuestions else 24
         super().__init__(root, text = text, name = "BDM", height = height)
 
         if self.controlQuestions:
@@ -857,7 +859,7 @@ class Wait(InstructionsFrame):
                         sameoffers = myoffer == maxoffer and myoffer == secondoffer
                         self.updateResults(maxoffer, secondoffer, condition, sameoffers)
                         self.write(response)
-                    elif self.what == "outcome":
+                    elif self.what == "outcome" and self.root.status["block"] != 6:
                         _, wins, reward, charity, completed = response.split("_")
                         if completed != "True":
                             continue
@@ -990,6 +992,7 @@ if __name__ == "__main__":
          Wait,
          AuctionResult,
          Cheating,
+         AuctionWait,
          BDM,
          BDMResult,
          Cheating,
