@@ -78,7 +78,7 @@ Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodn
 
 intro_BDM2 = f"""Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
-Nyní Vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO”, ve které uvádíte, zda jste uhodli či nikoliv, až poté, co vidíte výsledek hodu kostkou, je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
+Nyní Vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” (ve které uvádíte, zda jste uhodli či nikoliv, až poté, co vidíte výsledek hodu kostkou) je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO se zpoplatněním,
 - verze PŘED bez poplatku.
 
@@ -107,7 +107,7 @@ offerText = "Jsem ochoten/ochotna zaplatit:"
 
 intro_auction = """Toto je konec {} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a Vámi vybraná charita {} Kč.
 
-{} Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO", ve které se uvádí, zda jste uhodli či nikoli, až po zobrazení výsledku hodu kostkou, a zbývající účastníci budou hrát verzi "PŘED". Všichni členové skupiny jinak hrají úlohu za stejných podmínek.
+{} Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" (ve které se uvádí, zda jste uhodli či nikoliv, až po zobrazení výsledku hodu kostkou) a zbývající účastníci budou hrát verzi "PŘED". Všichni členové skupiny jinak hrají úlohu za stejných podmínek.
 
 Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě dražby. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně. Pokud nebudete hrát verzi "PO", žádný poplatek neplatíte. Žádný poplatek také neplatíte, pokud tento blok nebude po dokončení úlohy vylosován k proplacení. 
 

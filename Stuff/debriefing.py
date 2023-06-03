@@ -71,7 +71,7 @@ dsb3 = "Do určité míry"
 dsb4 = "Spíše hodně"
 dsb5 = "Velmi"
 
-q8 = "Napadlo Vás, že je možné ve verzi PŘED podvádět; tedy stanovit,\nže jste uhodli hod kostky, i když jste jej neuhodli."
+q8 = "Napadlo Vás, že je možné ve verzi PŘED podvádět; tedy stanovit,\nže jste uhodli hod kostky, i když jste jej neuhodli?"
 q9 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PŘED, abyste zabránili\nostatním účastníkům brát peníze od charitativních organizací?"
 q10 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PŘED, abyste mohli nahlásit,\nže jste neuhodli hod kostky, když byste jinak mohli způsobit ztrátu charitě?"
 yes = "Ano, napadlo mě to"
