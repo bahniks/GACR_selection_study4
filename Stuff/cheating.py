@@ -750,15 +750,18 @@ class Auction(PaymentFrame):
         data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.offerVar.get()})
         data = data.encode('ascii')
         if URL != "TEST":
-            for i in range(60):                
-                with urllib.request.urlopen(URL, data = data) as f:
-                    if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
-                        self.root.config(cursor = "wait")
-                        self.root.update()
-                        sleep(1)
-                    else:
-                        self.root.config(cursor = "")
-                        break
+            for i in range(60):
+                try: 
+                    with urllib.request.urlopen(URL, data = data) as f:
+                        if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
+                            self.root.config(cursor = "wait")
+                            self.root.update()
+                            sleep(1)
+                        else:
+                            self.root.config(cursor = "")
+                            break
+                except Exception:
+                    continue
             else:
                 messagebox.showinfo(message = "Zavolejte prosím experimentátora.", icon = "error", parent = self.root, 
                                   detail = "Pravděpodobně je problém se serverem.", title = "Problém")
