@@ -499,7 +499,7 @@ class Cheating(ExperimentFrame):
                         with urllib.request.urlopen(URL, data = data) as f:
                             response = f.read().decode("utf-8")       
                     except Exception:
-                        pass
+                        continue
                 if response:                    
                     super().nextFun()  
                     return            
@@ -850,16 +850,16 @@ class Wait(InstructionsFrame):
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:
                             response = f.read().decode("utf-8")       
-                    except Exception:
+                    except Exception as e:
                         pass
-                if response:
+                if response:                  
                     if self.what == "auction":
                         condition, maxoffer, secondoffer, myoffer = response.split("|")           
                         self.root.status["conditions"].append(condition)
                         sameoffers = myoffer == maxoffer and myoffer == secondoffer
                         self.updateResults(maxoffer, secondoffer, condition, sameoffers)
                         self.write(response)
-                    elif self.what == "outcome" and self.root.status["block"] != 6:
+                    elif self.what == "outcome" and self.root.status["block"] != 7:                        
                         _, wins, reward, charity, completed = response.split("_")
                         if completed != "True":
                             continue
