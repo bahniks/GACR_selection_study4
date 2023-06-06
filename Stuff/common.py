@@ -39,10 +39,11 @@ class ExperimentFrame(Canvas):
 
 class InstructionsFrame(ExperimentFrame):
     def __init__(self, root, text, proceed = True, firstLine = None, end = False, height = 12,
-                 font = 15, space = False, width = 80, keys = None, update = None, bold = None):
+                 font = 15, space = False, width = 80, keys = None, update = None, bold = None, wait = 2):
         super().__init__(root)
 
         self.root = root
+        self.wait = wait
         self.t0 = time()
 
         if update:
@@ -106,7 +107,7 @@ class InstructionsFrame(ExperimentFrame):
         self.text.config(state = "disabled")
 
     def proceed(self):
-        if time() - self.t0 > 2:
+        if time() - self.t0 > self.wait:
             self.nextFun()
 
     def nextFun(self):

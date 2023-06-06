@@ -46,7 +46,7 @@ Toto je konec experimentu. Děkujeme za vaši účast!
 Centrum laboratorního a experimentálního výzkumu FPH VŠE
 """ 
 
-
+login = "Klikněte na tlačítko Pokračovat pro přihlášení do studie."
 ################################################################################
 
 
@@ -90,10 +90,12 @@ class Ending(InstructionsFrame):
 
 
 Intro = (InstructionsFrame, {"text": intro, "proceed": True, "height": 30})
+Initial = (InstructionsFrame, {"text": login, "proceed": True, "height": 3, "wait": 0})
 
 
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([Intro,
+    GUI([Initial, 
+         Intro,
          Ending])

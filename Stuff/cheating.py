@@ -940,9 +940,7 @@ class Login(InstructionsFrame):
                 elif response == "closed":
                     self.changeText("Studie je uzavřena pro přihlašování")
                 elif response == "not_grouped":
-                    self.changeText("Nebyla Vám přiřazena žádná skupina") # TO DO
-                #elif frame in response:
-                    #pass # to do?
+                    self.changeText("Nebyla Vám přiřazena žádná skupina. Zavolejte prosím experimentátor zvednutím ruky.")
             count += 1                  
             sleep(0.1)        
 

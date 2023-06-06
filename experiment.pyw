@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.getcwd(), "Stuff"))
 from gui import GUI
 
 from quest import Hexaco, QuestInstructions
-from intros import Intro, Ending
+from intros import Initial, Intro, Ending
 from demo import Demographics
 from cheating import CheatingInstructions, Cheating, Instructions2, BDM, BDMResult, Auction, Wait
 from cheating import AuctionResult, EndCheating, Login, AuctionWait
@@ -21,7 +21,8 @@ from questionnaire import Prosociality
 # from anchoring import AnchoringInstructions, Anchoring
 
 
-frames = [Login,
+frames = [Initial,
+          Login,
           Intro,          
           Charity,
           CheatingInstructions,
