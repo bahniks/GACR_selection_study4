@@ -24,21 +24,21 @@ eventext = "Sudé (2, 4 nebo 6)"
 rolltext = "Hodit kostkou"
 correcttext = "Správně"
 incorrecttext = "Špatně"    
-predictiontext = "Zvolil/a jsem, jestli na kostce padne liché nebo sudé číslo"
+predictiontext = "Zvolil/a jsem, jestli na kostce padne liché, nebo sudé číslo"
 
 treatmenttext = '''Blok {}, Kolo {}
 
-Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodu padne liché nebo sudé číslo, zapamatujte si svoji volbu a poté klikněte na tlačítko Hodit kostkou.
+Máte za úkol uhodnout, zda na kostce padne liché, nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodu padne liché, nebo sudé číslo, zapamatujte si svoji volbu a poté klikněte na tlačítko Hodit kostkou.
 '''
 
-treatmenttext2 = "Zvolte, zda jste hádali správně a vydělali v tomto kole {} Kč{} nebo zda jste hádali špatně a nevydělali jste v tomto kole nic{}."
+treatmenttext2 = "Zvolte, zda jste hádali správně a vydělali v tomto kole {} Kč{}, nebo zda jste hádali špatně a nevydělali jste v tomto kole nic{}."
 
 treatmentcharity1 = " a charita ztratila {} Kč"
 treatmentcharity2 = " a charita neztratila nic"
 
 controltext = """Blok {}, Kolo {}
 
-Máte za úkol uhodnout, zda na kostce padne liché nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodě padne liché nebo sudé číslo, a poté klikněte na tlačítko Hodit kostkou.
+Máte za úkol uhodnout, zda na kostce padne liché, nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodě padne liché, nebo sudé číslo, a poté klikněte na tlačítko Hodit kostkou.
 """
 
 controltext2 = "V tomto kole byla Vaše předpověď {}"
@@ -55,10 +55,10 @@ treatmentchoicetext = "verze PO"
 intro_BDM = f"""Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
-<b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli či nikoliv, a kolik jste vydělali.
-<b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
+<b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv, a kolik jste vydělali.
+<b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
-Nyní Vás čeká třetí blok s dvanácti pokusy. Pro tento blok máte možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
+Nyní Vás čeká třetí blok s dvanácti pokusy. Pro tento blok máte možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude poplatek odečten od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO se zpoplatněním,
 - verze PŘED bez poplatku.
 
@@ -78,7 +78,7 @@ Pokud uvedete hodnotu 0, budete určitě hrát verzi "PŘED". Pokud uvedete hodn
 
 intro_BDM2 = f"""Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
 
-Nyní Vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” (ve které uvádíte, zda jste uhodli či nikoliv, až poté, co vidíte výsledek hodu kostkou) je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude zaplacená částka odečtena od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
+Nyní Vás čeká poslední blok s dvanácti pokusy. Pro tento blok máte opět možnost zvolit si jednu z uvedených verzí. <b>Volba verze “PO” (ve které uvádíte, zda jste uhodli, či nikoliv, až poté, co vidíte výsledek hodu kostkou) je ale zpoplatněna.</b> Zvolíte-li tuto verzi, bude poplatek odečten od výdělku v tomto bloku. Můžete si tedy zvolit jednu z následujících možností:
 - verze PO se zpoplatněním,
 - verze PŘED bez poplatku.
 
@@ -102,12 +102,12 @@ bdm_result = """Byl náhodně vybrán poplatek {} Kč. Byli jste ochotni zaplati
 bdm_after = "z Vaší výhry bude poplatek odečten"
 bdm_before = "nezaplatíte žádný poplatek"
 
-decisionText = "Nyní se rozhodněte, kolik jste ochotni zaplatit za verzi PŘED úlohy."
+decisionText = "Nyní se rozhodněte, kolik jste ochotni zaplatit za verzi PO úlohy."
 offerText = "Jsem ochoten/ochotna zaplatit:"
 
 intro_auction = """Toto je konec {} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a Vámi vybraná charita {} Kč.
 
-{} Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" (ve které se uvádí, zda jste uhodli či nikoliv, až po zobrazení výsledku hodu kostkou) a zbývající účastníci budou hrát verzi "PŘED". Všichni členové skupiny jinak hrají úlohu za stejných podmínek.
+{} Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" (ve které se uvádí, zda jste uhodli, či nikoliv, až po zobrazení výsledku hodu kostkou) a zbývající účastníci budou hrát verzi "PŘED". Všichni členové skupiny jinak hrají úlohu za stejných podmínek.
 
 Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě dražby. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně. Pokud nebudete hrát verzi "PO", žádný poplatek neplatíte. Žádný poplatek také neplatíte, pokud tento blok nebude po dokončení úlohy vylosován k proplacení. 
 
@@ -143,7 +143,7 @@ auction_prediction = 'Pokud nebudete hrát "PO" verzi úlohy Vy, kolik očekáv�
 
 
 
-intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
+intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché, nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
 
 Úkol je rozdělen do sedmi samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednoho hodu kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Po každém bloku bude krátká přestávka.
 
@@ -174,37 +174,37 @@ Toto je konec úkolu s kostkou.
 """
 
 
-BDMcontrol1 = "Zda budete hrát v následujícím kole verzi PŘED úlohy závisí na kterých faktorech:"
+BDMcontrol1 = "Zda budete hrát v následujícím kole verzi PO úlohy závisí na kterých faktorech:"
 BDManswers1 = ["náhodně vybrané částce a částce, kterou uvedete, že jste ochotni zaplatit.",
 "náhodně vybrané částce a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu.",
 "částce, kterou uvedete, že jste ochotni zaplatit, a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu."]
-BDMfeedback1 = ["Ano, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka.", 
-"Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka.", 
-"Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka."]
+BDMfeedback1 = ["Ano, zda budete hrát v následujícím kole verzi PO úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka.", 
+"Ne, zda budete hrát v následujícím kole verzi PO úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka.", 
+"Ne, zda budete hrát v následujícím kole verzi PO úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než náhodně vybraná částka."]
 
-BDMcontrol2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PŘED úlohy, tak platí, že:"
+BDMcontrol2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PO úlohy, tak platí, že:"
 BDManswers2 = ["se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
-"se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude náhodně vybraná částka poplatku nižší,\nnež nakolik si hraní verze PŘED ceníte, či stejná.",
-"se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
-BDMfeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy. Nikdy nebudete platit více než náhodně vybranou částku poplatku.",
-"Ano, vyplatí se Vám nabídnout maximální částku poplatku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy.",
-"Ne, pokud nabídnete vyšší částku, může se stát, že zaplatíte za hraní verze PŘED úlohy více, než nakolik si ji ceníte."]
+"se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PO, kdykoli bude náhodně vybraná částka poplatku nižší,\nnež nakolik si hraní verze PO ceníte či stejná.",
+"se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PO."]
+BDMfeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PO úlohy. Nikdy nebudete platit více než náhodně vybranou částku poplatku.",
+"Ano, vyplatí se Vám nabídnout maximální částku poplatku, kterou jste ochotni zaplatit za hraní verze PO úlohy.",
+"Ne, pokud nabídnete vyšší částku, může se stát, že zaplatíte za hraní verze PO úlohy více, než nakolik si ji ceníte."]
 
-AuctionControl1 = "Zda budete hrát v následujícím kole verzi PŘED úlohy závisí na kterých faktorech:"
+AuctionControl1 = "Zda budete hrát v následujícím kole verzi PO úlohy závisí na kterých faktorech:"
 AuctionAnswers1 = ["Náhodně vybrané částce a částce, kterou uvedete, že jste ochotni zaplatit",
 "Náhodně vybrané částce a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu",
 "Částce, kterou uvedete, že jste ochotni zaplatit, a částce, kterou jsou ochotni zaplatit ostatní účastníci výzkumu"]
-AuctionFeedback1 = ["Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny.",
-"Ne, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny.",
-"Ano, zda budete hrát v následujícím kole verzi PŘED úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny."]
+AuctionFeedback1 = ["Ne, zda budete hrát v následujícím kole verzi PO úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny.",
+"Ne, zda budete hrát v následujícím kole verzi PO úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny.",
+"Ano, zda budete hrát v následujícím kole verzi PO úlohy závisí na tom, zda je částka, kterou uvedete, že jste ochotni zaplatit, vyšší než částka, kterou jsou ochotni zaplatit ostatní členové Vaší skupiny."]
 
-AuctionControl2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PŘED úlohy, tak platí, že:"
+AuctionControl2 = "Pokud jste ochotni zaplatit až X Kč za to, že budete hrát verzi PO úlohy, tak platí, že:"
 AuctionAnswers2 = ["se Vám vyplatí nabídnout částku nižší než X, neboť pak můžete zaplatit méně, než X.",
-"se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PŘED, kdykoli bude částka nabídnutá ostatními\nčleny Vaší skupiny nižší než X.",
-"se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PŘED."]
-AuctionFeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy. Jinak je možné, že jiný člen Vaší skupiny zaplatí více než Vy, ale méně než X, a tudíž byste mohli hrát verzi PŘED za částku nižší než X, pokud byste ji nabídli.",
-"Ano, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PŘED úlohy.",
-"Ne, pokud nabídnete vyšší částku, může se stát, že zaplatíte za hraní verze PŘED úlohy více, než nakolik si ji ceníte."]
+"se Vám vyplatí nabídnout částku X, neboť pak budete hrát verzi PO, kdykoli bude částka nabídnutá ostatními\nčleny Vaší skupiny nižší než X.",
+"se Vám vyplatí nabídnout částku vyšší, neboť to zvyšuje šanci, že budete hrát verzi PO."]
+AuctionFeedback2 = ["Ne, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PO úlohy. Jinak je možné, že jiný člen Vaší skupiny zaplatí více než Vy, ale méně než X, a tudíž byste mohli hrát verzi PO za částku nižší než X, pokud byste ji nabídli.",
+"Ano, vyplatí se Vám nabídnout maximální částku, kterou jste ochotni zaplatit za hraní verze PO úlohy.",
+"Ne, pokud nabídnete vyšší částku, může se stát, že zaplatíte za hraní verze PO úlohy více, než nakolik si ji ceníte."]
 
 
 

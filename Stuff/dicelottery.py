@@ -119,6 +119,7 @@ class DiceLottery(ExperimentFrame):
         elif self.currentRoll % 2 == 1:
             self.currentReward = 0
             self.bottomText.insert("1.0", losingText)
+            self.endRolls["text"] = "Pokračovat"
         self.bottomText["state"] = "disabled"
         self.update()        
         self.endRolls["state"] = "!disabled"
