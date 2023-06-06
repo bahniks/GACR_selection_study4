@@ -35,11 +35,11 @@ Nepokračujte prosím, dokud Vám výzkumný asistent nedá pokyn.
 
 
 ending = """
-V úloze s házením kostek byl náhodně vybrán blok {}. V úkolu s kostkou jste tedy vydělali {} Kč. V loteriích jste vydělali {} Kč. {} jste správně na všechny kontroly pozornosti a tedy {} dalších {} Kč. Za účast na studii dostáváte {} Kč. Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky korun nahoru získáváte {} Kč. Napište prosím tuto (zaokrouhlenou) částku společně s Vaším kódem - {} na papír na stole před Vámi. 
+V úloze s házením kostek byl náhodně vybrán blok {}. V úkolu s kostkou jste tedy vydělali {} Kč. V loteriích jste vydělali {} Kč. {} jste správně na všechny kontroly pozornosti a tedy {} dalších {} Kč. Za účast na studii dostáváte {} Kč. Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky korun nahoru získáváte {} Kč. Napište prosím tuto (zaokrouhlenou) částku do příjmového dokladu na stole před Vámi. 
 
 Výsledky experimentu budou volně dostupné na stránkách Centrum laboratorního a experimentálního výzkumu FPH VŠE, krátce po vyhodnocení dat a publikaci výsledků. Žádáme Vás, abyste nesdělovali detaily této studie možným účastníkům, aby jejich volby a odpovědi nebyly ovlivněny a znehodnoceny.
   
-Můžete vzít všechny svoje věci, papír s uvedenou odměnou, a, aniž byste rušili ostatní účastníky, odebrat se za výzkumným asistentem, od kterého obdržíte svoji odměnu. 
+Můžete vzít všechny svoje věci, vyplněný příjmový doklad, a, aniž byste rušili ostatní účastníky, odebrat se za výzkumným asistentem, od kterého obdržíte svoji odměnu. 
 
 Toto je konec experimentu. Děkujeme za vaši účast!
  
@@ -56,9 +56,8 @@ class Ending(InstructionsFrame):
     def __init__(self, root):
         root.texts["reward"] = int(root.texts["dice"]) + int(root.texts["lottery_win"]) + int(root.texts["bonus"]) + PARTICIPATION_FEE
         root.texts["rounded_reward"] = ceil(root.texts["reward"] / 10) * 10
-        root.texts["id"] = root.id[:8]
         root.texts["participation_fee"] = str(PARTICIPATION_FEE)
-        updates = ["block", "dice", "lottery_win", "attention1", "attention2", "bonus", "participation_fee", "reward", "rounded_reward", "id"]
+        updates = ["block", "dice", "lottery_win", "attention1", "attention2", "bonus", "participation_fee", "reward", "rounded_reward"]
         super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)
         self.file.write("Ending\n")
         self.file.write(self.id + "\t" + "\t".join([str(root.texts["rounded_reward"]), str(root.texts["block"])]) + "\n\n")
