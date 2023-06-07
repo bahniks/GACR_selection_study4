@@ -20,12 +20,12 @@ from gui import GUI
 debriefingIntro = "V následující části se Vás zeptáme na Váš pohled na předchozí úlohu a na Vaše rozhodování v ní."
 
 
-q1 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při stanovení maximální ceny poplatku, co jste byli ochotni zaplatit za verzi PŘED úlohy:"
-q2 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při dražbě verze PŘED úlohy:"
+q1 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při stanovení maximální ceny poplatku, co jste byli ochotni zaplatit za verzi PO úlohy:"
+q2 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při dražbě verze PO úlohy:"
 
 
-q3 = "Ohodnoťte, do jaké míry jste zvažovali při stanovení maximální ceny poplatku,\nco jste byli ochotni zaplatit za verzi PŘED úlohy následující faktory:"
-q4 = "Ohodnoťte, do jaké míry jste zvažovali při dražbě verze PŘED úlohy následující faktory:"
+q3 = "Ohodnoťte, do jaké míry jste zvažovali při stanovení maximální ceny poplatku,\nco jste byli ochotni zaplatit za verzi PO úlohy následující faktory:"
+q4 = "Ohodnoťte, do jaké míry jste zvažovali při dražbě verze PO úlohy následující faktory:"
 
 debriefscale1 = "Vůbec ne"
 debriefscale2 = "Jen trochu"
@@ -37,7 +37,7 @@ debriefdimensions = ["svůj očekávaný peněžní výdělek",
                      "ztrátu peněz, kterou mohu způsobit charitě",
                      "ztrátu peněz, kterou mohou způsobit charitě ostatní členové skupiny",
                      "částku, kterou nabídnou ostatní členové skupiny",
-                     "počet správných předpovědí, které uvedou ostatní členové skupiny ve verzi PŘED",
+                     "počet správných předpovědí, které uvedou ostatní členové skupiny ve verzi PO",
                      "nakolik je zábavné hrát obě verze úlohy",
                      "nakolik je jednoduché hrát obě verze úlohy",
                      "schopnost ovlivnit velikost svého peněžního výdělku",
@@ -47,14 +47,14 @@ debriefdimensions = ["svůj očekávaný peněžní výdělek",
 
 
 q5 = "Jak moc souhlasíte nebo nesouhlasíte s následujícími tvrzeními:"
-dimensions2 = ["Stanovení maximální ceny poplatku za verzi PŘED bylo nespravedlivé.",
-               "Stanovení maximální ceny poplatku za verzi PŘED bylo riskantní.",
-               "Nerozuměl jsem účelu stanovení maximální ceny poplatku za verzi PŘED.",
-               "Stanovení maximální ceny poplatku za verzi PŘED mi připadalo komplikované.",
-               "Dražba verze PŘED byla nespravedlivá.",
-               "Dražba verze PŘED byla riskantní.",
+dimensions2 = ["Stanovení maximální ceny poplatku za verzi PO bylo nespravedlivé.",
+               "Stanovení maximální ceny poplatku za verzi PO bylo riskantní.",
+               "Nerozuměl jsem účelu stanovení maximální ceny poplatku za verzi PO.",
+               "Stanovení maximální ceny poplatku za verzi PO mi připadalo komplikované.",
+               "Dražba verze PO byla nespravedlivá.",
+               "Dražba verze PO byla riskantní.",
                "Nerozuměl jsem účelu dražeb.",
-               "Dražba verze PŘED mi připadala komplikovaná."]
+               "Dražba verze PO mi připadala komplikovaná."]
 ds1 = "rozhodně\nnesouhlasím"
 ds2 = "nesouhlasím"
 ds3 = "spíše\nnesouhlasím"
@@ -71,9 +71,9 @@ dsb3 = "Do určité míry"
 dsb4 = "Spíše hodně"
 dsb5 = "Velmi"
 
-q8 = "Napadlo Vás, že je možné ve verzi PŘED podvádět; tedy stanovit,\nže jste uhodli hod kostky, i když jste jej neuhodli?"
-q9 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PŘED, abyste zabránili\nostatním účastníkům brát peníze od charitativních organizací?"
-q10 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PŘED, abyste mohli nahlásit,\nže jste neuhodli hod kostky, když byste jinak mohli způsobit ztrátu charitě?"
+q8 = "Napadlo Vás, že je možné ve verzi PO podvádět; tedy stanovit,\nže jste uhodli hod kostky, i když jste jej neuhodli?"
+q9 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PO, abyste zabránili\nostatním účastníkům brát peníze od charitativních organizací?"
+q10 = "Napadlo Vás, že je možné vydražit možnost hrát verzi PO, abyste mohli nahlásit,\nže jste neuhodli hod kostky, když byste jinak mohli způsobit ztrátu charitě?"
 yes = "Ano, napadlo mě to"
 no = "Ne, nenapadlo mě to"
 
@@ -204,7 +204,7 @@ class DebriefCheating2(ExperimentFrame):
 class DebriefCheating3(ExperimentFrame):
     def __init__(self, root):
         super().__init__(root)       
-        self.frame = OneFrame(self, q5, dimensions2, [ds1, ds2, ds3, ds4, ds5, ds6], wrap = 300)
+        self.frame = OneFrame(self, q5, dimensions2, [ds1, ds2, ds3, ds4, ds5, ds6], wrap = 340)
         self.frame.grid(row = 1, column = 1)            
 
         ttk.Style().configure("TButton", font = "helvetica 15")

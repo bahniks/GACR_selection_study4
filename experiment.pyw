@@ -18,7 +18,6 @@ from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
 from charity import Charity
 from questionnaire import Prosociality
-# from anchoring import AnchoringInstructions, Anchoring
 
 
 frames = [Initial,

@@ -329,7 +329,7 @@ class MultipleChoice(Canvas):
                                           font = "helvetica 15", wraplength = 1000)
         self.filler.grid(column = 0, row = len(answers) + 1, pady = 5, sticky = NW)
         self.feedback = ttk.Label(self, text = " \n ", background = "white", anchor = "center",
-                                          font = "helvetica 15", wraplength = 1000)
+                                          font = "helvetica 15", wraplength = 950)
         self.feedback.grid(column = 0, row = len(answers) + 1, pady = 5, sticky = NW)
         self.rowconfigure(len(answers) + 1, weight = 1)
 
