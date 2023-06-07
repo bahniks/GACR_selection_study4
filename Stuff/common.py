@@ -335,10 +335,13 @@ class MultipleChoice(Canvas):
 
 
     def answerFunction(self):
+        self.root.next["state"] = "normal"            
+        
+    def showFeedback(self):
         self.feedback["text"] = self.feedbackTexts[int(self.answer.get()) - 1]
         for radio in self.radios:
             radio["state"] = "disabled"
-        self.root.next["state"] = "normal"
+        
         
         
 

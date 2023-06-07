@@ -642,7 +642,8 @@ class PaymentFrame(InstructionsFrame):
         texts = self.controlTexts[self.controlNum]
         self.controlQuestion = MultipleChoice(self.controlFrame, text = texts[0], answers = texts[1], feedback = texts[2])
         self.controlQuestion.grid(row = 0, column = 0)
-        self.controlNum += 1        
+        self.controlNum += 1
+        self.controlstate = "answer"
 
     def onValidate(self, P):
         try:
@@ -675,8 +676,12 @@ class PaymentFrame(InstructionsFrame):
             self.write()
             super().nextFun()   
         else:
-            self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.answer.get() + "\n")
-            self.createQuestion()
+            if self.controlstate == "answer":
+                self.controlQuestion.showFeedback()
+                self.controlstate = "feedback"
+            else:                
+                self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.answer.get() + "\n")
+                self.createQuestion()
 
 
 
@@ -954,7 +959,7 @@ class Login(InstructionsFrame):
 
     def write(self, response):
         self.file.write("Login" + "\n")
-        self.file.write(self.id + "\t" + response.replace("_", "\t") + "\n\n")        
+        self.file.write(self.id + response.replace("_", "\t").lstrip("start") + "\n\n")        
 
 
 
