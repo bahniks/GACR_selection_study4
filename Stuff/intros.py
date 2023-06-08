@@ -50,7 +50,7 @@ Děkujeme, že jste vypnuli své mobilní telefony, a že nebudete s nikým komu
 
 Pokud jste již tak neučinili, přečtěte si informovaný souhlas a podepište ho. 
 
-Klikněte na tlačítko Pokračovat pro přihlášení do studie.""".format(PARTICIPATION_FEE)
+Počkejte na pokyn experimentátora.""".format(PARTICIPATION_FEE)
 ################################################################################
 
 
@@ -93,7 +93,7 @@ class Ending(InstructionsFrame):
 
 
 Intro = (InstructionsFrame, {"text": intro, "proceed": True, "height": 22})
-Initial = (InstructionsFrame, {"text": login, "proceed": True, "height": 15, "wait": 0})
+Initial = (InstructionsFrame, {"text": login, "proceed": False, "height": 15, "wait": 0})
 
 
 
