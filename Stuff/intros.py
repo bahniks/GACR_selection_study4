@@ -5,6 +5,7 @@ import urllib.request
 import urllib.parse
 
 from math import ceil
+from time import sleep
 
 from common import InstructionsFrame
 from gui import GUI
@@ -93,7 +94,7 @@ class Ending(InstructionsFrame):
 
 
 Intro = (InstructionsFrame, {"text": intro, "proceed": True, "height": 22})
-Initial = (InstructionsFrame, {"text": login, "proceed": False, "height": 15, "wait": 0})
+Initial = (InstructionsFrame, {"text": login, "proceed": False, "height": 15, "keys": ["g", "G"]})
 
 
 

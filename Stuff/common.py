@@ -89,9 +89,9 @@ class InstructionsFrame(ExperimentFrame):
                     self.root.bind("{}".format(key), lambda e: self.proceed())
                 else:
                     self.root.bind("<{}>".format(key), lambda e: self.proceed())                
-        else:
-            self.root.bind("<g>", lambda e: self.proceed())
-            self.root.bind("<G>", lambda e: self.proceed())
+        # else:
+        #     self.root.bind("<g>", lambda e: self.proceed())
+        #     self.root.bind("<G>", lambda e: self.proceed())
         self.keys = keys
 
         self.columnconfigure(0, weight = 1)
