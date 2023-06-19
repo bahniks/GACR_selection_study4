@@ -500,7 +500,7 @@ class Cheating(ExperimentFrame):
                             response = f.read().decode("utf-8")       
                     except Exception:
                         continue
-                if response:                    
+                if response: # should be changed to if response == "ok":                    
                     super().nextFun()  
                     return            
                 sleep(0.1)
