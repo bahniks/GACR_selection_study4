@@ -1,8 +1,5 @@
 BONUS = 30
 PARTICIPATION_FEE = 150
-MAX_BDM_PRIZE = 300
-CONDITION_LOW = (25, 50, 75)
-CONDITION_HIGH = (100, 200, 300)
 
 TESTING = False
 URL = "https://bahnik.pythonanywhere.com/"
