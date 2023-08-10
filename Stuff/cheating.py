@@ -75,11 +75,6 @@ members = [" 1 člen", "i 2 členové", "i 3 členové", "i všichni 4 členové
 
 
 
-auction_info = """
-
-<b>Hráč, který hrál verzi “PO” v minulém kole, uvedl, že správně uhodl {} hodů kostkou a vyhrál tedy {} Kč a charita ztratila z přiděleného příspěvku {} Kč.</b>
-"""
-
 block_numbers = ["prvního", "druhého", "třetího", "čtvrtého", "pátého", "šestého", "sedmého"]
 
 wait_text = "Prosím počkejte na ostatní členy skupiny."
@@ -108,10 +103,10 @@ correct_answer = "15 Kč je správná odpověď. Byl vylosován třetí blok, ve
 
 
 intro_block_2 = """
-Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč a Vámi vybraná charita {} Kč. Nyní začne druhý blok s dvanácti koly.
+Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč. Nyní začne druhý blok s dvanácti koly.
 """
 
-endtext = """Toto je konec posledního bloku. Pokud bude tento blok vybrán, obdržíte {} Kč a Vámi vybraná charita {} Kč.
+endtext = """Toto je konec posledního bloku. Pokud bude tento blok vybrán, obdržíte {} Kč
 
 Toto je konec úkolu s kostkou.
 """
@@ -466,8 +461,8 @@ class CheatingInstructions(InstructionsFrame):
 
 
 
-class VotingFrame(InstructionsFrame):
-    def __init__(self, root, text, name, height = 10):
+class Voting(InstructionsFrame):
+    def __init__(self, root):
         # for testing
         if not "block" in root.status: 
             root.status["block"] = 1
@@ -475,9 +470,8 @@ class VotingFrame(InstructionsFrame):
         block_num = str(root.status["block"] - 1)
         root.texts["previousBlockText"] = block_numbers[root.status["block"] - 2]
         update = ["previousBlockText", "win" + block_num]
-        super().__init__(root, text = text, height = height, font = 15, width = 105, update = update)
+        super().__init__(root, text = intro_voting, height = 15, font = 15, width = 105, update = update)
 
-        self.name = name
 
         # offer frame
         self.offerVar = StringVar()
@@ -519,131 +513,7 @@ class VotingFrame(InstructionsFrame):
         self.rowconfigure(4, weight = 1)
         self.rowconfigure(5, weight = 1)
         self.rowconfigure(6, weight = 2)        
-
-        self.controlNum = 0
-        self.createQuestion()
-
-
-    def createQuestion(self):
-        self.next["state"] = "disabled"     
-        if self.controlQuestions and self.controlNum < len(self.controlTexts):            
-            self.createControlQuestion()            
-            self.controlFrame.grid(row = 2, column = 1)
-        else:
-            self.file.write("\n")
-            self.controlFrame.grid_forget()
-            self.offerFrame.grid(row = 2, column = 1)
-
-    def createControlQuestion(self):
-        if self.controlNum:
-            self.controlQuestion.grid_forget()
-        texts = self.controlTexts[self.controlNum]
-        self.controlQuestion = MultipleChoice(self.controlFrame, text = texts[0], answers = texts[1], feedback = texts[2])
-        self.controlQuestion.grid(row = 0, column = 0)
-        self.controlNum += 1
-        self.controlstate = "answer"
-
-    def onValidate(self, P):
-        try:
-            if "," in P or "." in P:
-                raise ValueError()            
-            if "-" in P:
-                raise Exception("Nabídka musí být vyšší než 0 Kč.")
-            offer = int(P)
-            if offer < 0:
-                raise Exception("Nabídka musí být vyšší než 0 Kč.")
-            elif offer > MAX_BDM_PRIZE:
-                raise Exception("Nabídka nesmí být vyšší než {} Kč.".format(MAX_BDM_PRIZE))
-            else:
-                self.next["state"] = "!disabled"
-                self.problem["text"] = ""
-        except ValueError:
-            self.next["state"] = "disabled"
-            self.problem["text"] = "Do textového pole je potřeba uvést celé číslo."
-        except Exception as e:
-            self.next["state"] = "disabled"
-            self.problem["text"] = e
-        return True
-  
-    def write(self):
-        self.file.write(self.name + "\n")
-        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.offerVar.get() + "\n\n")
-
-    def nextFun(self):        
-        if (not self.controlQuestions) or (self.controlNum == len(self.controlTexts) and self.offerVar.get()):
-            self.write()
-            super().nextFun()   
-        else:
-            if self.controlstate == "answer":
-                self.controlQuestion.showFeedback()
-                self.controlstate = "feedback"
-            else:                
-                self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.answer.get() + "\n")
-                self.createQuestion()
-
-
-
-class Auction(PaymentFrame):
-    def __init__(self, root):
-        self.controlQuestions = root.status["block"] == 4
-        if self.controlQuestions:
-            introAuction = intro_auction.format("{}", "{}", "{}", firstgroups, firstauction, MAX_BDM_PRIZE)
-        else:
-            introAuction = intro_auction.format("{}", "{}", "{}", latergroups, laterauction, MAX_BDM_PRIZE)
-
-        if "info" in root.status["condition"] and root.status["block"] > 4 and root.status["conditions"][root.status["block"]-2] != "treatment":
-            if int(root.texts["outcome"].split("_")[1]) == -99:
-                text = introAuction    
-            else:
-                text = introAuction + auction_info.format(*root.texts["outcome"].split("_")[1:4])
-        else:
-            text = introAuction
-
-        self.controlTexts = [[AuctionControl1, AuctionAnswers1, AuctionFeedback1], [AuctionControl2, AuctionAnswers2, AuctionFeedback2]]
-
-        super().__init__(root, text = text, name = "Auction", height = 20)
-
-        if self.controlQuestions:
-            self.file.write("Auction Control Questions" + "\n")
-
-        self.state = "bid"
-
-        self.predictionVar = StringVar()
-        self.vcmd2 = (self.register(self.onValidatePrediction), '%P')
-        self.predictionFrame = Canvas(self.offerFrame, background = "white", highlightbackground = "white",
-                                 highlightcolor = "white")
-        self.predictionFrame.grid(row = 3, column = 0, columnspan = 3, pady = 20, sticky = EW)
-        self.predictionTextLab = ttk.Label(self.predictionFrame, text = auction_prediction, font = "helvetica 15", background = "white", foreground = "white")
-        self.predictionTextLab.grid(row = 1, column = 0, padx = 6, sticky = E)
-        self.predictionEntry = ttk.Entry(self.predictionFrame, textvariable = self.predictionVar, width = 10, justify = "right",
-                                font = "helvetica 15", validate = "key", validatecommand = self.vcmd2)
-        self.predictionEntry.grid(row = 1, column = 1, padx = 10)
-        self.predictionEntry.grid_remove()
-
-
-    def onValidatePrediction(self, P):
-        try:
-            if "," in P or "." in P:
-                raise ValueError()            
-            if "-" in P:
-                raise Exception("Není možné správně odhadnout záporné množství hodů.")
-            offer = int(P)
-            if offer < 0:
-                raise Exception("Není možné správně odhadnout záporné množství hodů.")
-            elif offer > 12:
-                raise Exception("Není možné odhadnout správně více než 12 hodů.")
-            else:
-                self.next["state"] = "!disabled"
-                self.problem["text"] = ""
-        except ValueError:
-            self.next["state"] = "disabled"
-            self.problem["text"] = "Do textového pole je potřeba uvést celé číslo."
-        except Exception as e:
-            self.next["state"] = "disabled"
-            self.problem["text"] = e
-        return True
-
-  
+ 
     def write(self):
         self.root.texts["auctionResponse"] = self.offerVar.get()
 
@@ -669,8 +539,7 @@ class Auction(PaymentFrame):
                 messagebox.showinfo(message = "Zavolejte prosím experimentátora.", icon = "error", parent = self.root, 
                                   detail = "Pravděpodobně je problém se serverem.", title = "Problém")
         else:
-            self.root.status["TESTauction"] = self.offerVar.get()
-
+            self.root.status["TESTvote"] = self.offerVar.get() # zmenit na hlasovani
 
     def nextFun(self):
         if self.state == "bid" and ((not self.controlQuestions) or (self.controlNum == len(self.controlTexts) and self.offerVar.get())):
@@ -684,44 +553,9 @@ class Auction(PaymentFrame):
 
 
 
-class BDM(PaymentFrame):
-    def __init__(self, root):
-        if (not "block" in root.status) or root.status["block"] == 3:
-            self.controlQuestions = True
-            text = intro_BDM  
-        else: 
-            self.controlQuestions = False
-            text = intro_BDM2        
-
-        self.controlTexts = [[BDMcontrol1, BDManswers1, BDMfeedback1], [BDMcontrol2, BDManswers2, BDMfeedback2]]
-
-        height = 30 if self.controlQuestions else 24
-        super().__init__(root, text = text, name = "BDM", height = height)
-
-        if self.controlQuestions:
-            self.file.write("BDM Control Questions" + "\n")
-
-    def write(self):        
-        fee = self.root.status["bdm1"] if self.root.status["block"] == 3 else self.root.status["bdm2"]
-        if int(self.offerVar.get()) >= fee:
-            condition = "after"
-            self.root.texts["bdmVersion"] = "PO"
-            self.root.texts["bdmPaymentText"] = bdm_after
-            self.root.status["conditions"].append("treatment")
-            self.root.fees[self.root.status["block"]] = fee
-        else:
-            condition = "before"
-            self.root.texts["bdmVersion"] = "PŘED"
-            self.root.texts["bdmPaymentText"] = bdm_before
-            self.root.status["conditions"].append("control")
-        self.root.texts["bdmFee"] = fee
-        self.root.texts["bdmResponse"] = int(self.offerVar.get())                
-
-        super().write()
-
 
 class Wait(InstructionsFrame):
-    def __init__(self, root, what = "auction"):
+    def __init__(self, root, what = "voting"):
         super().__init__(root, text = wait_text, height = 3, font = 15, proceed = False, width = 45)
         self.what = what
         self.progressBar = ttk.Progressbar(self, orient = HORIZONTAL, length = 400, mode = 'indeterminate')
@@ -732,26 +566,24 @@ class Wait(InstructionsFrame):
         while True:
             self.update()
             if count % 50 == 0:
-                if self.what == "auction":
+                if self.what == "voting":
                     data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "result"})
                 elif self.what == "outcome":
                     data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "outcome"})
                 data = data.encode('ascii')
                 if URL == "TEST":
-                    if self.what == "auction":
-                        myoffer = int(self.root.status["TESTauction"])
-                        offers = [myoffer, random.randint(1,MAX_BDM_PRIZE), random.randint(1,MAX_BDM_PRIZE), random.randint(1,MAX_BDM_PRIZE)]
-                        maxoffer = max(offers)
-                        offers.sort()
-                        secondoffer = offers[2]
-                        condition = "treatment" if myoffer == maxoffer else "control"
-                        response = "|".join([condition, str(maxoffer), str(secondoffer), str(myoffer)])
+                    if self.what == "voting":
+                        myvote = int(self.root.status["TESTvote"])
+                        maxvotes = random.choice(["you", "2", "3", "4"])
+                        votes = random.randint(1, 4)
+                        condition = "treatment" if maxvotes == "you" else "control"
+                        response = "_".join([condition, maxvotes, str(votes)])
                     elif self.what == "outcome":
                         if self.root.status["conditions"][self.root.status["block"]-2] == "treatment":
-                            response = self.root.texts["testOutcome"] + "_True"
+                            response = self.root.texts["testOutcome"] + "_True" # upravit
                         else:
-                            charity = -25 if "low" in self.root.status["condition"] else -100
-                            response = "outcome_{}_{}_{}_True".format(10, 275, charity)
+                            result = random.randint(0,12)
+                            response = "outcome_{}_True".format(result)
                 else:
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:
@@ -759,14 +591,13 @@ class Wait(InstructionsFrame):
                     except Exception as e:
                         pass
                 if response:                  
-                    if self.what == "auction":
-                        condition, maxoffer, secondoffer, myoffer = response.split("|")           
-                        self.root.status["conditions"].append(condition)
-                        sameoffers = myoffer == maxoffer and myoffer == secondoffer
-                        self.updateResults(maxoffer, secondoffer, condition, sameoffers)
+                    if self.what == "voting":
+                        condition, maxvotes, votes = response.split("_")           
+                        self.root.status["conditions"].append(condition)                        
+                        self.updateResults(maxvotes, votes)
                         self.write(response)
-                    elif self.what == "outcome" and self.root.status["block"] != 7:                        
-                        _, wins, reward, charity, completed = response.split("_")
+                    elif self.what == "outcome" and self.root.status["block"] != 7:
+                        _, wins, completed = response.split("_")
                         if completed != "True":
                             continue
                         else:
@@ -781,23 +612,14 @@ class Wait(InstructionsFrame):
         self.progressBar.start()
         self.checkOffers()
 
-    def updateResults(self, maxoffer, secondoffer, nextCondition, sameoffers):        
-        if not hasattr(self.root, "fees"):
-            self.root.fees = defaultdict(int)
-        if nextCondition == "treatment":
-            self.root.fees[self.root.status["block"]] = int(secondoffer)
-            if sameoffers:
-                self.root.texts["auctionText"] = auction_after_same.format(secondoffer, secondoffer)
-            else:
-                self.root.texts["auctionText"] = auction_after.format(secondoffer, secondoffer)
+    def updateResults(self, maxvotes, votes):                
+        if maxvotes == "you":
+            self.root.texts["voting_result_text"] = voting_result.format(voting_you, members[int(votes)])
         else:
-            if sameoffers:
-                self.root.texts["auctionText"] = auction_before_same.format(maxoffer)   
-            else:
-                self.root.texts["auctionText"] = auction_before.format(maxoffer)           
+            self.root.texts["voting_result_text"] = voting_result.format(voting_other.format(maxvotes), members[int(votes)])
 
     def write(self, response):
-        self.file.write("Auction Result" + "\n")
+        self.file.write("Voting Result" + "\n")
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response.replace("|", "\t") + "\n\n")          
             
 
@@ -816,7 +638,7 @@ class Login(InstructionsFrame):
                 data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
                 data = data.encode('ascii')
                 if URL == "TEST":
-                    response = "_".join(["start", str(random.randint(1,MAX_BDM_PRIZE)), str(random.randint(1,MAX_BDM_PRIZE)), random.choice(["lowinfo", "highinfo", "lowcontrol", "highcontrol"])])
+                    response = "_".join(["start", random.choice(["charity", "others", "all"])])
                 else:
                     response = ""
                     try:
@@ -825,11 +647,9 @@ class Login(InstructionsFrame):
                     except Exception:
                         self.changeText("Server nedostupný")
                 if "start" in response:
-                    info, bdm1, bdm2, condition = response.split("_")                    
-                    self.root.status["bdm1"] = int(bdm1)
-                    self.root.status["bdm2"] = int(bdm2)
+                    info, condition = response.split("_")                    
                     self.root.status["condition"] = condition
-                    self.update_intro(condition)
+                    #self.update_intro(condition)
                     self.progressBar.stop()
                     self.write(response)
                     self.nextFun()                      
@@ -851,9 +671,9 @@ class Login(InstructionsFrame):
         self.progressBar.start()
         self.login()
 
-    def update_intro(self, condition):
-        loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
-        self.root.texts["intro_block_1"] = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2], sum(loss))
+    # def update_intro(self, condition):
+    #     loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
+    #     self.root.texts["intro_block_1"] = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2], sum(loss))
 
     def write(self, response):
         self.file.write("Login" + "\n")
@@ -863,11 +683,10 @@ class Login(InstructionsFrame):
 
 
 
-Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1", "charity1"]})
-BDMResult = (InstructionsFrame, {"text": bdm_result, "height": 3, "update": ["bdmFee", "bdmResponse", "bdmVersion", "bdmPaymentText"]})
-AuctionResult = (InstructionsFrame, {"text": auction_result, "height": 3, "update": ["auctionResponse", "auctionText"]})
-EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win7", "charity7"]})
-AuctionWait = (Wait, {"what": "outcome"})
+Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
+VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text3"]})
+EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win3"]})
+OutcomeWait = (Wait, {"what": "outcome"})
 
 
 
@@ -879,26 +698,10 @@ if __name__ == "__main__":
          Cheating,
          Instructions2,
          Cheating,
-         BDM,
-         BDMResult,
-         Cheating,
-         Auction,
+         Voting,
          Wait,
-         AuctionResult,
+         VotingResult,
          Cheating,
-         AuctionWait,
-         Auction,
-         Wait,
-         AuctionResult,
-         Cheating,
-         AuctionWait,
-         Auction,
-         Wait,
-         AuctionResult,
-         Cheating,
-         AuctionWait,
-         BDM,
-         BDMResult,
-         Cheating,
+         OutcomeWait,
          EndCheating
          ])
