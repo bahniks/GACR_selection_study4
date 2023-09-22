@@ -12,7 +12,7 @@ import urllib.parse
 
 from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice
 from gui import GUI
-from constants import MAX_BDM_PRIZE, TESTING, URL, CONDITION_LOW, CONDITION_HIGH
+from constants import TESTING, URL
 
 
 ################################################################################
@@ -33,8 +33,6 @@ Máte za úkol uhodnout, zda na kostce padne liché, nebo sudé číslo. Nyní p
 
 treatmenttext2 = "Zvolte, zda jste hádali správně a vydělali v tomto kole {} Kč, nebo zda jste hádali špatně a nevydělali jste v tomto kole nic."
 
-treatmentcharity1 = " a charita ztratila {} Kč"
-treatmentcharity2 = " a charita neztratila nic"
 
 controltext = """Blok {}, Kolo {}
 
@@ -45,24 +43,38 @@ controltext2 = "V tomto kole byla Vaše předpověď {}"
 wintext = "správná a vydělali jste {} Kč."
 losstext = "špatná a nevydělali jste možných {} Kč."
 
-charityloss = " Charita ztratila {} Kč."
 
 
-# buttons
-controlchoicetext = "verze PŘED"
-treatmentchoicetext = "verze PO"  
-
-intro_voting = f"""Toto je konec {{}} bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč a Vámi vybraná charita {{}} Kč.
+intro_third = f"""Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
 <b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv, a kolik jste vydělali.
 <b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
-Nyní Vás čeká třetí blok s dvanácti pokusy. 
+Nyní Vás čeká třetí blok s dvanácti pokusy. V tomto kole budete hrát verzi "PO". 
 
-Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" (ve které se uvádí, zda jste uhodli, či nikoliv, až po zobrazení výsledku hodu kostkou) a zbývající účastníci budou hrát verzi "PŘED". Všichni členové skupiny jinak hrají úlohu za stejných podmínek.
+Před čtvrtým blokem budete náhodně přiřazeni do skupiny spolu s dalšími třemi účastníky studie. {{}}Jeden z členů skupiny bude hrát ve čtvrtém kole verzi "PO" a ostatní budou hrát verzi "PŘED". Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO". {{}}Každý člen skupiny bude mít jeden hlas, který přidělí některému z ostatních členů skupiny. Před hlasováním uvidíte výhru všech členů skupiny v tomto, třetím bloku a budete ji tedy moct vzít při hlasování v potaz.
 
-Kdo z každé skupiny bude hrát verzi "PO" bude rozhodnuto na základě dražby. Všichni členové skupiny uvedou nabídku, kolik korun jsou ochotni zaplatit ze své výhry za to, aby hráli verzi "PO". Ten, který uvede nejvyšší částku bude hrát verzi "PO" a za tuto možnost zaplatí částku poplatku rovnou druhé nejvyšší nabídce ve skupině. V případě, že dva či více členové skupiny uvedou stejnou nejvyšší částku, verze “PO” bude za tuto částku přiřazena jednomu z nich náhodně. Pokud nebudete hrát verzi "PO", žádný poplatek neplatíte. Žádný poplatek také neplatíte, pokud tento blok nebude po dokončení úlohy vylosován k proplacení. 
+Vysolovaný blok ůlohy, ze kterého Vám bude proplacena odměna, bude stejný pro celou Vaši skupinu.
+
+V třetím bloku budete tedy hrát verzi "PO" a před následujícím blokem budete spolu s ostatními členy Vaší skupiny hlasovat o tom, kdo bude v posledním bloku hrát verzi "PO". Před tímto hlasováním uvidíte výhru ostatních členů skupiny v tomto, třetím bloku.
+"""
+
+condition_others = 'Výhra člena skupiny, který bude hrát verzi "PO", bude odečtena od 400 Kč a zbylé peníze budou rozděleny rovným dílem mezi všechny členy skupiny. '
+condition_charity = 'Výhra člena skupiny, který bude hrát verzi "PO", bude odečtena od 400 Kč a zbylé peníze budou darovány charitě XXX. '
+condition_divided = "Ve čtvrtém kole se výhra celé skupiny sečte a rozdělí mezi všechny členy skupiny rovným dílem. "
+
+
+
+intro_voting = f"""Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+
+Nyní Vás čeká čtvrtý blok s dvanácti pokusy.
+
+Byli jste přiřazeni do skupiny s dalšími třemi účastníky studie. {{}}
+
+Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" (ve které se uvádí, zda jste uhodli, či nikoliv, až po zobrazení výsledku hodu kostkou) a zbývající účastníci budou hrát verzi "PŘED". {{}}Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO".
+
+Níže jsou zobrazeny výhry ostatních účastníků studie ve třetím bloku. Označte pro koho hlasujete, aby hrál verzi "PO" v následujícím bloku a zmáčkněte tlačítko "Pokračovat".
 """
 
 
@@ -94,7 +106,7 @@ Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, k
 Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
 
 Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na následující otázku:
-Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku, 8 hodů ve čtvrtém a pátém bloku, 4 hody v šestém bloku a 11 hodů v sedmém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
+Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku, 8 hodů ve čtvrtém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
 """
 
 wrong_answer = "{} Kč je chybná odpověď, správná odpověď je 15 Kč. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
@@ -377,7 +389,7 @@ class Cheating(ExperimentFrame):
 
     
     def nextFun(self):
-        if self.blockNumber > 3 and self.blockNumber <= 6:            
+        if self.blockNumber == 3: # send the results of the after version in the third round            
             wins = self.root.wins[self.blockNumber]
             reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
             outcome = "outcome_" + "_".join([str(wins), str(reward)]) 
@@ -647,9 +659,10 @@ class Login(InstructionsFrame):
                     except Exception:
                         self.changeText("Server nedostupný")
                 if "start" in response:
-                    info, condition = response.split("_")                    
-                    self.root.status["condition"] = condition
-                    #self.update_intro(condition)
+                    info, source, condition = response.split("_")                    
+                    self.root.status["source"] = source
+                    self.root.status["condition"] = condition                    
+                    self.update_intro(source, condition)
                     self.progressBar.stop()
                     self.write(response)
                     self.nextFun()                      
@@ -671,9 +684,12 @@ class Login(InstructionsFrame):
         self.progressBar.start()
         self.login()
 
-    # def update_intro(self, condition):
-    #     loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
-    #     self.root.texts["intro_block_1"] = intro_block_1.format(loss[0], loss[1], loss[2], sum(loss), loss[0], loss[1], loss[2], sum(loss))
+    def update_intro(self, source, condition):
+        source = {"others": condition_others, "charity": condition_charity, "experimenter": ""}[source]
+        condition = {"divided": condition_divided, "kept": ""}[condition]
+        loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
+        self.root.texts["intro_block_3"] = intro_third.format("", condition, source)
+        self.root.texts["intro_block_4"] = intro_voting.format("", condition, source)
 
     def write(self, response):
         self.file.write("Login" + "\n")
