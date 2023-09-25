@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from time import localtime, strftime, time
+from time import localtime, strftime, time, sleep
 from collections import defaultdict
 from uuid import uuid4
 
@@ -10,7 +10,7 @@ import urllib.parse
 import os
 import json
 
-from constants import TESTING, URL
+from constants import TESTING, URL, GOTHROUGH
 
 
 class GUI(Tk):
@@ -101,6 +101,11 @@ class GUI(Tk):
             else:
                 self.frame = nxt(self)
             self.frame.grid(row = 0, column = 0, sticky = (N, S, E, W))
+
+            if GOTHROUGH and GOTHROUGH != self.frame.__class__ and (type(GOTHROUGH) is not int or GOTHROUGH < self.count):                
+                self.update()
+                sleep(0.5)         
+                self.frame.gothrough()
 
             if hasattr(self.frame, "run"):
                 self.update()

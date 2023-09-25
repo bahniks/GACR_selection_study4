@@ -1,4 +1,6 @@
 #! python3
+# -*- coding: utf-8 -*- 
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -45,7 +47,7 @@ losstext = "špatná a nevydělali jste možných {} Kč."
 
 
 
-intro_third = f"""Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+intro_third = """Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
 <b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv, a kolik jste vydělali.
@@ -53,7 +55,7 @@ Jak jste zaznamenali, úkol měl dvě verze:
 
 Nyní Vás čeká třetí blok s dvanácti pokusy. V tomto kole budete hrát verzi "PO". 
 
-Před čtvrtým blokem budete náhodně přiřazeni do skupiny spolu s dalšími třemi účastníky studie. {{}}Jeden z členů skupiny bude hrát ve čtvrtém kole verzi "PO" a ostatní budou hrát verzi "PŘED". Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO". {{}}Každý člen skupiny bude mít jeden hlas, který přidělí některému z ostatních členů skupiny. Před hlasováním uvidíte výhru všech členů skupiny v tomto, třetím bloku a budete ji tedy moct vzít při hlasování v potaz.
+Před čtvrtým blokem budete náhodně přiřazeni do skupiny spolu s dalšími třemi účastníky studie. {}Jeden z členů skupiny bude hrát ve čtvrtém kole verzi "PO" a ostatní budou hrát verzi "PŘED". Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO". {}Každý člen skupiny bude mít jeden hlas, který přidělí některému z ostatních členů skupiny. Před hlasováním uvidíte výhru všech členů skupiny v tomto, třetím bloku a budete ji tedy moct vzít při hlasování v potaz.
 
 Vysolovaný blok ůlohy, ze kterého Vám bude proplacena odměna, bude stejný pro celou Vaši skupinu.
 
@@ -66,13 +68,13 @@ condition_divided = "Ve čtvrtém kole se výhra celé skupiny sečte a rozděl�
 
 
 
-intro_voting = f"""Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+intro_voting = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
 
 Nyní Vás čeká čtvrtý blok s dvanácti pokusy.
 
-Byli jste přiřazeni do skupiny s dalšími třemi účastníky studie. {{}}
+Byli jste přiřazeni do skupiny s dalšími třemi účastníky studie. {}
 
-Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" (ve které se uvádí, zda jste uhodli, či nikoliv, až po zobrazení výsledku hodu kostkou) a zbývající účastníci budou hrát verzi "PŘED". {{}}Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO".
+Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO" (ve které se uvádí, zda jste uhodli, či nikoliv, až po zobrazení výsledku hodu kostkou) a zbývající účastníci budou hrát verzi "PŘED". {}Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO".
 
 Níže jsou zobrazeny výhry ostatních účastníků studie ve třetím bloku. Označte pro koho hlasujete, aby hrál verzi "PO" v následujícím bloku a zmáčkněte tlačítko "Pokračovat".
 """
@@ -150,6 +152,7 @@ class Cheating(ExperimentFrame):
             self.root.status["block"] = 1
             conditions = ["treatment", "control"]
             random.shuffle(conditions)  
+            conditions += "treatment"
             self.root.status["conditions"] = conditions
         self.blockNumber = self.root.status["block"]      
         
@@ -206,8 +209,6 @@ class Cheating(ExperimentFrame):
 
         if not hasattr(self.root, "wins"):
             self.root.wins = defaultdict(int)    
-        if not hasattr(self.root, "fees"):
-            self.root.fees = defaultdict(int)
 
         self.responses = []
 
@@ -219,10 +220,9 @@ class Cheating(ExperimentFrame):
             self.currentTrial += 1
             self.startTrial()
         else:
-            fee = self.root.fees[self.blockNumber]
-            self.root.texts["win" + str(self.blockNumber)] = sum(self.rewards[:self.root.wins[self.blockNumber]]) - fee
-            if self.blockNumber == 7: # pocet bloku
-                win = random.randint(1, 7)
+            self.root.texts["win" + str(self.blockNumber)] = sum(self.rewards[:self.root.wins[self.blockNumber]])
+            if self.blockNumber == 4: # pocet bloku
+                win = random.randint(1, 4)
                 self.root.texts["dice"] = self.root.texts["win{}".format(win)]
                 self.root.texts["block"] = win
             self.nextFun()
@@ -278,6 +278,7 @@ class Cheating(ExperimentFrame):
 
 
     def bottomPart(self):
+        print("bottom")
         self.bottomText["state"] = "normal"
         if "treatment" in self.condition:
             reward = self.rewards[self.root.wins[self.blockNumber]]
@@ -307,6 +308,7 @@ class Cheating(ExperimentFrame):
 
 
     def roll(self):
+        print("roll")
         self.firstResponse = perf_counter()
         if "treatment" in self.condition:
             self.response = "NA"    
@@ -327,7 +329,8 @@ class Cheating(ExperimentFrame):
         self.currentRoll = random.randint(1, 6)
         self.displayNum(self.diesize/2, self.diesize/2, self.currentRoll)
         self.update()
-        sleep(self.pause_after_roll)
+        if not TESTING:
+            sleep(self.pause_after_roll)
         self.beforeSecondResponse = perf_counter()
         self.bottomPart()
 
@@ -351,9 +354,8 @@ class Cheating(ExperimentFrame):
 
     def showWinnings(self):
         wins = self.root.wins[self.blockNumber]        
-        self.infoWinnings["text"] = "Počet správných odhadů:\n{}".format(wins)
-        fee = self.root.fees[self.blockNumber]
-        self.infoWinnings["text"] += "\n\nVaše současná výhra:\n{} Kč".format(sum(self.rewards[:wins]) - fee)
+        self.infoWinnings["text"] = "Počet správných odhadů:\n{}".format(wins)        
+        self.infoWinnings["text"] += "\n\nVaše současná výhra:\n{} Kč".format(sum(self.rewards[:wins]))
 
     def answer(self, answer = "NA"):
         t = perf_counter()
@@ -361,7 +363,7 @@ class Cheating(ExperimentFrame):
             self.root.wins[self.blockNumber] += 1
         self.responses.append([self.blockNumber, self.currentTrial, self.condition, self.root.status["condition"],
                                self.currentRoll, self.response, answer, 
-                               sum(self.rewards[:self.root.wins[self.blockNumber]]) - self.root.fees[self.blockNumber],
+                               sum(self.rewards[:self.root.wins[self.blockNumber]]),
                                t - self.time, self.firstResponse - self.time,
                                t - self.beforeSecondResponse])
         self.bottomText["state"] = "normal"
@@ -411,6 +413,31 @@ class Cheating(ExperimentFrame):
                 sleep(0.1)
         else:
             super().nextFun()  
+
+
+    def gothrough(self):
+        # nefunguje :(
+        self.run()
+       
+        if "treatment" in self.condition:
+            self.predictedCB.invoke()
+            self.after(200, self.rollButton.invoke)
+            self.after(200, self.winButton.invoke)
+            #self.root.update()
+            #self.after(500, self.update)
+            #answer = random.choice([self.winButton, self.lossButton])
+            #self.after(700, answer.invoke)
+        elif "control" in self.condition:
+            answer = random.choice([self.evenButton, self.oddButton])
+            answer.invoke()            
+            self.after(200, self.rollButton.invoke)
+            self.update()
+            self.after(200, self.continueButton.invoke)
+            #self.root.update()
+            #self.after(700, self.continueButton.invoke)
+
+
+
     
     
 
@@ -471,6 +498,14 @@ class CheatingInstructions(InstructionsFrame):
             self.lowerText["state"] = "disabled"
             self.checked = True
 
+    def gothrough(self):
+        self.entry.focus_set()
+        self.event_generate('<KeyPress-1>')
+        self.event_generate('<KeyPress-5>')
+        self.after(500, self.next.invoke)
+        self.after(500, self.next.invoke)
+
+
 
 
 class Voting(InstructionsFrame):
@@ -478,11 +513,8 @@ class Voting(InstructionsFrame):
         # for testing
         if not "block" in root.status: 
             root.status["block"] = 1
-
-        block_num = str(root.status["block"] - 1)
-        root.texts["previousBlockText"] = block_numbers[root.status["block"] - 2]
-        update = ["previousBlockText", "win" + block_num]
-        super().__init__(root, text = intro_voting, height = 15, font = 15, width = 105, update = update)
+        
+        super().__init__(root, text = root.texts["intro_block_4"], height = 15, font = 15, width = 105, update = "win3")
 
 
         # offer frame
@@ -650,7 +682,7 @@ class Login(InstructionsFrame):
                 data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
                 data = data.encode('ascii')
                 if URL == "TEST":
-                    response = "_".join(["start", random.choice(["charity", "others", "all"])])
+                    response = "_".join(["start", random.choice(["others_kept", "charity_kept", "charity_divided", "experimenter_kept", "experimenter_divided"])])
                 else:
                     response = ""
                     try:
@@ -687,19 +719,22 @@ class Login(InstructionsFrame):
     def update_intro(self, source, condition):
         source = {"others": condition_others, "charity": condition_charity, "experimenter": ""}[source]
         condition = {"divided": condition_divided, "kept": ""}[condition]
-        loss = CONDITION_HIGH if "high" in condition else CONDITION_LOW
-        self.root.texts["intro_block_3"] = intro_third.format("", condition, source)
+        self.root.texts["condition"] = condition
+        self.root.texts["source"] = source
         self.root.texts["intro_block_4"] = intro_voting.format("", condition, source)
 
     def write(self, response):
         self.file.write("Login" + "\n")
         self.file.write(self.id + response.replace("_", "\t").lstrip("start") + "\n\n")        
 
+    def gothrough(self):
+        self.run()
 
 
 
 
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
+Instructions3 = (InstructionsFrame, {"text": intro_third, "height": 25, "update": ["win2", "condition", "source"]})
 VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text3"]})
 EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win3"]})
 OutcomeWait = (Wait, {"what": "outcome"})
@@ -713,6 +748,8 @@ if __name__ == "__main__":
          CheatingInstructions,
          Cheating,
          Instructions2,
+         Cheating,
+         Instructions3,
          Cheating,
          Voting,
          Wait,

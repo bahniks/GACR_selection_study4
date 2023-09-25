@@ -34,6 +34,9 @@ class ExperimentFrame(Canvas):
     def write(self):
         pass
 
+    def gothrough(self):        
+        self.nextFun()
+
 
 
 
