@@ -519,35 +519,16 @@ class Voting(InstructionsFrame):
 
         # offer frame
         self.offerVar = StringVar()
-        self.vcmd = (self.register(self.onValidate), '%P')
         self.offerFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.filler1 = Canvas(self.offerFrame, background = "white", width = 1, height = 255,
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler1.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
-        if self.controlQuestions:
-            self.decisionTextLab = ttk.Label(self.offerFrame, text = decisionText, font = "helvetica 15 bold", background = "white")
-            self.decisionTextLab.grid(row = 1, column = 0, columnspan = 3, pady = 10)        
         self.offerInnerFrame = Canvas(self.offerFrame, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.offerInnerFrame.grid(row = 2, column = 0, columnspan = 3, sticky = EW)
         self.offerTextLab = ttk.Label(self.offerInnerFrame, text = offerText, font = "helvetica 15", background = "white")
-        self.offerTextLab.grid(row = 2, column = 1, padx = 6, sticky = E)
-        self.entry = ttk.Entry(self.offerInnerFrame, textvariable = self.offerVar, width = 10, justify = "right",
-                               font = "helvetica 15", validate = "key", validatecommand = self.vcmd)
-        self.entry.grid(row = 2, column = 2, sticky = E, padx = 5)
-        self.currencyLabel = ttk.Label(self.offerInnerFrame, text = "Kč", font = "helvetica 15", background = "white")
-        self.currencyLabel.grid(row = 2, column = 3, sticky = W)
+        self.offerTextLab.grid(row = 2, column = 1, padx = 6, sticky = E)        
         self.offerInnerFrame.columnconfigure(0, weight = 1)
         self.offerInnerFrame.columnconfigure(4, weight = 1)
-        
-        self.problem = ttk.Label(self.offerFrame, text = "", font = "helvetica 15", background = "white", foreground = "red")
-        self.problem.grid(row = 4, column = 0, columnspan = 3, pady = 10)
-
-        # control question frame
-        self.controlFrame = Canvas(self, background = "white", highlightbackground = "white",
-                                 highlightcolor = "white")
-        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = 255,
-                                highlightbackground = "white", highlightcolor = "white")
-        self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
                      
         self.next.grid(row = 5, column = 1, sticky = N)
    
@@ -745,6 +726,7 @@ OutcomeWait = (Wait, {"what": "outcome"})
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
+         Voting,
          CheatingInstructions,
          Cheating,
          Instructions2,
