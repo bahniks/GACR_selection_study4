@@ -517,18 +517,18 @@ class Voting(InstructionsFrame):
         super().__init__(root, text = root.texts["intro_block_4"], height = 15, font = 15, width = 105, update = "win3")
 
 
-        # offer frame
-        self.offerVar = StringVar()
-        self.offerFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
-        self.filler1 = Canvas(self.offerFrame, background = "white", width = 1, height = 255,
+        # vote frame
+        self.voteVar = StringVar()
+        self.voteFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
+        self.filler1 = Canvas(self.voteFrame, background = "white", width = 1, height = 255,
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler1.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
-        self.offerInnerFrame = Canvas(self.offerFrame, background = "white", highlightbackground = "white", highlightcolor = "white")
-        self.offerInnerFrame.grid(row = 2, column = 0, columnspan = 3, sticky = EW)
-        self.offerTextLab = ttk.Label(self.offerInnerFrame, text = offerText, font = "helvetica 15", background = "white")
-        self.offerTextLab.grid(row = 2, column = 1, padx = 6, sticky = E)        
-        self.offerInnerFrame.columnconfigure(0, weight = 1)
-        self.offerInnerFrame.columnconfigure(4, weight = 1)
+        self.voteInnerFrame = Canvas(self.voteFrame, background = "white", highlightbackground = "white", highlightcolor = "white")
+        self.voteInnerFrame.grid(row = 2, column = 0, columnspan = 3, sticky = EW)
+        self.voteTextLab = ttk.Label(self.voteInnerFrame, text = voteText, font = "helvetica 15", background = "white")
+        self.voteTextLab.grid(row = 2, column = 1, padx = 6, sticky = E)        
+        self.voteInnerFrame.columnconfigure(0, weight = 1)
+        self.voteInnerFrame.columnconfigure(4, weight = 1)
                      
         self.next.grid(row = 5, column = 1, sticky = N)
    
@@ -540,12 +540,12 @@ class Voting(InstructionsFrame):
         self.rowconfigure(6, weight = 2)        
  
     def write(self):
-        self.root.texts["auctionResponse"] = self.offerVar.get()
+        self.root.texts["auctionResponse"] = self.voteVar.get()
 
         self.file.write(self.name + "\n")
-        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.offerVar.get() + "\t" + self.predictionVar.get() + "\n\n")
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.voteVar.get() + "\t" + self.predictionVar.get() + "\n\n")
 
-        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.offerVar.get()})
+        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'vote': self.voteVar.get()})
         data = data.encode('ascii')
         if URL != "TEST":
             for i in range(60):
@@ -564,17 +564,7 @@ class Voting(InstructionsFrame):
                 messagebox.showinfo(message = "Zavolejte prosím experimentátora.", icon = "error", parent = self.root, 
                                   detail = "Pravděpodobně je problém se serverem.", title = "Problém")
         else:
-            self.root.status["TESTvote"] = self.offerVar.get() # zmenit na hlasovani
-
-    def nextFun(self):
-        if self.state == "bid" and ((not self.controlQuestions) or (self.controlNum == len(self.controlTexts) and self.offerVar.get())):
-            self.state = "prediction"
-            self.entry["state"] = "disabled"
-            self.next["state"] = "disabled"
-            self.predictionTextLab["foreground"] = "black"
-            self.predictionEntry.grid(row = 1, column = 1, padx = 10)
-        else:
-            super().nextFun()
+            self.root.status["vote"] = self.voteVar.get() # zmenit na hlasovani
 
 
 
@@ -603,12 +593,15 @@ class Wait(InstructionsFrame):
                         votes = random.randint(1, 4)
                         condition = "treatment" if maxvotes == "you" else "control"
                         response = "_".join([condition, maxvotes, str(votes)])
-                    elif self.what == "outcome":
-                        if self.root.status["conditions"][self.root.status["block"]-2] == "treatment":
-                            response = self.root.texts["testOutcome"] + "_True" # upravit
-                        else:
-                            result = random.randint(0,12)
-                            response = "outcome_{}_True".format(result)
+                    elif self.what == "outcome":                                                
+                        response = "outcome_"
+                        for i in range(4):
+                            if i + 1 == mynumber: # change mynumber to self.root.status with the participant number in the group
+                                self.root.texts["testOutcome"]
+                            else:
+                                outcome = random.randint(0,12)                            
+                            response += "_".join([str(i + 1)], outcome, sum([i*5 + 5 for i in range(12)][:outcome])) 
+                        response += "_True"
                 else:
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:
@@ -621,9 +614,8 @@ class Wait(InstructionsFrame):
                         self.root.status["conditions"].append(condition)                        
                         self.updateResults(maxvotes, votes)
                         self.write(response)
-                    elif self.what == "outcome" and self.root.status["block"] != 7:
-                        _, wins, completed = response.split("_")
-                        if completed != "True":
+                    elif self.what == "outcome": # and self.root.status["block"] == 3:                        
+                        if not response.endswith("True"):
                             continue
                         else:
                             self.root.texts["outcome"] = response
