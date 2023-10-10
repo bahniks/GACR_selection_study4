@@ -102,7 +102,7 @@ class GUI(Tk):
                 self.frame = nxt(self)
             self.frame.grid(row = 0, column = 0, sticky = (N, S, E, W))
 
-            if GOTHROUGH and GOTHROUGH != self.frame.__class__ and (type(GOTHROUGH) is not int or GOTHROUGH < self.count):                
+            if GOTHROUGH and GOTHROUGH != type(self.frame).__name__ and (type(GOTHROUGH) is not int or GOTHROUGH < self.count):                
                 self.update()
                 sleep(0.5)         
                 self.frame.gothrough()

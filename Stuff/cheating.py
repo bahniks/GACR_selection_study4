@@ -57,7 +57,7 @@ Nyní Vás čeká třetí blok s dvanácti pokusy. V tomto kole budete hrát ver
 
 Před čtvrtým blokem budete náhodně přiřazeni do skupiny spolu s dalšími třemi účastníky studie. {}Jeden z členů skupiny bude hrát ve čtvrtém kole verzi "PO" a ostatní budou hrát verzi "PŘED". Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO". {}Každý člen skupiny bude mít jeden hlas, který přidělí některému z ostatních členů skupiny. Před hlasováním uvidíte výhru všech členů skupiny v tomto, třetím bloku a budete ji tedy moct vzít při hlasování v potaz.
 
-Vysolovaný blok ůlohy, ze kterého Vám bude proplacena odměna, bude stejný pro celou Vaši skupinu.
+Vylosovaný blok úlohy, ze kterého Vám bude proplacena odměna, bude stejný pro celou Vaši skupinu.
 
 V třetím bloku budete tedy hrát verzi "PO" a před následujícím blokem budete spolu s ostatními členy Vaší skupiny hlasovat o tom, kdo bude v posledním bloku hrát verzi "PO". Před tímto hlasováním uvidíte výhru ostatních členů skupiny v tomto, třetím bloku.
 """
@@ -68,7 +68,7 @@ condition_divided = "Ve čtvrtém kole se výhra celé skupiny sečte a rozděl�
 
 
 
-intro_voting = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {{}} Kč.
+intro_voting = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
 
 Nyní Vás čeká čtvrtý blok s dvanácti pokusy.
 
@@ -80,12 +80,13 @@ Níže jsou zobrazeny výhry ostatních účastníků studie ve třetím bloku. 
 """
 
 
-voting_result = """Verzi PO {}{} Vaší skupiny.
+
+voting_result = """Verzi PO {} Vaší skupiny.
 """
 
 voting_you = "budete hrát Vy, neboť pro Vás hlasoval"
 voting_other = "bude hrát hráč {}, pro kterého hlasoval"
-members = [" 1 člen", "i 2 členové", "i 3 členové", "i všichni 4 členové"]
+members = [" 1 člen", "i 2 členové", "i 3 členové"]
 
 
 
@@ -152,7 +153,7 @@ class Cheating(ExperimentFrame):
             self.root.status["block"] = 1
             conditions = ["treatment", "control"]
             random.shuffle(conditions)  
-            conditions += "treatment"
+            conditions += ["treatment"]
             self.root.status["conditions"] = conditions
         self.blockNumber = self.root.status["block"]      
         
@@ -278,7 +279,6 @@ class Cheating(ExperimentFrame):
 
 
     def bottomPart(self):
-        print("bottom")
         self.bottomText["state"] = "normal"
         if "treatment" in self.condition:
             reward = self.rewards[self.root.wins[self.blockNumber]]
@@ -308,7 +308,6 @@ class Cheating(ExperimentFrame):
 
 
     def roll(self):
-        print("roll")
         self.firstResponse = perf_counter()
         if "treatment" in self.condition:
             self.response = "NA"    
@@ -394,12 +393,12 @@ class Cheating(ExperimentFrame):
         if self.blockNumber == 3: # send the results of the after version in the third round            
             wins = self.root.wins[self.blockNumber]
             reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
-            outcome = "outcome_" + "_".join([str(wins), str(reward)]) 
+            outcome = "|".join(["outcome", str(self.root.status["number"]), str(wins), str(reward)]) 
             while True:
                 data = urllib.parse.urlencode({'id': self.id, 'round': self.blockNumber, 'offer': outcome})
                 data = data.encode('ascii')
                 if URL == "TEST":
-                    self.root.texts["testOutcome"] = outcome                   
+                    self.root.texts["testOutcome"] = outcome.lstrip("outcome|")                   
                     response = "ok"
                 else:
                     try:
@@ -513,24 +512,43 @@ class Voting(InstructionsFrame):
         # for testing
         if not "block" in root.status: 
             root.status["block"] = 1
-        
-        super().__init__(root, text = root.texts["intro_block_4"], height = 15, font = 15, width = 105, update = "win3")
+        if TESTING:
+            if not "outcome" in root.texts:
+                root.texts["outcome"] = "outcome_1|1|5_2|3|30_3|12|390_4|10|275_True"
 
+        super().__init__(root, text = root.texts["intro_block_4"], height = 15, font = 15, update = ["win3"])
 
         # vote frame
         self.voteVar = StringVar()
         self.voteFrame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
-        self.filler1 = Canvas(self.voteFrame, background = "white", width = 1, height = 255,
-                                highlightbackground = "white", highlightcolor = "white")
-        self.filler1.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
-        self.voteInnerFrame = Canvas(self.voteFrame, background = "white", highlightbackground = "white", highlightcolor = "white")
-        self.voteInnerFrame.grid(row = 2, column = 0, columnspan = 3, sticky = EW)
-        self.voteTextLab = ttk.Label(self.voteInnerFrame, text = voteText, font = "helvetica 15", background = "white")
-        self.voteTextLab.grid(row = 2, column = 1, padx = 6, sticky = E)        
-        self.voteInnerFrame.columnconfigure(0, weight = 1)
-        self.voteInnerFrame.columnconfigure(4, weight = 1)
-                     
+        
+        self.labs = {}
+        self.radios = {}
+        self.wins = {}
+
+        self.playerHead = ttk.Label(self.voteFrame, text = "Hráč", font = "helvetica 15 bold", background = "white")
+        self.playerHead.grid(row = 0, column = 1, pady = 10, padx = 20, sticky = W)
+        self.winHead = ttk.Label(self.voteFrame, text = "Výhra", font = "helvetica 15 bold", background = "white")
+        self.winHead.grid(row = 0, column = 2, pady = 10, padx = 20, sticky = E)
+        self.radioHead = ttk.Label(self.voteFrame, text = "Volba", font = "helvetica 15 bold", background = "white")
+        self.radioHead.grid(row = 0, column = 3, pady = 10, padx = 20)
+        
+        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
+        for i in range(4):
+            you = i + 1 == int(self.root.status["number"])
+            player = "Hráč " + str(i + 1) if not you else "Vy"
+            self.labs[i] = ttk.Label(self.voteFrame, text = player, font = "helvetica 15", background = "white")
+            self.labs[i].grid(row = i + 1, column = 1, sticky = W, padx = 20)
+            win = self.root.texts["outcome"].split("_")[i+1].split("|")[2]
+            self.wins[i] = ttk.Label(self.voteFrame, text = win, font = "helvetica 15", background = "white")
+            self.wins[i].grid(row = i + 1, column = 2, padx = 20, sticky = E)
+            state = "disabled" if you else "normal"
+            self.radios[i] = ttk.Radiobutton(self.voteFrame, text = "", variable = self.voteVar, value = str(i + 1), command = self.voted, state = state)
+            self.radios[i].grid(row = i + 1, column = 3, padx = 20)
+                            
+        self.voteFrame.grid(row = 4, column = 1)
         self.next.grid(row = 5, column = 1, sticky = N)
+        self.next["state"] = "disabled"
    
         self.rowconfigure(0, weight = 2)
         self.rowconfigure(2, weight = 1)
@@ -538,12 +556,20 @@ class Voting(InstructionsFrame):
         self.rowconfigure(4, weight = 1)
         self.rowconfigure(5, weight = 1)
         self.rowconfigure(6, weight = 2)        
+
+
+    def voted(self):
+        self.next["state"] = "!disabled"
+
+    def nextFun(self):
+        self.write()
+        super().nextFun()
  
     def write(self):
-        self.root.texts["auctionResponse"] = self.voteVar.get()
+        self.root.texts["votingResponse"] = self.voteVar.get()
 
-        self.file.write(self.name + "\n")
-        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.voteVar.get() + "\t" + self.predictionVar.get() + "\n\n")
+        self.file.write("Voting\n")
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.voteVar.get() + "\t" + "\n\n")
 
         data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'vote': self.voteVar.get()})
         data = data.encode('ascii')
@@ -564,7 +590,7 @@ class Voting(InstructionsFrame):
                 messagebox.showinfo(message = "Zavolejte prosím experimentátora.", icon = "error", parent = self.root, 
                                   detail = "Pravděpodobně je problém se serverem.", title = "Problém")
         else:
-            self.root.status["vote"] = self.voteVar.get() # zmenit na hlasovani
+            self.root.status["TESTvote"] = self.voteVar.get()
 
 
 
@@ -589,18 +615,19 @@ class Wait(InstructionsFrame):
                 if URL == "TEST":
                     if self.what == "voting":
                         myvote = int(self.root.status["TESTvote"])
-                        maxvotes = random.choice(["you", "2", "3", "4"])
-                        votes = random.randint(1, 4)
-                        condition = "treatment" if maxvotes == "you" else "control"
-                        response = "_".join([condition, maxvotes, str(votes)])
+                        # pridat pocitacni hlasu
+                        maxvotes = random.randint(1, 4)
+                        votes = random.randint(1, 3)
+                        condition = "treatment" if maxvotes == self.root.status["number"] else "control"
+                        response = "_".join([condition, str(maxvotes), str(votes)])
                     elif self.what == "outcome":                                                
-                        response = "outcome_"
+                        response = "outcome"
                         for i in range(4):
-                            if i + 1 == mynumber: # change mynumber to self.root.status with the participant number in the group
-                                self.root.texts["testOutcome"]
+                            if i + 1 == int(self.root.status["number"]):
+                                response += "_" + self.root.texts["testOutcome"]
                             else:
-                                outcome = random.randint(0,12)                            
-                            response += "_".join([str(i + 1)], outcome, sum([i*5 + 5 for i in range(12)][:outcome])) 
+                                outcome = random.randint(0,12)                 
+                                response += "_" + "|".join([str(i + 1), str(outcome), str(sum([i*5 + 5 for i in range(12)][:outcome]))]) 
                         response += "_True"
                 else:
                     try:
@@ -630,14 +657,14 @@ class Wait(InstructionsFrame):
         self.checkOffers()
 
     def updateResults(self, maxvotes, votes):                
-        if maxvotes == "you":
-            self.root.texts["voting_result_text"] = voting_result.format(voting_you, members[int(votes)])
+        if maxvotes == self.root.status["number"]:
+            self.root.texts["voting_result_text"] = voting_you + members[int(votes) - 1]
         else:
-            self.root.texts["voting_result_text"] = voting_result.format(voting_other.format(maxvotes), members[int(votes)])
+            self.root.texts["voting_result_text"] = voting_other.format(maxvotes) + members[int(votes) - 1]
 
     def write(self, response):
         self.file.write("Voting Result" + "\n")
-        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response.replace("|", "\t") + "\n\n")          
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response.replace("_", "\t") + "\n\n")          
             
 
 class Login(InstructionsFrame):
@@ -655,7 +682,7 @@ class Login(InstructionsFrame):
                 data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
                 data = data.encode('ascii')
                 if URL == "TEST":
-                    response = "_".join(["start", random.choice(["others_kept", "charity_kept", "charity_divided", "experimenter_kept", "experimenter_divided"])])
+                    response = "_".join(["start", random.choice(["others_kept", "charity_kept", "charity_divided", "experimenter_kept", "experimenter_divided"]), str(random.randint(1,4))])
                 else:
                     response = ""
                     try:
@@ -664,9 +691,10 @@ class Login(InstructionsFrame):
                     except Exception:
                         self.changeText("Server nedostupný")
                 if "start" in response:
-                    info, source, condition = response.split("_")                    
+                    info, source, condition, number = response.split("_")                    
                     self.root.status["source"] = source
                     self.root.status["condition"] = condition                    
+                    self.root.status["number"] = number
                     self.update_intro(source, condition)
                     self.progressBar.stop()
                     self.write(response)
@@ -681,7 +709,7 @@ class Login(InstructionsFrame):
                 elif response == "closed":
                     self.changeText("Studie je uzavřena pro přihlašování")
                 elif response == "not_grouped":
-                    self.changeText("Nebyla Vám přiřazena žádná skupina. Zavolejte prosím experimentátor zvednutím ruky.")
+                    self.changeText("Nebyla Vám přiřazena žádná skupina. Zavolejte prosím experimentátora zvednutím ruky.")
             count += 1                  
             sleep(0.1)        
 
@@ -694,7 +722,7 @@ class Login(InstructionsFrame):
         condition = {"divided": condition_divided, "kept": ""}[condition]
         self.root.texts["condition"] = condition
         self.root.texts["source"] = source
-        self.root.texts["intro_block_4"] = intro_voting.format("", condition, source)
+        self.root.texts["intro_block_4"] = intro_voting.format("{}", condition, source)
 
     def write(self, response):
         self.file.write("Login" + "\n")
@@ -708,8 +736,8 @@ class Login(InstructionsFrame):
 
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
 Instructions3 = (InstructionsFrame, {"text": intro_third, "height": 25, "update": ["win2", "condition", "source"]})
-VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text3"]})
-EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win3"]})
+VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]})
+EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win4"]})
 OutcomeWait = (Wait, {"what": "outcome"})
 
 
@@ -718,17 +746,16 @@ OutcomeWait = (Wait, {"what": "outcome"})
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
-         Voting,
          CheatingInstructions,
          Cheating,
          Instructions2,
          Cheating,
          Instructions3,
          Cheating,
+         OutcomeWait,
          Voting,
          Wait,
          VotingResult,
-         Cheating,
-         OutcomeWait,
+         Cheating,         
          EndCheating
          ])
