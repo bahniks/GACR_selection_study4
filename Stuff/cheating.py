@@ -360,10 +360,9 @@ class Cheating(ExperimentFrame):
         t = perf_counter()
         if answer == "win":
             self.root.wins[self.blockNumber] += 1
-        self.responses.append([self.blockNumber, self.currentTrial, self.condition, self.root.status["condition"],
-                               self.currentRoll, self.response, answer, 
-                               sum(self.rewards[:self.root.wins[self.blockNumber]]),
-                               t - self.time, self.firstResponse - self.time,
+        self.responses.append([self.blockNumber, self.currentTrial, self.condition, self.root.status["source"], 
+                               self.root.status["condition"], self.currentRoll, self.response, answer, 
+                               sum(self.rewards[:self.root.wins[self.blockNumber]]), t - self.time, self.firstResponse - self.time,
                                t - self.beforeSecondResponse])
         self.bottomText["state"] = "normal"
         self.upperText["state"] = "normal"
@@ -393,7 +392,7 @@ class Cheating(ExperimentFrame):
         if self.blockNumber == 3: # send the results of the after version in the third round            
             wins = self.root.wins[self.blockNumber]
             reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
-            outcome = "|".join(["outcome", str(self.root.status["number"]), str(wins), str(reward)]) 
+            outcome = "|".join(["outcome", str(wins), str(reward)]) 
             while True:
                 data = urllib.parse.urlencode({'id': self.id, 'round': self.blockNumber, 'offer': outcome})
                 data = data.encode('ascii')
@@ -571,7 +570,7 @@ class Voting(InstructionsFrame):
         self.file.write("Voting\n")
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.voteVar.get() + "\t" + "\n\n")
 
-        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'vote': self.voteVar.get()})
+        data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.voteVar.get()})
         data = data.encode('ascii')
         if URL != "TEST":
             for i in range(60):
@@ -608,7 +607,7 @@ class Wait(InstructionsFrame):
             self.update()
             if count % 50 == 0:
                 if self.what == "voting":
-                    data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "result"})
+                    data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "voting"})
                 elif self.what == "outcome":
                     data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': "outcome"})
                 data = data.encode('ascii')
@@ -637,11 +636,13 @@ class Wait(InstructionsFrame):
                         pass
                 if response:                  
                     if self.what == "voting":
-                        condition, maxvotes, votes = response.split("_")           
+                        condition, maxvotes, votes = response.split("_")         
+                        if maxvotes == "0":
+                            continue  
                         self.root.status["conditions"].append(condition)                        
                         self.updateResults(maxvotes, votes)
                         self.write(response)
-                    elif self.what == "outcome": # and self.root.status["block"] == 3:                        
+                    elif self.what == "outcome":   
                         if not response.endswith("True"):
                             continue
                         else:
