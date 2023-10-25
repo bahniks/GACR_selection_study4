@@ -11,45 +11,29 @@ from gui import GUI
 from quest import Hexaco, QuestInstructions
 from intros import Initial, Intro, Ending
 from demo import Demographics
-from cheating import CheatingInstructions, Cheating, Instructions2, BDM, BDMResult, Auction, Wait
-from cheating import AuctionResult, EndCheating, Login, AuctionWait
+from cheating import CheatingInstructions, Cheating, Instructions2, Wait, Voting
+from cheating import EndCheating, Login, Instructions3, OutcomeWait, VotingResult
 from debriefing import DebriefingInstructions, DebriefCheating1, DebriefCheating2, DebriefCheating3, DebriefCheating4
 from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
-from charity import Charity
 from questionnaire import Prosociality
 
 
 frames = [Initial,
           Login,
-          Intro,          
-          Charity,
+          Intro,
           CheatingInstructions,
           Cheating,
           Instructions2,
           Cheating,
-          BDM,
-          BDMResult,
+          Instructions3,
           Cheating,
-          Auction,
+          OutcomeWait,
+          Voting,
           Wait,
-          AuctionResult,
-          Cheating,
-          AuctionWait,
-          Auction,
-          Wait,
-          AuctionResult,
-          Cheating,
-          AuctionWait,
-          Auction,
-          Wait,
-          AuctionResult,
-          Cheating,
-          AuctionWait,
-          BDM,
-          BDMResult,
-          Cheating,
-          EndCheating,    
+          VotingResult,
+          Cheating,         
+          EndCheating    
           DebriefingInstructions,      
           DebriefCheating1,
           DebriefCheating2,

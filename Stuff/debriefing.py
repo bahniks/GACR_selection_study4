@@ -20,48 +20,7 @@ from gui import GUI
 debriefingIntro = "V následující části se Vás zeptáme na Váš pohled na předchozí úlohu a na Vaše rozhodování v ní."
 
 
-q1 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při stanovení maximální ceny poplatku, co jste byli ochotni zaplatit za verzi PO úlohy:"
-q2 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při dražbě verze PO úlohy:"
-
-
-q3 = "Ohodnoťte, do jaké míry jste zvažovali při stanovení maximální ceny poplatku,\nco jste byli ochotni zaplatit za verzi PO úlohy následující faktory:"
-q4 = "Ohodnoťte, do jaké míry jste zvažovali při dražbě verze PO úlohy následující faktory:"
-
-debriefscale1 = "Vůbec ne"
-debriefscale2 = "Jen trochu"
-debriefscale3 = "Do určité míry"
-debriefscale4 = "Spíše hodně"
-debriefscale5 = "Velmi"
-
-debriefdimensions = ["svůj očekávaný peněžní výdělek",
-                     "ztrátu peněz, kterou mohu způsobit charitě",
-                     "ztrátu peněz, kterou mohou způsobit charitě ostatní členové skupiny",
-                     "částku, kterou nabídnou ostatní členové skupiny",
-                     "počet správných předpovědí, které uvedou ostatní členové skupiny ve verzi PO",
-                     "nakolik je zábavné hrát obě verze úlohy",
-                     "nakolik je jednoduché hrát obě verze úlohy",
-                     "schopnost ovlivnit velikost svého peněžního výdělku",
-                     "schopnost ovlivnit velikost ztráty charity",
-                     "snahu být vítězem",
-                     "snahu překonat ostatní"]
-
-
-q5 = "Jak moc souhlasíte nebo nesouhlasíte s následujícími tvrzeními:"
-dimensions2 = ["Stanovení maximální ceny poplatku za verzi PO bylo nespravedlivé.",
-               "Stanovení maximální ceny poplatku za verzi PO bylo riskantní.",
-               "Nerozuměl jsem účelu stanovení maximální ceny poplatku za verzi PO.",
-               "Stanovení maximální ceny poplatku za verzi PO mi připadalo komplikované.",
-               "Dražba verze PO byla nespravedlivá.",
-               "Dražba verze PO byla riskantní.",
-               "Nerozuměl jsem účelu dražeb.",
-               "Dražba verze PO mi připadala komplikovaná."]
-ds1 = "rozhodně\nnesouhlasím"
-ds2 = "nesouhlasím"
-ds3 = "spíše\nnesouhlasím"
-ds4 = "spíše\nsouhlasím"
-ds5 = "souhlasím"
-ds6 = "rozhodně\nsouhlasím"
-
+q1 = "Uveďte v několika bodech či větách, jak jste se rozhodovali při volbě člena skupiny, co bude hrát verzi PO úlohy:"
 
 q6 = "Jak moc se podle Vás účastníci z Vaší skupiny zajímali o to,\nkolik charitativní organizace v experimentu ztratily?"
 q7 = "Jak moc Vám záleželo na tom, kolik charitativní organizace v experimentu ztratily?"
