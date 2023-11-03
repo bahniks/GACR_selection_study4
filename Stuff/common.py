@@ -65,18 +65,23 @@ class InstructionsFrame(ExperimentFrame):
             self.text.tag_configure(firstLine, font = "helvetica 20 {}".format(firstLine))
         else:
             self.text.insert("1.0", text)
+       
+        def addtags(starttag, endtag, tag):            
+            i_index = "1.0"
+            while True:
+                i_index = self.text.search(starttag, i_index)
+                if not i_index:
+                    break
+                e_index = self.text.search(endtag, i_index)
+                self.text.tag_add(tag, i_index, e_index)
+                self.text.delete(e_index, e_index + "+{}c".format(len(endtag)))
+                self.text.delete(i_index, i_index + "+{}c".format(len(starttag)))
+                i_index = e_index
 
         self.text.tag_configure("bold", font = "helvetica {} bold".format(font))
-        i_index = "1.0"
-        while True:
-            i_index = self.text.search("<b>", i_index)
-            if not i_index:
-                break
-            e_index = self.text.search("</b>", i_index)
-            self.text.tag_add("bold", i_index, e_index)
-            self.text.delete(e_index, e_index + "+4c")
-            self.text.delete(i_index, i_index + "+3c")
-            i_index = e_index
+        addtags("<b>", "</b>", "bold")
+        self.text.tag_configure("italic", font = "helvetica {} italic".format(font))
+        addtags("<i>", "</i>", "italic")
             
         self.text.config(state = "disabled")
 
