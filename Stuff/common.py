@@ -121,8 +121,8 @@ class InstructionsFrame(ExperimentFrame):
     def nextFun(self):
         if self.check():
             self.root.unbind("<space>")
-            self.root.unbind("<g>")
-            self.root.unbind("<G>")
+            # self.root.unbind("<g>")
+            # self.root.unbind("<G>")
             if self.keys:
                 for key in self.keys:
                     if key in [str(i) for i in range(10)]:
@@ -333,7 +333,7 @@ class MultipleChoice(Canvas):
                                                command = self.answerFunction, variable = self.answer))
             self.radios[row].grid(row = row + 1, column = 0, pady = 3, sticky = W)
 
-        self.filler = ttk.Label(self, text = " \n\n ", background = "white", anchor = "center",
+        self.filler = ttk.Label(self, text = " "*150 + "\n ", background = "white", anchor = "center",
                                           font = "helvetica 15", wraplength = 1000)
         self.filler.grid(column = 0, row = len(answers) + 1, pady = 5, sticky = NW)
         self.feedback = ttk.Label(self, text = " \n ", background = "white", anchor = "center",
@@ -351,7 +351,47 @@ class MultipleChoice(Canvas):
             radio["state"] = "disabled"
         
         
+
+class InstructionsAndUnderstanding(InstructionsFrame):
+    def __init__(self, root, controlTexts, **kwargs):
+        super().__init__(root, **kwargs)
+        self.controlTexts = controlTexts
+
+        self.controlFrame = Canvas(self, background = "white", highlightbackground = "white",
+                                 highlightcolor = "white")
+        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = 255,
+                                highlightbackground = "white", highlightcolor = "white")
+        self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
+
+        self.controlFrame.grid(row = 2, column = 1)
+        #self.controlFrame.columnconfigure(1, weight = 1)        
+        self.next.grid(row = 3, column = 1)
+
+        self.controlNum = 0
+        self.createQuestion()
+
+    def createQuestion(self):
+        if self.controlNum:
+            self.controlQuestion.grid_forget()
+        self.next["state"] = "disabled"
+        texts = self.controlTexts[self.controlNum]
+        self.controlQuestion = MultipleChoice(self.controlFrame, text = texts[0], answers = texts[1], feedback = texts[2])
+        self.controlQuestion.grid(row = 0, column = 0)
+        self.controlNum += 1
+        self.controlstate = "answer"
         
+    def nextFun(self):        
+        if self.controlNum == len(self.controlTexts) and self.controlstate == "feedback":
+            self.file.write("\n")
+            super().nextFun()   
+        else:
+            if self.controlstate == "answer":
+                self.controlQuestion.showFeedback()
+                self.controlstate = "feedback"
+            else:                
+                self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.answer.get() + "\n")
+                self.createQuestion()    
+
 
 
 

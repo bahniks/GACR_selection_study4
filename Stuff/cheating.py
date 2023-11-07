@@ -12,7 +12,7 @@ import os
 import urllib.request
 import urllib.parse
 
-from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice
+from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, InstructionsAndUnderstanding
 from gui import GUI
 from constants import TESTING, URL
 
@@ -61,8 +61,7 @@ Každý člen skupiny bude mít jeden hlas, který přidělí některému z osta
 
 Vylosovaný blok úlohy, ze kterého Vám bude proplacena odměna, bude stejný pro celou Vaši skupinu.
 
-Ve třetím bloku budete tedy hrát verzi "PO" a před následujícím blokem budete spolu s ostatními členy Vaší skupiny hlasovat o tom, kdo bude v posledním bloku hrát verzi "PO". Před tímto hlasováním uvidíte výhru ostatních členů skupiny v tomto, třetím bloku.
-"""
+Ve třetím bloku budete tedy hrát verzi "PO" a před následujícím blokem budete spolu s ostatními členy Vaší skupiny hlasovat o tom, kdo bude v posledním bloku hrát verzi "PO". Před tímto hlasováním uvidíte výhru ostatních členů skupiny v tomto, třetím bloku."""
 
 condition_others = '''
 <b>Výhra člena skupiny, který bude hrát verzi "PO", bude odečtena od 400 Kč a zbylé peníze budou rozděleny rovným dílem mezi všechny členy skupiny.</b>
@@ -71,6 +70,16 @@ condition_charity = '''
 <b>Výhra člena skupiny, který bude hrát verzi "PO", bude odečtena od 400 Kč a zbylé peníze budou darovány charitě XXX.</b>
 '''
 condition_divided = '<b>Ve čtvrtém kole se výhra celé skupiny sečte a rozdělí mezi všechny členy skupiny rovným dílem.</b> '
+
+
+
+control1 = 'Kdo bude hrát verzi "PO" úlohy ve třetím kole?' 
+answers1 = ['Všichni členové skupiny', 'Člen skupiny s nejvíce hlasy', 'Člen skupiny, který měl nejvyšší výhru v druhém kole', 'Nikdo'] 
+feedback1 = ['Ano, ve třetím kole hrají všichni členové skupiny verzi "PO" úlohy.', 'Ne, před třetím kolem se nehlasuje. Verzi "PO" úlohy hrají všichni členové skupiny.', 'Ne, verzi "PO" úlohy hrají všichni členové skupiny.', 'Ne, verzi "PO" úlohy hrají všichni členové skupiny.']
+
+control2 = 'Kdo bude hrát verzi "PO" úlohy ve čtvrtém kole?' 
+answers2 = ['Všichni členové skupiny', 'Člen skupiny s nejvíce hlasy', 'Člen skupiny, který bude mít nejvyšší výhru v třetím kole', 'Nikdo'] 
+feedback2 = ['Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ano, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.']
 
 
 
@@ -135,6 +144,9 @@ Toto je konec úkolu s kostkou.
 """
 
 
+
+
+perception_intro = """Nyní odpovězte na několik otázek týkající se volby."""
 
 
 ################################################################################
@@ -515,16 +527,31 @@ class CheatingInstructions(InstructionsFrame):
 
 
 
+class Instructions3(InstructionsAndUnderstanding):
+    def __init__(self, root):
+        # for testing
+        if TESTING and not "win2" in root.texts:
+            root.texts["win2"] = 150            
+
+        controlTexts = [[control1, answers1, feedback1], [control2, answers2, feedback2]]
+        super().__init__(root, controlTexts = controlTexts, text = intro_third, height = 25, font = 15, width = 100, update = ["win2", "condition", "source"])
+
+
+
+
+
+
+
+
 class Voting(InstructionsFrame):
     def __init__(self, root):
         # for testing
         if not "block" in root.status: 
             root.status["block"] = 1
-        if TESTING:
-            if not "outcome" in root.texts:
-                root.texts["outcome"] = "outcome_1|1|5_2|3|30_3|12|390_4|10|275_True"
+        if TESTING and not "outcome" in root.texts:
+            root.texts["outcome"] = "outcome_1|1|5_2|3|30_3|12|390_4|10|275_True"
 
-        super().__init__(root, text = root.texts["intro_block_4"], height = 15, font = 15, update = ["win3"])
+        super().__init__(root, text = root.texts["intro_block_4"], height = 20, font = 15, update = ["win3"])
 
         # vote frame
         self.voteVar = StringVar()
@@ -559,10 +586,6 @@ class Voting(InstructionsFrame):
         self.next["state"] = "disabled"
    
         self.rowconfigure(0, weight = 2)
-        self.rowconfigure(2, weight = 1)
-        self.rowconfigure(3, weight = 1)
-        self.rowconfigure(4, weight = 1)
-        self.rowconfigure(5, weight = 1)
         self.rowconfigure(6, weight = 2)        
 
 
@@ -599,6 +622,16 @@ class Voting(InstructionsFrame):
                                   detail = "Pravděpodobně je problém se serverem.", title = "Problém")
         else:
             self.root.status["TESTvote"] = self.voteVar.get()
+
+
+
+
+class Perception(InstructionsFrame):
+    def __init__(self, root):
+        super().__init__(root, text = perception_intro, height = 20, font = 15)
+
+        # TO DO
+
 
 
 
@@ -745,7 +778,7 @@ class Login(InstructionsFrame):
 
 
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
-Instructions3 = (InstructionsFrame, {"text": intro_third, "height": 30, "update": ["win2", "condition", "source"]})
+#Instructions3 = (InstructionsFrame, {"text": intro_third, "height": 30, "update": ["win2", "condition", "source"]})
 VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]})
 EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win4"]})
 OutcomeWait = (Wait, {"what": "outcome"})
@@ -756,6 +789,7 @@ OutcomeWait = (Wait, {"what": "outcome"})
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
+         Instructions3, # odstranit
          CheatingInstructions,
          Cheating,
          Instructions2,
@@ -764,6 +798,7 @@ if __name__ == "__main__":
          Cheating,
          OutcomeWait,
          Voting,
+         Perception,
          Wait,
          VotingResult,
          Cheating,         
