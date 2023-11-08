@@ -67,20 +67,25 @@ condition_others = '''
 <b>Výhra člena skupiny, který bude hrát verzi "PO", bude odečtena od 400 Kč a zbylé peníze budou rozděleny rovným dílem mezi všechny členy skupiny.</b>
 '''
 condition_charity = '''
-<b>Výhra člena skupiny, který bude hrát verzi "PO", bude odečtena od 400 Kč a zbylé peníze budou darovány charitě XXX.</b>
+<b>Výhra člena skupiny, který bude hrát verzi "PO", bude odečtena od 400 Kč a zbylé peníze budou darovány charitě Člověk v tísni.</b>
 '''
 condition_divided = '<b>Ve čtvrtém kole se výhra celé skupiny sečte a rozdělí mezi všechny členy skupiny rovným dílem.</b> '
 
 
 
 control1 = 'Kdo bude hrát verzi "PO" úlohy ve třetím kole?' 
-answers1 = ['Všichni členové skupiny', 'Člen skupiny s nejvíce hlasy', 'Člen skupiny, který měl nejvyšší výhru v druhém kole', 'Nikdo'] 
+answers1 = ['Všichni členové skupiny.', 'Člen skupiny s nejvíce hlasy.', 'Člen skupiny, který měl nejvyšší výhru v druhém kole.', 'Nikdo.'] 
 feedback1 = ['Ano, ve třetím kole hrají všichni členové skupiny verzi "PO" úlohy.', 'Ne, před třetím kolem se nehlasuje. Verzi "PO" úlohy hrají všichni členové skupiny.', 'Ne, verzi "PO" úlohy hrají všichni členové skupiny.', 'Ne, verzi "PO" úlohy hrají všichni členové skupiny.']
 
 control2 = 'Kdo bude hrát verzi "PO" úlohy ve čtvrtém kole?' 
-answers2 = ['Všichni členové skupiny', 'Člen skupiny s nejvíce hlasy', 'Člen skupiny, který bude mít nejvyšší výhru v třetím kole', 'Nikdo'] 
+answers2 = ['Všichni členové skupiny.', 'Člen skupiny s nejvíce hlasy.', 'Člen skupiny, který bude mít nejvyšší výhru v třetím kole.', 'Nikdo.'] 
 feedback2 = ['Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ano, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.']
 
+control3 = 'Co platí o výhře člena skupiny, který bude hrát verzi "PO" úlohy ve čtvrtém kole?' 
+answers3 = ["Bude proplacena, pokud bude tento člen skupiny vylosován.", "Dělí se s členem skupiny, který obdržel nejméně hlasů.", "Bude přidělena charitě Člověk v tísni."] 
+feedback3 = ["Ne, výhra ", "Ne, výhra ", "Ne, výhra ", "Ano, výhra "]
+
+correct_answers3 = {"experimenter_divided": 'Sečte se s výhrou ostatních členů a rozdělí rovným dílem.', "others_kept": 'Bude odečtena od 400 Kč a zbylé peníze budou rozděleny mezi všechny členy skupiny.', "charity_kept": 'Bude odečtena od 400 Kč a zbylé peníze budou darovány charitě Člověk v tísni.', "charity_divided": 'Bude odečtena od 400 Kč a zbylé peníze budou darovány charitě Člověk v tísni. Následně se sečte s výhrou ostatních členů skupiny a rozdělí rovným dílem.', "experimenter_kept": "Bude proplacena, pokud bude čtvrtý blok úlohy vylosován."}
 
 
 intro_voting = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
@@ -113,8 +118,6 @@ wait_text = "Prosím počkejte na ostatní členy skupiny."
 
 
 
-
-
 intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché, nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
 
 Úkol je rozdělen do sedmi samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednoho hodu kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Pravidla níže však platí pro všech sedm bloků.
@@ -125,12 +128,12 @@ Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, k
 
 Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
 
-Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na následující otázku:
-Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku, 8 hodů ve čtvrtém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
-"""
+Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na kontrolní otázku:"""
 
-wrong_answer = "{} Kč je chybná odpověď, správná odpověď je 15 Kč. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
-correct_answer = "15 Kč je správná odpověď. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
+
+intro_control1 = 'Kolik obdržíte za úlohu peněz, pokud bude vylosován blok, kde uhodnete dohromady 4 hody?' 
+intro_answers1 = ['30 Kč (0 + 5 + 10 + 15)', '45 Kč (5 + 10 + 15 + 15)', '50 Kč (5 + 10 + 15 + 20)', '60 Kč (4 x 15)'] 
+intro_feedback1 = ['Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).', 'Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).', 'Ano, obdželi byste 50 Kč.', 'Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).']
 
 
 
@@ -147,6 +150,28 @@ Toto je konec úkolu s kostkou.
 
 
 perception_intro = """Nyní odpovězte na několik otázek týkající se volby."""
+
+
+
+
+# intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché, nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
+
+# Úkol je rozdělen do sedmi samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednoho hodu kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Pravidla níže však platí pro všech sedm bloků.
+
+# Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč.
+
+# Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
+
+# Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
+
+# Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na následující otázku:
+# Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku, 8 hodů ve čtvrtém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
+# """
+
+# wrong_answer = "{} Kč je chybná odpověď, správná odpověď je 15 Kč. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
+# correct_answer = "15 Kč je správná odpověď. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
+
+
 
 
 ################################################################################
@@ -533,7 +558,7 @@ class Instructions3(InstructionsAndUnderstanding):
         if TESTING and not "win2" in root.texts:
             root.texts["win2"] = 150            
 
-        controlTexts = [[control1, answers1, feedback1], [control2, answers2, feedback2]]
+        controlTexts = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
         super().__init__(root, controlTexts = controlTexts, text = intro_third, height = 25, font = 15, width = 100, update = ["win2", "condition", "source"])
 
 
@@ -739,6 +764,7 @@ class Login(InstructionsFrame):
                     self.root.status["condition"] = condition                    
                     self.root.status["number"] = number
                     self.update_intro(source, condition)
+                    self.create_control_question(source, condition)
                     self.progressBar.stop()
                     self.write(response)
                     self.nextFun()                      
@@ -767,6 +793,19 @@ class Login(InstructionsFrame):
         self.root.texts["source"] = source
         self.root.texts["intro_block_4"] = intro_voting.format("{}", condition, source)
 
+    def create_control_question(self, source, condition):        
+        condition = source + "_" + condition
+        global answers3
+        correctAnswer = correct_answers3[condition]
+        answers3 += [correctAnswer]
+        global feedback3
+        if condition == "experimenter_divided":
+            correctAnswer.replace("Sečte se", "se sečte")
+        else:
+            correctAnswer = correctAnswer[:1].lower() + correctAnswer[1:]
+        for i in range(4):
+            feedback3[i] += correctAnswer
+
     def write(self, response):
         self.file.write("Login" + "\n")
         self.file.write(self.id + response.replace("_", "\t").lstrip("start") + "\n\n")        
@@ -776,7 +815,7 @@ class Login(InstructionsFrame):
 
 
 
-
+CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 23, "width": 100, "randomize": False, "controlTexts": [[intro_control1, intro_answers1, intro_feedback1]]})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
 #Instructions3 = (InstructionsFrame, {"text": intro_third, "height": 30, "update": ["win2", "condition", "source"]})
 VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]})
@@ -789,7 +828,6 @@ OutcomeWait = (Wait, {"what": "outcome"})
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
-         Instructions3, # odstranit
          CheatingInstructions,
          Cheating,
          Instructions2,

@@ -4,6 +4,7 @@ from time import time
 
 import os
 import sys
+import random
 
 from constants import TESTING
 
@@ -314,12 +315,13 @@ class Measure(Canvas):
 
 
 class MultipleChoice(Canvas):
-    def __init__(self, root, text, answers, feedback):
+    def __init__(self, root, text, answers, feedback, randomize = True):
         super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
 
         self.root = root.master
         self.answer = StringVar()
         self.feedbackTexts = feedback
+        self.answers = answers
         
         
         self.question = ttk.Label(self, text = text, background = "white", anchor = "center",
@@ -328,10 +330,13 @@ class MultipleChoice(Canvas):
 
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
         self.radios = []
-        for row, answer in enumerate(answers):            
-            self.radios.append(ttk.Radiobutton(self, text = answer, value = row + 1,
+        self.order = [i for i in range(len(answers))]
+        if randomize:
+            random.shuffle(self.order)
+        for i in range(len(answers)):            
+            self.radios.append(ttk.Radiobutton(self, text = answers[self.order[i]], value = i + 1,
                                                command = self.answerFunction, variable = self.answer))
-            self.radios[row].grid(row = row + 1, column = 0, pady = 3, sticky = W)
+            self.radios[i].grid(row = i+ 1, column = 0, pady = 3, sticky = W)
 
         self.filler = ttk.Label(self, text = " "*150 + "\n ", background = "white", anchor = "center",
                                           font = "helvetica 15", wraplength = 1000)
@@ -341,21 +346,24 @@ class MultipleChoice(Canvas):
         self.feedback.grid(column = 0, row = len(answers) + 1, pady = 5, sticky = NW)
         self.rowconfigure(len(answers) + 1, weight = 1)
 
+    def getAnswer(self):
+        return self.answers[self.order[int(self.answer.get()) - 1]].replace("\n", "  ").replace("\t", " ") 
 
     def answerFunction(self):
         self.root.next["state"] = "normal"            
         
     def showFeedback(self):
-        self.feedback["text"] = self.feedbackTexts[int(self.answer.get()) - 1]
+        self.feedback["text"] = self.feedbackTexts[self.order[int(self.answer.get()) - 1]]
         for radio in self.radios:
             radio["state"] = "disabled"
         
         
 
 class InstructionsAndUnderstanding(InstructionsFrame):
-    def __init__(self, root, controlTexts, **kwargs):
+    def __init__(self, root, controlTexts, randomize = True, **kwargs):
         super().__init__(root, **kwargs)
         self.controlTexts = controlTexts
+        self.randomize = randomize
 
         self.controlFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
@@ -364,7 +372,6 @@ class InstructionsAndUnderstanding(InstructionsFrame):
         self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
 
         self.controlFrame.grid(row = 2, column = 1)
-        #self.controlFrame.columnconfigure(1, weight = 1)        
         self.next.grid(row = 3, column = 1)
 
         self.controlNum = 0
@@ -375,7 +382,7 @@ class InstructionsAndUnderstanding(InstructionsFrame):
             self.controlQuestion.grid_forget()
         self.next["state"] = "disabled"
         texts = self.controlTexts[self.controlNum]
-        self.controlQuestion = MultipleChoice(self.controlFrame, text = texts[0], answers = texts[1], feedback = texts[2])
+        self.controlQuestion = MultipleChoice(self.controlFrame, text = texts[0], answers = texts[1], feedback = texts[2], randomize = self.randomize)
         self.controlQuestion.grid(row = 0, column = 0)
         self.controlNum += 1
         self.controlstate = "answer"
@@ -389,7 +396,7 @@ class InstructionsAndUnderstanding(InstructionsFrame):
                 self.controlQuestion.showFeedback()
                 self.controlstate = "feedback"
             else:                
-                self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.answer.get() + "\n")
+                self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.getAnswer() + "\n")
                 self.createQuestion()    
 
 
