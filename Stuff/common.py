@@ -83,6 +83,8 @@ class InstructionsFrame(ExperimentFrame):
         addtags("<b>", "</b>", "bold")
         self.text.tag_configure("italic", font = "helvetica {} italic".format(font))
         addtags("<i>", "</i>", "italic")
+        self.text.tag_configure("courier", font = "courier {}".format(font))
+        addtags("<c>", "</c>", "courier")
             
         self.text.config(state = "disabled")
 
@@ -312,6 +314,8 @@ class Measure(Canvas):
             ans = self.answer.get()
         self.root.file.write(ans)
 
+    def check(self):
+        return self.answer.get()
 
 
 class MultipleChoice(Canvas):
@@ -400,7 +404,37 @@ class InstructionsAndUnderstanding(InstructionsFrame):
                 self.createQuestion()    
 
 
+class OneFrame(Canvas):
+    def __init__(self, root, question, items, scale, wrap = 480):
+        super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
 
+        self.root = root
+        self.file = self.root.file
+
+        self.answers = scale
+        
+        self.lab1 = ttk.Label(self, text = question, font = "helvetica 15", background = "white")
+        self.lab1.grid(row = 2, column = 1, pady = 10, columnspan = 2)
+        self.measures = []
+        for count, word in enumerate(items):
+            self.measures.append(Measure(self, word, self.answers, "", "", function = self.root.check,
+                                         labelPosition = "none"))
+            self.measures[count].grid(row = count + 3, column = 1, columnspan = 2, sticky = E)
+            self.measures[count].question["wraplength"] = wrap
+            self.measures[count].question["justify"] = "right"
+
+    def check(self):
+        for measure in self.measures:
+            if not measure.answer.get():
+                return False
+        else:
+            return True             
+
+    def write(self):
+        for num, measure in enumerate(self.measures):
+            self.file.write(str(self.answers.index(measure.answer.get()) + 1))
+            if num != len(self.measures) - 1:
+                self.file.write("\t")
 
 
 def read_all(file, encoding = "utf-8"):

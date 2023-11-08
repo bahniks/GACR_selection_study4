@@ -12,7 +12,7 @@ import os
 import urllib.request
 import urllib.parse
 
-from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, InstructionsAndUnderstanding
+from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, InstructionsAndUnderstanding, OneFrame, Question
 from gui import GUI
 from constants import TESTING, URL
 
@@ -122,8 +122,12 @@ intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální
 
 Úkol je rozdělen do sedmi samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednoho hodu kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Pravidla níže však platí pro všech sedm bloků.
 
-Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč.
-
+Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč. Odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
+<c>
+|  0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |  10 |  11 |  12 |
+------------------------------------------------------------------------------
+|  0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
+</c>
 Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
 
 Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
@@ -147,30 +151,13 @@ Toto je konec úkolu s kostkou.
 """
 
 
-
-
 perception_intro = """Nyní odpovězte na několik otázek týkající se volby."""
 
-
-
-
-# intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché, nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
-
-# Úkol je rozdělen do sedmi samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednoho hodu kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Pravidla níže však platí pro všech sedm bloků.
-
-# Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč.
-
-# Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
-
-# Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
-
-# Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na následující otázku:
-# Když správně uhodnete 7 hodů z 12 v prvním bloku, 5 hodů z 12 ve druhém bloku, 2 hody z 12 ve třetím bloku, 8 hodů ve čtvrtém bloku a poté je vylosován třetí blok, kolik peněz obdržíte?
-# """
-
-# wrong_answer = "{} Kč je chybná odpověď, správná odpověď je 15 Kč. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
-# correct_answer = "15 Kč je správná odpověď. Byl vylosován třetí blok, ve kterém jste správně uhodli 2 hody. Obdržíte tedy 5 + 10 = 15 Kč."
-
+q1 = 'Kolik si myslíte, že hráč, kterého jste volili, nahlásí správných odhadů, pokud bude hrát verzi "PO" úlohy?'
+q2 = 'Kolik si myslíte, že obdržíte hlasů od ostatních členů skupiny ve volbě?'
+q3 = 'Nakolik souhlasíte, že Hráč {}, který nahlásil, že v třetím kole vyhrál {} Kč, je...'
+characteristics = ["... čestný", "... přátelský", "... oportunista"]
+scale = ["Zcela nesouhlasím", "Nesouhlasím", "Spíše nesouhlasím", "Spíše souhlasím", "Souhlasím", "Zcela souhlasím"]
 
 
 
@@ -552,14 +539,14 @@ class CheatingInstructions(InstructionsFrame):
 
 
 
-class Instructions3(InstructionsAndUnderstanding):
-    def __init__(self, root):
-        # for testing
-        if TESTING and not "win2" in root.texts:
-            root.texts["win2"] = 150            
+# class Instructions3(InstructionsAndUnderstanding):
+#     def __init__(self, root):
+#         # for testing
+#         if TESTING and not "win2" in root.texts:
+#             root.texts["win2"] = 150            
 
-        controlTexts = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
-        super().__init__(root, controlTexts = controlTexts, text = intro_third, height = 25, font = 15, width = 100, update = ["win2", "condition", "source"])
+#         controlTexts = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
+#         super().__init__(root, controlTexts = controlTexts, text = intro_third, height = 25, font = 15, width = 100, update = ["win2", "condition", "source"])
 
 
 
@@ -651,14 +638,56 @@ class Voting(InstructionsFrame):
 
 
 
+
+
+
+
 class Perception(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = perception_intro, height = 20, font = 15)
+        super().__init__(root, text = perception_intro, height = 2, font = 15)
 
-        # TO DO
+        self.Q1 = Measure(self, q1, values = [i for i in range(13)], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)  
+        self.Q2 = Measure(self, q2, values = [i for i in range(4)], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 300)
+        
+        self.frames = {}
+        row = 3
+        for i in range(4):
+            if not i + 1 == int(self.root.status["number"]):
+                self.frames[row-3] = OneFrame(self, q3.format(i+1, self.root.texts["outcome"].split("_")[i+1].split("|")[2]), items = characteristics, scale = scale)
+                self.frames[row-3].grid(row = row, column = 1)
+                row += 1
 
+        self.Q1.grid(row = 1, column = 1)
+        self.Q2.grid(row = 2, column = 1)
 
+        self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
+                                 background = "white", font = "helvetica 15", foreground = "white")
+        self.warning.grid(row = 6, column = 1)
 
+        self.next.grid(row = 7, column = 1)
+
+        self.rowconfigure(0, weight = 2)
+        self.rowconfigure(1, weight = 1)
+        self.rowconfigure(2, weight = 1)
+        self.rowconfigure(3, weight = 1)
+        self.rowconfigure(4, weight = 1)
+        self.rowconfigure(5, weight = 1)
+        self.rowconfigure(6, weight = 1)
+        self.rowconfigure(7, weight = 1)
+        self.rowconfigure(8, weight = 2)
+
+    def check(self):
+        return all([self.Q1.check(), self.Q2.check()] + [i.check() for i in self.frames.values()])
+
+    def back(self):
+        self.warning.config(foreground = "red")
+
+    def write(self):
+        self.file.write("Perception\n" + "\t".join([self.id, self.Q1.answer.get(), self.Q2.answer.get()]))
+        self.Q3.write()
+        self.Q4.write()
+        self.Q5.write()
+        self.file.write("\n")
 
 
 class Wait(InstructionsFrame):
@@ -734,6 +763,66 @@ class Wait(InstructionsFrame):
         self.file.write("Voting Result" + "\n")
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response.replace("_", "\t") + "\n\n")          
             
+
+
+debrief_intro = """Nyní odpovězte na několik otázek týkající se této části studie."""
+
+d1 = 'Nakolik jste chtěl být ve čtvrtém bloku úlohy zvolen?'
+d2 = 'Nakolik jste si mysleli, že budete ve čtvrtém bloku úlohy zvoleni?'
+scale = ["Vůbec ne", "Jen trochu", "Do určité míry", "Spíše hodně", "Velmi"]
+
+
+class Debrief(InstructionsFrame):
+    def __init__(self, root):
+        super().__init__(root, text = perception_intro, height = 2, font = 15)
+
+        self.question1 = Question(self, q1, alines = 5, qlines = 2, width = 60)
+        self.question2 = Question(self, q2, alines = 5, width = 60)
+        self.Q1 = Measure(self, q1, values = [i for i in range(13)], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)  
+        self.Q2 = Measure(self, q2, values = [i for i in range(4)], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 300)
+        
+        self.frames = {}
+        row = 3
+        for i in range(4):
+            if not i + 1 == int(self.root.status["number"]):
+                self.frames[row-3] = OneFrame(self, q3.format(i+1, self.root.texts["outcome"].split("_")[i+1].split("|")[2]), items = characteristics, scale = scale)
+                self.frames[row-3].grid(row = row, column = 1)
+                row += 1
+
+        self.Q1.grid(row = 1, column = 1)
+        self.Q2.grid(row = 2, column = 1)
+
+        self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
+                                 background = "white", font = "helvetica 15", foreground = "white")
+        self.warning.grid(row = 6, column = 1)
+
+        self.next.grid(row = 7, column = 1)
+
+        self.rowconfigure(0, weight = 2)
+        self.rowconfigure(1, weight = 1)
+        self.rowconfigure(2, weight = 1)
+        self.rowconfigure(3, weight = 1)
+        self.rowconfigure(4, weight = 1)
+        self.rowconfigure(5, weight = 1)
+        self.rowconfigure(6, weight = 1)
+        self.rowconfigure(7, weight = 1)
+        self.rowconfigure(8, weight = 2)
+
+    def check(self):
+        return all([self.Q1.check(), self.Q2.check()] + [i.check() for i in self.frames.values()])
+
+    def back(self):
+        self.warning.config(foreground = "red")
+
+    def write(self):
+        self.file.write("Perception\n" + "\t".join([self.id, self.Q1.answer.get(), self.Q2.answer.get()]))
+        self.Q3.write()
+        self.Q4.write()
+        self.Q5.write()
+        self.file.write("\n")      
+
+
+
 
 class Login(InstructionsFrame):
     def __init__(self, root):
@@ -815,7 +904,11 @@ class Login(InstructionsFrame):
 
 
 
-CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 23, "width": 100, "randomize": False, "controlTexts": [[intro_control1, intro_answers1, intro_feedback1]]})
+controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1]]
+controlTexts3 = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
+
+CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 28, "width": 100, "randomize": False, "controlTexts": controlTexts1})
+Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 25, "width": 100, "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
 #Instructions3 = (InstructionsFrame, {"text": intro_third, "height": 30, "update": ["win2", "condition", "source"]})
 VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]})
@@ -823,11 +916,10 @@ EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win
 OutcomeWait = (Wait, {"what": "outcome"})
 
 
-
-
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
+         Debrief, 
          CheatingInstructions,
          Cheating,
          Instructions2,
@@ -839,6 +931,7 @@ if __name__ == "__main__":
          Perception,
          Wait,
          VotingResult,
-         Cheating,         
+         Cheating,   
+         Debrief,      
          EndCheating
          ])
