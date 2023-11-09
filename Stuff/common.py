@@ -231,7 +231,41 @@ class Question(Canvas):
             self.cond.config(state = "disabled")
 
 
+class TextArea(Canvas):
+    def __init__(self, root, text, width = 80, qlines = 2, alines = 5):
+        super().__init__(root)
+        self["background"] = "white"
+        self["highlightbackground"] = "white"
+        self["highlightcolor"] = "white"
 
+        self.root = root
+
+        self.answer = StringVar()
+
+        self.label = Text(self, width = width, wrap = "word", font = "helvetica 15",
+                          relief = "flat", height = qlines, cursor = "arrow",
+                          selectbackground = "white", selectforeground = "black")
+        self.label.insert("1.0", text)
+        self.label.config(state = "disabled")
+        self.label.grid(column = 0, row = 0)
+
+        self.field = Text(self, width = int(width*1.2), wrap = "word", font = "helvetica 15",
+                          height = alines, relief = "solid")
+        self.field.grid(column = 0, row = 1, pady = 6)
+
+        self.columnconfigure(0, weight = 1)
+
+
+    def check(self):
+        return self.field.get("1.0", "end").strip()
+
+    def write(self, newline = True):
+        self.root.file.write(self.field.get("1.0", "end").replace("\n", "  ").replace("\t", " "))
+        if newline:
+            self.root.file.write("\n")
+
+    def disable(self):
+        self.field.config(state = "disabled")
 
 
 class Measure(Canvas):

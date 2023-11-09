@@ -12,7 +12,7 @@ import os
 import urllib.request
 import urllib.parse
 
-from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, InstructionsAndUnderstanding, OneFrame, Question
+from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, InstructionsAndUnderstanding, OneFrame, Question, TextArea
 from gui import GUI
 from constants import TESTING, URL
 
@@ -20,6 +20,30 @@ from constants import TESTING, URL
 ################################################################################
 # TEXTS
 
+# PRVNÍ BLOK
+intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché, nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
+
+Úkol je rozdělen do čtyř samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednoho hodu kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Pravidla níže však platí pro všechny čtyři bloky.
+
+Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč. Celkové odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
+<c>
+|  0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |  10 |  11 |  12 |
+------------------------------------------------------------------------------
+|  0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
+</c>
+Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
+
+Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie. 
+
+Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na kontrolní otázku:"""
+
+
+intro_control1 = 'Kolik obdržíte za úlohu peněz, pokud bude vylosován blok, kde uhodnete dohromady 4 hody?' 
+intro_answers1 = ['30 Kč (0 + 5 + 10 + 15)', '45 Kč (5 + 10 + 15 + 15)', '50 Kč (5 + 10 + 15 + 20)', '60 Kč (4 x 15)'] 
+intro_feedback1 = ['Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).', 'Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).', 'Ano, obdželi byste 50 Kč.', 'Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).']
+
+
+# ÚLOHA
 continuetext = "Pokračovat"
 oddtext = "Liché (1, 3 nebo 5)"
 eventext = "Sudé (2, 4 nebo 6)"
@@ -46,16 +70,22 @@ wintext = "správná a vydělali jste {} Kč."
 losstext = "špatná a nevydělali jste možných {} Kč."
 
 
+# DRUHÝ BLOK
+intro_block_2 = """
+Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč. Nyní začne druhý blok s dvanácti koly.
+"""
 
+
+# TŘETÍ BLOK
 intro_third = """Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
 <b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
 <b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
-Nyní Vás čeká třetí blok s dvanácti pokusy. V tomto kole budete hrát verzi "PO". 
+Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku budete hrát verzi "PO". 
 
-Před čtvrtým blokem budete náhodně přiřazeni do skupiny spolu s dalšími třemi účastníky studie. {}Jeden z členů skupiny bude hrát ve čtvrtém kole verzi "PO" a ostatní budou hrát verzi "PŘED". Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO".
+Před čtvrtým blokem budete náhodně přiřazeni do skupiny spolu s dalšími třemi účastníky studie. {}Jeden z členů skupiny bude hrát ve čtvrtém bloku verzi "PO" a ostatní budou hrát verzi "PŘED". Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO".
 {}
 Každý člen skupiny bude mít jeden hlas, který přidělí některému z ostatních členů skupiny. Před hlasováním uvidíte výhru všech členů skupiny v tomto, třetím bloku a budete ji tedy moct vzít při hlasování v potaz.
 
@@ -69,38 +99,51 @@ condition_others = '''
 condition_charity = '''
 <b>Výhra člena skupiny, který bude hrát verzi "PO", bude odečtena od 400 Kč a zbylé peníze budou darovány charitě Člověk v tísni.</b>
 '''
-condition_divided = '<b>Ve čtvrtém kole se výhra celé skupiny sečte a rozdělí mezi všechny členy skupiny rovným dílem.</b> '
+condition_divided = '<b>Ve čtvrtém bloku se výhra celé skupiny sečte a rozdělí mezi všechny členy skupiny rovným dílem.</b> '
 
 
+control1 = 'Kdo bude hrát verzi "PO" úlohy ve třetím bloku?' 
+answers1 = ['Všichni členové skupiny.', 'Člen skupiny s nejvíce hlasy.', 'Člen skupiny, který měl nejvyšší výhru v druhém bloku.', 'Nikdo.'] 
+feedback1 = ['Ano, ve třetím bloku hrají všichni členové skupiny verzi "PO" úlohy.', 'Ne, před třetím blokem se nehlasuje. Verzi "PO" úlohy hrají všichni členové skupiny.', 'Ne, verzi "PO" úlohy hrají všichni členové skupiny.', 'Ne, verzi "PO" úlohy hrají všichni členové skupiny.']
 
-control1 = 'Kdo bude hrát verzi "PO" úlohy ve třetím kole?' 
-answers1 = ['Všichni členové skupiny.', 'Člen skupiny s nejvíce hlasy.', 'Člen skupiny, který měl nejvyšší výhru v druhém kole.', 'Nikdo.'] 
-feedback1 = ['Ano, ve třetím kole hrají všichni členové skupiny verzi "PO" úlohy.', 'Ne, před třetím kolem se nehlasuje. Verzi "PO" úlohy hrají všichni členové skupiny.', 'Ne, verzi "PO" úlohy hrají všichni členové skupiny.', 'Ne, verzi "PO" úlohy hrají všichni členové skupiny.']
+control2 = 'Kdo bude hrát verzi "PO" úlohy ve čtvrtém bloku?' 
+answers2 = ['Všichni členové skupiny.', 'Člen skupiny s nejvíce hlasy.', 'Člen skupiny, který bude mít nejvyšší výhru v třetím bloku.', 'Nikdo.'] 
+feedback2 = ['Ne, před čtvrtým blokem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ano, před čtvrtým blokem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ne, před čtvrtým blokem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ne, před čtvrtým blokem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.']
 
-control2 = 'Kdo bude hrát verzi "PO" úlohy ve čtvrtém kole?' 
-answers2 = ['Všichni členové skupiny.', 'Člen skupiny s nejvíce hlasy.', 'Člen skupiny, který bude mít nejvyšší výhru v třetím kole.', 'Nikdo.'] 
-feedback2 = ['Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ano, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.', 'Ne, před čtvrtým kolem se hlasuje a verzi "PO" hraje pouze člen skupiny s nejvíce hlasy.']
-
-control3 = 'Co platí o výhře člena skupiny, který bude hrát verzi "PO" úlohy ve čtvrtém kole?' 
+control3 = 'Co platí o výhře člena skupiny, který bude hrát verzi "PO" úlohy ve čtvrtém bloku?' 
 answers3 = ["Bude proplacena, pokud bude tento člen skupiny vylosován.", "Dělí se s členem skupiny, který obdržel nejméně hlasů.", "Bude přidělena charitě Člověk v tísni."] 
 feedback3 = ["Ne, výhra ", "Ne, výhra ", "Ne, výhra ", "Ano, výhra "]
 
 correct_answers3 = {"experimenter_divided": 'Sečte se s výhrou ostatních členů a rozdělí rovným dílem.', "others_kept": 'Bude odečtena od 400 Kč a zbylé peníze budou rozděleny mezi všechny členy skupiny.', "charity_kept": 'Bude odečtena od 400 Kč a zbylé peníze budou darovány charitě Člověk v tísni.', "charity_divided": 'Bude odečtena od 400 Kč a zbylé peníze budou darovány charitě Člověk v tísni. Následně se sečte s výhrou ostatních členů skupiny a rozdělí rovným dílem.', "experimenter_kept": "Bude proplacena, pokud bude čtvrtý blok úlohy vylosován."}
 
 
+# HLASOVÁNÍ
 intro_voting = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
 
 Nyní Vás čeká čtvrtý blok s dvanácti pokusy.
 
 Byli jste přiřazeni do skupiny s dalšími třemi účastníky studie. {}
 
-Z každé skupiny bude v následujícím kole jeden účastník hrát verzi "PO", ve které se uvádí, zda jste uhodli, či nikoliv, až po zobrazení výsledku hodu kostkou. Zbývající účastníci budou hrát verzi "PŘED". 
+Z každé skupiny bude v následujícím bloku jeden účastník hrát verzi "PO", ve které se uvádí, zda jste uhodli, či nikoliv, až po zobrazení výsledku hodu kostkou. Zbývající účastníci budou hrát verzi "PŘED". 
 {}
 Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO".
 
-Níže jsou zobrazeny výhry ostatních účastníků studie ve třetím bloku. Označte, pro koho ze své skupiny hlasujete, aby hrál verzi "PO" v následujícím bloku a zmáčkněte tlačítko "Pokračovat".
+Níže jsou zobrazeny výhry ostatních účastníků studie ve třetím bloku. Označte, pro koho ze své skupiny hlasujete, aby hrál verzi "PO" v následujícím bloku, a zmáčkněte tlačítko "Pokračovat".
 """
 
+
+# OTÁZKA PO HLASOVÁNÍ
+perception_intro = """Nyní odpovězte na několik otázek týkající se volby."""
+
+q1 = 'Kolik si myslíte, že hráč, kterého jste volili, nahlásí správných odhadů, pokud bude hrát verzi "PO" úlohy?'
+q2 = 'Kolik si myslíte, že obdržíte hlasů od ostatních členů skupiny ve volbě?'
+q3 = 'Nakolik souhlasíte, že Hráč {}, který nahlásil, že v třetím bloku vyhrál {} Kč, je...'
+characteristics = ["... čestný", "... přátelský", "... oportunista"]
+scale = ["Zcela nesouhlasím", "Nesouhlasím", "Spíše nesouhlasím", "Spíše souhlasím", "Souhlasím", "Zcela souhlasím"]
+
+
+# VÝSLEDKY HLASOVÁNÍ
+wait_text = "Prosím počkejte na ostatní členy skupiny."
 
 
 voting_result = """Verzi PO {} Vaší skupiny.
@@ -111,55 +154,21 @@ voting_other = "bude hrát hráč {}, pro kterého hlasoval"
 members = [" 1 člen", "i 2 členové", "i 3 členové"]
 
 
-
-block_numbers = ["prvního", "druhého", "třetího", "čtvrtého", "pátého", "šestého", "sedmého"]
-
-wait_text = "Prosím počkejte na ostatní členy skupiny."
-
-
-
-intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché, nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
-
-Úkol je rozdělen do sedmi samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednoho hodu kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Pravidla níže však platí pro všech sedm bloků.
-
-Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč. Odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
-<c>
-|  0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |  10 |  11 |  12 |
-------------------------------------------------------------------------------
-|  0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
-</c>
-Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
-
-Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie a kolik peněz díky Vám obdržela charita. 
-
-Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na kontrolní otázku:"""
-
-
-intro_control1 = 'Kolik obdržíte za úlohu peněz, pokud bude vylosován blok, kde uhodnete dohromady 4 hody?' 
-intro_answers1 = ['30 Kč (0 + 5 + 10 + 15)', '45 Kč (5 + 10 + 15 + 15)', '50 Kč (5 + 10 + 15 + 20)', '60 Kč (4 x 15)'] 
-intro_feedback1 = ['Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).', 'Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).', 'Ano, obdželi byste 50 Kč.', 'Ne, obdželi byste 50 Kč. Za první hod 5 Kč a za každý další o 5 Kč více (tj. 5 + 10 + 15 + 20).']
-
-
-
-intro_block_2 = """
-Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč. Nyní začne druhý blok s dvanácti koly.
-"""
-
+# KONEC
 endtext = """Toto je konec posledního bloku. Pokud bude tento blok vybrán, obdržíte {} Kč
 
 Toto je konec úkolu s kostkou.
 """
 
 
-perception_intro = """Nyní odpovězte na několik otázek týkající se volby."""
+# DOPLŇUJÍCÍ OTÁZKY PO ÚLOZE
+debrief_intro = """Nyní odpovězte na několik otázek týkající se této části studie."""
 
-q1 = 'Kolik si myslíte, že hráč, kterého jste volili, nahlásí správných odhadů, pokud bude hrát verzi "PO" úlohy?'
-q2 = 'Kolik si myslíte, že obdržíte hlasů od ostatních členů skupiny ve volbě?'
-q3 = 'Nakolik souhlasíte, že Hráč {}, který nahlásil, že v třetím kole vyhrál {} Kč, je...'
-characteristics = ["... čestný", "... přátelský", "... oportunista"]
-scale = ["Zcela nesouhlasím", "Nesouhlasím", "Spíše nesouhlasím", "Spíše souhlasím", "Souhlasím", "Zcela souhlasím"]
-
-
+d1 = 'Popište, jak jste se rozhodoval(a) o tom, komu dát hlas před čtvrtým blokem úlohy.'
+d2 = 'Nakolik jste chtěl být ve čtvrtém bloku úlohy zvolen?'
+d3 = 'Nakolik jste si mysleli, že budete ve čtvrtém bloku úlohy zvoleni?'
+scale = ["Vůbec ne", "Jen trochu", "Do určité míry", "Spíše hodně", "Velmi"]
+d4 = 'Popište, zda jste dělal(a) něco ve třetím bloku úlohy, abyste byl(a) zvolen(a) pro hraní "PO" verze úlohy ve čtvrtém bloku.'
 
 ################################################################################
 
@@ -598,6 +607,9 @@ class Voting(InstructionsFrame):
         self.next["state"] = "disabled"
    
         self.rowconfigure(0, weight = 2)
+        self.rowconfigure(1, weight = 1)
+        self.rowconfigure(4, weight = 1)
+        self.rowconfigure(5, weight = 1)
         self.rowconfigure(6, weight = 2)        
 
 
@@ -765,32 +777,22 @@ class Wait(InstructionsFrame):
             
 
 
-debrief_intro = """Nyní odpovězte na několik otázek týkající se této části studie."""
 
-d1 = 'Nakolik jste chtěl být ve čtvrtém bloku úlohy zvolen?'
-d2 = 'Nakolik jste si mysleli, že budete ve čtvrtém bloku úlohy zvoleni?'
-scale = ["Vůbec ne", "Jen trochu", "Do určité míry", "Spíše hodně", "Velmi"]
 
 
 class Debrief(InstructionsFrame):
     def __init__(self, root):
         super().__init__(root, text = perception_intro, height = 2, font = 15)
 
-        self.question1 = Question(self, q1, alines = 5, qlines = 2, width = 60)
-        self.question2 = Question(self, q2, alines = 5, width = 60)
-        self.Q1 = Measure(self, q1, values = [i for i in range(13)], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)  
-        self.Q2 = Measure(self, q2, values = [i for i in range(4)], questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 300)
-        
-        self.frames = {}
-        row = 3
-        for i in range(4):
-            if not i + 1 == int(self.root.status["number"]):
-                self.frames[row-3] = OneFrame(self, q3.format(i+1, self.root.texts["outcome"].split("_")[i+1].split("|")[2]), items = characteristics, scale = scale)
-                self.frames[row-3].grid(row = row, column = 1)
-                row += 1
+        self.Q1 = TextArea(self, d1, alines = 5, qlines = 2, width = 60)
+        self.Q2 = Measure(self, d2, values = scale, questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)  
+        self.Q3 = Measure(self, d3, values = scale, questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)
+        self.Q4 = TextArea(self, d4, alines = 5, width = 60)
 
-        self.Q1.grid(row = 1, column = 1)
-        self.Q2.grid(row = 2, column = 1)
+        self.Q1.grid(row = 2, column = 1)
+        self.Q2.grid(row = 3, column = 1)
+        self.Q3.grid(row = 4, column = 1)
+        self.Q4.grid(row = 5, column = 1)
 
         self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
                                  background = "white", font = "helvetica 15", foreground = "white")
@@ -809,16 +811,15 @@ class Debrief(InstructionsFrame):
         self.rowconfigure(8, weight = 2)
 
     def check(self):
-        return all([self.Q1.check(), self.Q2.check()] + [i.check() for i in self.frames.values()])
+        return all([self.Q1.check(), self.Q2.check(), self.Q3.check(), self.Q4.check()])
 
     def back(self):
         self.warning.config(foreground = "red")
 
     def write(self):
-        self.file.write("Perception\n" + "\t".join([self.id, self.Q1.answer.get(), self.Q2.answer.get()]))
+        self.file.write("Perception\n" + "\t".join([self.id, self.Q1.answer.get(), self.Q4.answer.get()]) + "\n")
         self.Q3.write()
         self.Q4.write()
-        self.Q5.write()
         self.file.write("\n")      
 
 
@@ -907,7 +908,7 @@ class Login(InstructionsFrame):
 controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1]]
 controlTexts3 = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
 
-CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 28, "width": 100, "randomize": False, "controlTexts": controlTexts1})
+CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 25, "width": 100, "randomize": False, "controlTexts": controlTexts1})
 Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 25, "width": 100, "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
 #Instructions3 = (InstructionsFrame, {"text": intro_third, "height": 30, "update": ["win2", "condition", "source"]})
@@ -919,7 +920,6 @@ OutcomeWait = (Wait, {"what": "outcome"})
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
-         Debrief, 
          CheatingInstructions,
          Cheating,
          Instructions2,
