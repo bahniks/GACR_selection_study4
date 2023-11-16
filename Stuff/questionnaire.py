@@ -24,6 +24,9 @@ class Questionnaire(ExperimentFrame):
     def __init__(self, root, words, question = "", labels = None, blocksize = 4, values = 7, text = True,
                  filetext = "", fontsize = 13, labelwidth = None):
         super().__init__(root)
+
+        self.fontsize = fontsize
+
         if filetext:
             self.file.write(filetext + "\n")
 
@@ -46,7 +49,7 @@ class Questionnaire(ExperimentFrame):
 
         for count, word in enumerate(self.words, 1):
             self.variables[word] = StringVar()
-            if TESTING:
+            if False: #TESTING:  # remove False
                 self.variables[word].set(random.randint(1, values))
             for i in range(1, values+1):
                 if word not in self.buttons:
@@ -82,7 +85,7 @@ class Questionnaire(ExperimentFrame):
                 self.texts[count]["width"] = labelwidth,
             self.texts[count].grid(column = count+1, row = 0, sticky = W, pady = 4, padx = 3)
 
-        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 12")
+        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica {}".format(fontsize))
 
         ttk.Style().configure("TButton", font = "helvetica 15")
         self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun,
@@ -107,7 +110,7 @@ class Questionnaire(ExperimentFrame):
             if not self.variables[word].get():
                 end = False
             else:
-                self.labels[word]["font"] = "helvetica 10"
+                self.labels[word]["font"] = "helvetica {}".format(self.fontsize - 3)
         if end:
             self.next["state"] = "!disabled"
 

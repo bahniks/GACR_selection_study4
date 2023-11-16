@@ -350,14 +350,14 @@ class Measure(Canvas):
 
 
 class MultipleChoice(Canvas):
-    def __init__(self, root, text, answers, feedback, randomize = True):
+    def __init__(self, root, text, answers, feedback, randomize = True, callback = False):
         super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
 
-        self.root = root.master
+        self.root = root
         self.answer = StringVar()
         self.feedbackTexts = feedback
         self.answers = answers
-        
+        self.callback = callback
         
         self.question = ttk.Label(self, text = text, background = "white", anchor = "center",
                                           font = "helvetica 15 bold")
@@ -385,7 +385,12 @@ class MultipleChoice(Canvas):
         return self.answers[self.order[int(self.answer.get()) - 1]].replace("\n", "  ").replace("\t", " ") 
 
     def answerFunction(self):
-        self.root.next["state"] = "normal"            
+        if hasattr(self.root.master, "next"):
+            self.root.master.next["state"] = "normal"
+        elif hasattr(self.root, "next"):
+            self.root.next["state"] = "normal"
+        if self.callback:
+            self.callback()
         
     def showFeedback(self):
         self.feedback["text"] = self.feedbackTexts[self.order[int(self.answer.get()) - 1]]

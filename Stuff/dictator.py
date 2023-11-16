@@ -11,6 +11,7 @@ import urllib.parse
 from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, InstructionsAndUnderstanding
 from gui import GUI
 from constants import TESTING, URL
+from questionnaire import Questionnaire
 
 
 ################################################################################
@@ -25,10 +26,7 @@ Hráč A obdrží 20 Kč. Má možnost vzít si od hráče B od 0 do 10 Kč. Uve
 
 <i>Odpověď hráče B:</i>
 Hráč B obdrží 20 Kč. Bude mít k dispozici dvě možnosti reakce na rozhodnutí hráče A a bude moci poslat zprávu.
-Reakce mohou být:
-  - Nedělat nic: Pokračovat v interakci bez jakékoli akce.
-  - Potrestat: Může hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětuje do potrestání, ztratí hráč A 1 Kč. 
-  - Odpustit: Může hráče A odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dá hráči A, dostane 1 Kč.
+Reakce mohou být:{}{}
 
 Reakce budou zaznamenány pro všechny možné volby hráče A (vezme 0-10 Kč).
 Uskutečnění: Jakmile oba účastníci učiní svá rozhodnutí, budou provedena a hra postoupí do druhého kola, které je velmi podobné – liší se jen částky.
@@ -42,6 +40,9 @@ Budou následovat dotazníky na Vaše názory a postoje.
 
 Níže uvádíme několik otázek, které ověřují, zda studii rozumíte."""
 
+ignoreInfo = "\n<b>Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce."
+punishInfo = "\n<b>Potrestat</b>: Může hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětuje do potrestání, ztratí hráč A 1 Kč."
+forgiveInfo = "\n<b>Odpustit</b>: Může hráče A odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dá, hráč A dostane 1 Kč." 
 
 DictControl1 = "Jaká je role hráče A a hráče B ve studii?"
 DictAnswers1 = ["Hráč A rozhoduje, kolik hráči B vezme peněz. Účastníci studie jsou v obou kolech buď hráčem A nebo hráčem B (role se nemění).",
@@ -76,17 +77,15 @@ Vy i hráč B jste dostali v této části studie 20 Kč.
 S hráčem B budete ve dvojici pro obě kola, po které se studie koná. Oba budete znát rozhodnutí toho druhého.
 
 Nyní budete mít příležitost se rozhodnout, kolik (0-10 Kč) si od hráče B vezmete.
-Hráč B bude reagovat. Bude mít k dispozici dvě možnosti reakce na rozhodnutí hráče A a bude moci poslat textovou zprávu:
+Hráč B bude reagovat. Bude mít k dispozici dvě možnosti reakce na Vaše rozhodnutí a vybere pro Vás textovou zprávu:
 {}
 
 <b>Rozhodněte se, kolik si chcete od hráče B vzít (0-10 Kč)</b>:
 """
 
 ignoreText = "\n<b>Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce."
-punishText = "\n<b>Potrestat</b>: Může hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětuje do potrestání, ztratí hráč A 1 Kč."
-forgiveText = "\n<b>Odpustit</b>: Může hráče A odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dá, hráč A dostane 1 Kč." 
-
-
+punishText = "\n<b>Potrestat</b>: Může Vás potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětuje do potrestání, ztratí hráč A 1 Kč."
+forgiveText = "\n<b>Odpustit</b>: Může Vás odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dá, hráč A dostane 1 Kč." 
 
 
 B1text = """Byla vám náhodně přidělena role: <b>Hráč B</b> 
@@ -95,10 +94,10 @@ Vaše role zůstává po celou dobu experimentu stejná.
 Vy i hráč A jste dostali v této části studie 20 Kč.
 S hráčem A budete ve dvojici pro obě kola, po které se studie koná. Oba budete znát rozhodnutí toho druhého.
 
-Hráč A Vám může vzít 0 až 10 Kč, níže uveďte, jak budete reagovat. Máte na výběr z těchto dvou možností:
+Hráč A Vám může vzít 0 až 10 Kč. Níže uveďte, jak budete reagovat. Máte na výběr z těchto dvou možností:
 {}
 
-<b>Níže uveďte v Kč Vaše reakci na možná rozhodnutí hráče A:</b>"""
+<b>Níže uveďte v Kč Vaše reakce na možná rozhodnutí hráče A:</b>"""
 
 ignoreResponse = '''<b>Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce a poslat jednu ze zpráv.'''
 punishResponse = '''<b>Potrestat</b>: Můžete hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětujete do potrestání, ztratí hráč A 1 Kč. Navíc pošlete jednu ze zpráv.'''
@@ -111,14 +110,85 @@ punishMessage2 = "Volím možnost: Potrestat."
 forgiveMessage1 = "Je mi líto, že jste mi vzal peníze. Takto by se k sobě lidé chovat neměli. Já Vám ale odpouštím."
 forgiveMessage2 = "Volím možnost: Odpustit."
 
+
+followup = "Jak se cítíte poté, co jste učinil/a Vaši volbu?"
+scale = ["Velmi mírně\nnebo vůbec", "Nepatrně", "Mírně", "Docela dost", "Extrémně"]
+dimensions = ["Naštvaný/á", "Rozrušený/á", "Provinilý/á", "Nepřátelský/á", "Hrdý/á", "Nadšený/á", "Zahanbený/á", "Odhodlaný/á", "Bojácný/á"]
+
+expectText = "Jaké chování očekáváte od hráče B v reakci na Vaši volbu:"
+expectAnswers = {"ignore": "Nebude dělat nic.", "punish": "Potrestá mne (přijdeme oba o 0-10 Kč).", "forgive": "Odpustí mi (pošle mi 0-10 Kč a sám ztratí 0-10 Kč)."}
+
+followupB2 = """Hráč A Vám může vzít 0 až 20 Kč. Vyčkáváte na rozhodnutí hráče A.
+
+Jak se cítíte?"""
+
+
+dictatorResultTextA = """Rozhodl jste se Hráči B vzít {} Kč.
+
+Jako reakci Hráč B:
+<b>{}
+Vy máte tedy po prvním kole {} Kč a Hráč B {} Kč.</b> 
+Nyní přistoupíme k druhému kolu.
+
+
+<b>Druhé kolo</b>
+Máte stejnou roli: Hráč A
+Vy i Hráč B dostáváte 20 Kč.
+
+Rozhodnete se, kolik (0-20 Kč) si od hráče B vezmete.
+Hráč B vyčkává Vašeho rozhodnutí.
+
+<b>Rozhodněte se nyní, kolik si chcete od hráče B vzít (0-20 Kč):</b>"""
+
+dictatorResultTextB = """Hráč A se rozhodl Vám vzít {} Kč.
+
+Jako reakci jste:
+{}
+<b>Vy máte tedy po prvním kole {} Kč a Hráč A {} Kč.</b> 
+Nyní přistoupíme k druhému kolu.
+
+
+<b>Druhé kolo</b>
+Máte stejnou roli: Hráč B
+Vy i Hráč A dostáváte 20 Kč.
+
+Hráč A se rozhodne, kolik (0-20 Kč) si od Vás vezme.
+Vy vyčkáte rozhodnutí Hráče A."""
+
+ignoreResult = 'Neudělal nic a poslal zprávu "{}"'
+punishResult = '{} a poslal zprávu "{}" Oba ztrácíte {} Kč.'
+forgiveResult = '{} {} Kč a poslal zprávu "{}"'
+
+punishA = "Vás potrestal"
+punishB = "Hráče A potrestal"
+forgiveA = "Vám odpustil, daroval Vám"
+forgiveB = "Hráči A odpustil, daroval Hráči A"
+
+
+finalTextA = """Rozhodl jste se Hráči B vzít {} Kč.
+V tomto kole jste získal {} Kč a Hráč B {} Kč.
+<b>Z této úlohy si dohromady odnášíte {} Kč a Hráč B {} Kč.</b> 
+
+Tímto tato část experimentu končí.
+Ve studii pokračujte kliknutím na tlačítko "Pokračovat"."""
+
+finalTextB = """Hráč A se rozhodl Vám vzít {} Kč.
+V tomto kole jste získal {} Kč a Hráč A {} Kč.
+<b>Z této úlohy si dohromady odnášíte {} Kč a Hráč A {} Kč.</b> 
+
+Tímto tato část experimentu končí.
+Ve studii pokračujte kliknutím na tlačítko "Pokračovat"."""
+
+
 ################################################################################
 
 
 
 class ScaleFrame(Canvas):
-    def __init__(self, root):
+    def __init__(self, root, round = 1, font = 15):
         super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
 
+        self.parent = root
         self.root = root.root
 
         self.valueVar = StringVar()
@@ -126,16 +196,12 @@ class ScaleFrame(Canvas):
 
         ttk.Style().configure("TScale", background = "white")
 
-        self.value = ttk.Scale(self, orient = HORIZONTAL, from_ = 0, to = 10, length = 500,
+        self.value = ttk.Scale(self, orient = HORIZONTAL, from_ = 0, to = 10*round, length = 500,
                             variable = self.valueVar, command = self.changedValue)
 
-        if self.root.status["dictatorRole"] == "A":
-            action = "Beru"
-        else:
-            action = "Beru" # TO DO
-        self.actionLab = ttk.Label(self, text = action, font = "helvetica 15", background = "white", anchor = "w")
-        self.valueLab = ttk.Label(self, textvariable = self.valueVar, font = "helvetica 15", background = "white", width = 3, anchor = "e")
-        self.currencyLab = ttk.Label(self, text = "Kč", font = "helvetica 15", background = "white")
+        self.actionLab = ttk.Label(self, text = "Beru", font = "helvetica {}".format(font), background = "white", anchor = "w")
+        self.valueLab = ttk.Label(self, textvariable = self.valueVar, font = "helvetica {}".format(font), background = "white", width = 3, anchor = "e")
+        self.currencyLab = ttk.Label(self, text = "Kč", font = "helvetica {}".format(font), background = "white")
 
         self.value.grid(column = 1, row = 1, padx = 15)
         self.actionLab.grid(column = 2, row = 1)
@@ -144,13 +210,18 @@ class ScaleFrame(Canvas):
 
 
     def changedValue(self, value):                
-        self.valueVar.set(str(int(round(eval(self.valueVar.get()), 0))))
+        self.valueVar.set(str(int(round(eval(self.valueVar.get())/2, 0)*2)))
+        if self.root.status["dictatorRole"] == "B":
+            self.parent.changedValue()
+        else:
+            self.parent.checkAnswers()
         
 
 class ResponseFrame(Canvas):
     def __init__(self, root, value):
-        super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
+        super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white", width = 1200, height = 300)        
         self.root = root.root
+        self.parent = root
 
         conditions = {"ignore": ["Neudělám nic", ignoreMessage1, ignoreMessage2], 
                       "punish": ["Potrestám", punishMessage1, punishMessage2],
@@ -161,31 +232,110 @@ class ResponseFrame(Canvas):
 
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 14")
 
-        self.valueLab = ttk.Label(self, text = "Hráč A vezme " + str(value) + " Kč:  ", font = "helvetica 14", background = "white", anchor = "e")
+        valueText = str(value*2) + "Kč:  " if value < 5 else "10 Kč:  "
+        self.valueLab = ttk.Label(self, text = "Hráč A vezme " +  valueText, font = "helvetica 14", background = "white", anchor = "e", width = 18)
 
         self.responseVar = StringVar()
-        self.responseBut1 = ttk.Radiobutton(self, text = conditions[c1][0], value = c1, command = self.response, variable = self.responseVar)
-        self.responseBut2 = ttk.Radiobutton(self, text = conditions[c2][0], value = c2, command = self.response, variable = self.responseVar)
+        self.responseBut1 = ttk.Radiobutton(self, text = conditions[c1][0], value = c1, command = self.response1, variable = self.responseVar)
+        self.responseBut2 = ttk.Radiobutton(self, text = conditions[c2][0], value = c2, command = self.response2, variable = self.responseVar)
 
-        self.valueLab.grid(column = 0, row = 1)
-        self.responseBut1.grid(column = 1, row = 1, sticky = W)
-        self.responseBut2.grid(column = 1, row = 2, sticky = W)
+        self.filler = Canvas(self, background = "white", width = 1250, height = 1,
+                                highlightbackground = "white", highlightcolor = "white")
+        self.filler.grid(column = 0, row = 0, columnspan = 4, sticky = EW)
 
-        self.columnconfigure(0, weight = 2)
+        self.filler2 = Canvas(self, background = "white", width = 1, height = 100,
+                                highlightbackground = "white", highlightcolor = "white")
+        self.filler2.grid(column = 0, row = 0, rowspan = 4, sticky = NS)
+
+        self.valueLab.grid(column = 1, row = 1)
+        self.responseBut1.grid(column = 2, row = 1, sticky = W)
+        self.responseBut2.grid(column = 2, row = 2, sticky = W)
+
         self.columnconfigure(3, weight = 2)
+        self.rowconfigure(0, weight = 0)
+        self.rowconfigure(1, weight = 0)
+        self.rowconfigure(2, weight = 0)
+        self.rowconfigure(3, weight = 2)
+
+        self.s= ttk.Style()
+        self.s.configure('Grey.TRadiobutton', foreground='grey')
+        self.s.configure('Black.TRadiobutton', foreground='black')
+
+        self.messageVar = StringVar()        
+        self.messageBut1 = ttk.Radiobutton(self, text = " ", value = "1", command = self.message1, variable = self.messageVar)
+        self.messageBut2 = ttk.Radiobutton(self, text = " ", value = "2", command = self.message2, variable = self.messageVar)
+        self.scale = ScaleFrame(self, font = 14)
+
+        self.messageBut1.grid(column = 3, row = 1, sticky = W, padx = 10)
+        self.messageBut2.grid(column = 3, row = 2, sticky = W, padx = 10)
+        self.scale.grid(column = 2, row = 3, columnspan = 2, sticky = W)
+
+        self.messageBut1.grid_remove()
+        self.messageBut2.grid_remove()
+        self.scale.grid_remove()
+
+        self.scaleResponses = {c1: 0, c2: 0}
+        self.messageResponses = {c1: 0, c2: 0}
+
+    def changedValue(self):
+        self.scaleResponses[self.responseVar.get()] = self.scale.valueVar.get()
+
+    def response1(self):
+        self.responseBut1["style"] = "Black.TRadiobutton"
+        self.responseBut2["style"] = "Grey.TRadiobutton"
+        self.response()
+
+    def response2(self):
+        self.responseBut1["style"] = "Grey.TRadiobutton"
+        self.responseBut2["style"] = "Black.TRadiobutton"
+        self.response()
 
     def response(self):
         c1, c2 = self.root.status["dictatorCondition"].split("-")
 
-        self.messageVar = StringVar()        
-        self.messageBut1 = ttk.Radiobutton(self, text = self.conditions[c1][1], value = "1", command = self.message, variable = self.messageVar)
-        self.messageBut2 = ttk.Radiobutton(self, text = self.conditions[c2][2], value = "2", command = self.message, variable = self.messageVar)
+        if self.responseVar.get() != "ignore":
+            self.scale.grid(column = 2, row = 3, columnspan = 2, sticky = W)
+            if self.responseVar.get() == "punish":
+                self.scale.actionLab["text"] = "Beru"
+            else:
+                self.scale.actionLab["text"] = "Dávám"
+            self.scale.valueVar.set(self.scaleResponses[self.responseVar.get()])
+        else:
+            self.scale.grid_remove()
 
-        self.messageBut1.grid(column = 2, row = 1, sticky = W)
-        self.messageBut2.grid(column = 2, row = 2, sticky = W)
+        self.messageBut1["text"] = self.conditions[self.responseVar.get()][1]
+        self.messageBut2["text"] = self.conditions[self.responseVar.get()][2]
+
+        if self.messageResponses[self.responseVar.get()]:
+            self.messageVar.set(self.messageResponses[self.responseVar.get()])
+            if self.messageVar.get() == "1":
+                self.message1()
+            else:
+                self.message2()
+        else:
+            self.messageVar.set("")
+            self.messageBut1["style"] = "Black.TRadiobutton"
+            self.messageBut2["style"] = "Black.TRadiobutton"
+            self.parent.next["state"] = "disabled"
+
+        self.messageBut1.grid(column = 3, row = 1, sticky = W, padx = 20)
+        self.messageBut2.grid(column = 3, row = 2, sticky = W, padx = 20)
+
+    def message1(self):
+        self.messageBut1["style"] = "Black.TRadiobutton"
+        self.messageBut2["style"] = "Grey.TRadiobutton"
+        self.message()
+
+    def message2(self):
+        self.messageBut1["style"] = "Grey.TRadiobutton"
+        self.messageBut2["style"] = "Black.TRadiobutton"
+        self.message()
 
     def message(self):
-        pass
+        self.messageResponses[self.responseVar.get()] = self.messageVar.get()
+        self.parent.checkAnswers()
+    
+        
 
 
 class DictatorDecision(InstructionsFrame):
@@ -193,14 +343,14 @@ class DictatorDecision(InstructionsFrame):
         if root.status["dictatorRole"] == "A":
             text = A1text
             text = text.format({"forgive-ignore": forgiveText + "\n" + ignoreText, 
-                                "punish-ignore": punishText + "\n" + ignoreText, 
+                                "ignore-punish": ignoreText + "\n" + punishText, 
                                 "forgive-punish": forgiveText + "\n" + punishText}[root.status["dictatorCondition"]])
             height = 19
             width = 80
         else:
             text = B1text
             text = text.format({"forgive-ignore": forgiveResponse + "\n" + ignoreResponse, 
-                    "punish-ignore": punishResponse + "\n" + ignoreResponse, 
+                    "ignore-punish": ignoreResponse + "\n" + punishResponse, 
                     "forgive-punish": forgiveResponse + "\n" + punishResponse}[root.status["dictatorCondition"]])
             height = 13
             width = 100
@@ -209,15 +359,16 @@ class DictatorDecision(InstructionsFrame):
 
         if self.root.status["dictatorRole"] == "A":
             self.scaleFrame = ScaleFrame(self)       
-            self.scaleFrame.grid(column = 1, row = 3, pady = 10)        
+            self.scaleFrame.grid(column = 1, row = 3, pady = 10, sticky = NSEW)        
             self.next.grid(column = 1, row = 4)
             self.rowconfigure(4, weight = 1)
         else:
-            frames = {}
-            for i in range(11):
-                frames[i] = ResponseFrame(self, i)
-                frames[i].grid(column = 0, row = 3 + i, pady = 3)
-            self.next.grid(column = 1, row = 15)          
+            self.next["state"] = "disabled"
+            self.frames = {}
+            for i in range(6):
+                self.frames[i] = ResponseFrame(self, i)
+                self.frames[i].grid(column = 0, row = 3 + i, pady = 3, columnspan = 3)
+            self.next.grid(column = 1, row = 15)            
             self.rowconfigure(15, weight = 1)
       
        
@@ -226,6 +377,14 @@ class DictatorDecision(InstructionsFrame):
         self.rowconfigure(2, weight = 0)
         self.rowconfigure(3, weight = 0)
         self.rowconfigure(16, weight = 2)
+
+    def checkAnswers(self):
+        if self.root.status["dictatorRole"] == "B":            
+            for frame in self.frames.values():
+                if not frame.messageVar.get():
+                    break
+            else:
+                self.next["state"] = "normal"
 
 
 
@@ -241,21 +400,28 @@ class WaitDictator(InstructionsFrame):
         count = 0
         while True:
             self.update()
-            if count % 50 == 0:
-                if self.what == "pairing":
-                    data = urllib.parse.urlencode({'id': self.id, 'round': "dictator", 'offer': "pairing"})
-                elif self.what == "decision":
-                    data = urllib.parse.urlencode({'id': self.id, 'round': "dictator", 'offer': "decision"})
+            if count % 50 == 0:                
+                data = urllib.parse.urlencode({'id': self.id, 'round': "dictator", 'offer': self.what})                
                 data = data.encode('ascii')
                 if URL == "TEST":
                     if self.what == "pairing":
-                        condition = random.choice(["forgive-ignore", "punish-ignore", "forgive-punish"])
-                        role = "B"
-                        #role = random.choice(["A", "B"])                        
+                        condition = random.choice(["forgive-ignore", "ignore-punish", "forgive-punish"])
+                        #role = "A" # for testing
+                        role = random.choice(["A", "B"])                        
                         pair = random.randint(1,20)
                         response = str(pair) + "_" + role + "_" + condition
-                    elif self.what == "decision":                                                                        
-                        response = ""  # TO DO
+                    elif self.what == "decision1":                                                                        
+                        #if self.root.status["dictatorRole"] == "A": # TO DO
+                        pair = random.randint(1,20)
+                        took = random.randint(0, 5) * 2 #self.root.status[""]
+                        decision = random.choice(self.root.status["dictatorCondition"].split("-"))
+                        message = eval(decision + "Message" + str(random.randint(1,2)))
+                        money = 0 if decision == "ignore" else random.randint(0,5) * 2
+                        response = "_".join(map(str, [pair, took, decision, message, money]))    
+                    elif self.what == "decision2":     
+                        pair = random.randint(1,20)
+                        took = random.randint(0, 10) * 2                
+                        response = "_".join(map(str, [pair, took]))
                 else:
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:
@@ -266,11 +432,46 @@ class WaitDictator(InstructionsFrame):
                     if self.what == "pairing":
                         pair, role, condition = response.split("_")                                 
                         self.root.status["dictatorCondition"] = condition
+                        self.root.texts["firstOption"] = eval(condition.split("-")[0] + "Info")
+                        self.root.texts["secondOption"] = eval(condition.split("-")[1] + "Info")
                         self.root.status["dictatorRole"] = role
                         self.root.status["dictatorPair"] = pair                        
                         self.write(response)
-                    elif self.what == "decision":   
-                        pass # TO DO
+                    elif self.what == "decision1":   
+                        pair, took, decision, message, money = response.split("_")
+                        took, money = int(took), int(money)
+                        result = eval(decision + "Result")
+                        a = 20 + took
+                        b = 20 - took
+                        if decision == "ignore":
+                            result = result.format(message)
+                        elif decision == "punish":
+                            result = result.format(eval(decision + self.root.status["dictatorRole"]), message, money)
+                            a -= money
+                            b -= money
+                        elif decision == "forgive":
+                            result = result.format(eval(decision + self.root.status["dictatorRole"]), money, message)
+                            a += money
+                            b -= money
+                        self.root.status["dictatorRound1AReward"] = a
+                        self.root.status["dictatorRound1BReward"] = b
+                        if self.root.status["dictatorRole"] == "A":
+                            text = dictatorResultTextA.format(took, result, a, b)
+                        else:
+                            text = dictatorResultTextB.format(took, result, b, a)
+                        self.root.texts["dictatorResult"] = text
+                    elif self.what == "decision2":   
+                        pair, took = response.split("_")
+                        took = int(took)                        
+                        a = 20 + took
+                        b = 20 - took                        
+                        aTotal = self.root.status["dictatorRound1AReward"] + a
+                        bTotal = self.root.status["dictatorRound1BReward"] + b
+                        if self.root.status["dictatorRole"] == "A":
+                            text = finalTextA.format(took, a, b, aTotal, bTotal)
+                        else:
+                            text = finalTextB.format(took, b, a, bTotal, aTotal)
+                        self.root.texts["dictatorEnd"] = text
                     self.progressBar.stop()
                     self.nextFun()  
                     return
@@ -288,14 +489,72 @@ class WaitDictator(InstructionsFrame):
 
 
 
+class DictatorFeelings(Questionnaire):
+    def __init__(self, root, round = 1):
+
+        question = followupB2 if root.status["dictatorRole"] == "B" and round == 2 else followup
+
+        super().__init__(root, words = dimensions, question = question, labels = scale, values = 5, labelwidth = 12, text = False,
+                         fontsize = 14, blocksize = len(dimensions), filetext = "Dictator Feelings" + str(round))
+
+        self.round = round
+
+        if self.root.status["dictatorRole"] == "A" and self.round == 1:
+            answers = [expectAnswers[condition] for condition in self.root.status["dictatorCondition"].split("-")]
+            self.expectation = MultipleChoice(self, text = expectText, answers = answers, feedback = [""]*2, randomize = False, callback = self.clicked)
+            self.expectation.grid(row = 2, column = 1)
+            self.next.grid(row = 3, column = 1)
+        
+
+    def clicked(self):
+        super().clicked()     
+        if self.root.status["dictatorRole"] == "A" and self.round == 1:            
+            if self.expectation.answer.get():
+                for word in self.words:
+                    if not self.variables[word].get():
+                        self.next["state"] = "disabled"
+                        break
+                else:
+                    self.next["state"] = "!disabled"
+
+               
+
+class DictatorResult(InstructionsFrame):
+    def __init__(self, root):
+        super().__init__(root, text = "{}", height = 19, update = ["dictatorResult"])
+
+        if self.root.status["dictatorRole"] == "A":
+            self.scaleFrame = ScaleFrame(self, round = 2)       
+            self.scaleFrame.grid(column = 1, row = 3, pady = 10, sticky = N)        
+            self.next.grid(column = 1, row = 4)
+            self.rowconfigure(0, weight = 1)        
+            self.rowconfigure(1, weight = 0) 
+            self.rowconfigure(2, weight = 0) 
+            self.rowconfigure(3, weight = 0) 
+            self.rowconfigure(4, weight = 1)       
+
+    def checkAnswers(self):
+        pass 
+
+
+
 
 controlTexts1 = [[DictControl1, DictAnswers1, DictFeedback1], [DictControl2, DictAnswers2, DictFeedback2], [DictControl3, DictAnswers3, DictFeedback3], [DictControl4, DictAnswers4, DictFeedback4], [DictControl5, DictAnswers5, DictFeedback5]]
-InstructionsDictator = (InstructionsAndUnderstanding, {"text": instructions, "height": 31, "width": 110, "randomize": False, "controlTexts": controlTexts1})
-
+InstructionsDictator = (InstructionsAndUnderstanding, {"text": instructions, "height": 30, "width": 110, "randomize": False, "controlTexts": controlTexts1, "update": ["firstOption", "secondOption"]})
+WaitResult1 = (WaitDictator, {"what": "decision1"})
+WaitResult2 = (WaitDictator, {"what": "decision2"})
+DictatorEnd = (InstructionsFrame, {"text": "{}", "height": 8, "update": ["dictatorEnd"]})
+DictatorFeelings2 = (DictatorFeelings, {"round": 2})
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([WaitDictator,
+         InstructionsDictator,
          DictatorDecision,
-         InstructionsDictator
+         DictatorFeelings,
+         WaitResult1,
+         DictatorResult,
+         DictatorFeelings2,
+         WaitResult2,
+         DictatorEnd
          ])
