@@ -5,8 +5,10 @@ from time import time
 import os
 import sys
 import random
+import urllib.request
+import urllib.parse
 
-from constants import TESTING
+from constants import TESTING, URL
 
 
 class ExperimentFrame(Canvas):
@@ -37,6 +39,23 @@ class ExperimentFrame(Canvas):
 
     def gothrough(self):        
         self.nextFun()
+
+    def sendData(self, message):            
+        while True:
+            data = urllib.parse.urlencode(message)
+            data = data.encode('ascii')
+            if URL == "TEST":
+                response = "ok"
+            else:
+                try:
+                    with urllib.request.urlopen(URL, data = data) as f:
+                        response = f.read().decode("utf-8")       
+                except Exception:
+                    continue
+            if response == "ok":                    
+                return            
+            sleep(0.1)               
+
 
 
 
@@ -118,11 +137,9 @@ class InstructionsFrame(ExperimentFrame):
         if time() - self.t0 > self.wait:
             self.nextFun()
 
-    def nextFun(self):
+    def nextFun(self):        
         if self.check():
             self.root.unbind("<space>")
-            # self.root.unbind("<g>")
-            # self.root.unbind("<G>")
             if self.keys:
                 for key in self.keys:
                     if key in [str(i) for i in range(10)]:

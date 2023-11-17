@@ -741,7 +741,7 @@ class Wait(InstructionsFrame):
                         with urllib.request.urlopen(URL, data = data) as f:
                             response = f.read().decode("utf-8")       
                     except Exception as e:
-                        pass
+                        continue
                 if response:                  
                     if self.what == "voting":
                         condition, maxvotes, votes = response.split("_")         

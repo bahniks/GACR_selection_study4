@@ -12,6 +12,7 @@ from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, 
 from gui import GUI
 from constants import TESTING, URL
 from questionnaire import Questionnaire
+from cheating import Login
 
 
 ################################################################################
@@ -227,6 +228,7 @@ class ResponseFrame(Canvas):
                       "punish": ["Potrestám", punishMessage1, punishMessage2],
                       "forgive": ["Odpustím", forgiveMessage1, forgiveMessage2]}
         self.conditions = conditions
+        self.value = value
 
         c1, c2 = self.root.status["dictatorCondition"].split("-")
 
@@ -335,11 +337,14 @@ class ResponseFrame(Canvas):
         self.messageResponses[self.responseVar.get()] = self.messageVar.get()
         self.parent.checkAnswers()
     
+    def getData(self):
+        money = "0" if self.responseVar.get() == "ignore" else self.scale.valueVar.get()
+        return "|".join([str(self.value * 2), self.responseVar.get(), self.messageVar.get(), money])
         
 
 
 class DictatorDecision(InstructionsFrame):
-    def __init__(self, root, round = 1):
+    def __init__(self, root):
         if root.status["dictatorRole"] == "A":
             text = A1text
             text = text.format({"forgive-ignore": forgiveText + "\n" + ignoreText, 
@@ -386,7 +391,21 @@ class DictatorDecision(InstructionsFrame):
             else:
                 self.next["state"] = "normal"
 
+    def nextFun(self):
+        self.send()        
+        super().nextFun()
 
+    def send(self):
+        if self.root.status["dictatorRole"] == "A": 
+            data = {'id': self.id, 'round': "dictator1A", 'offer': self.scaleFrame.valueVar.get()}
+        else:            
+            response = "_".join([frame.getData() for frame in self.frames.values()])
+            data = {'id': self.id, 'round': "dictator1B", 'offer': response}
+        self.sendData(data)
+
+    def write(self):
+        pass
+        # TO DO
 
 
 class WaitDictator(InstructionsFrame):
@@ -415,7 +434,7 @@ class WaitDictator(InstructionsFrame):
                         pair = random.randint(1,20)
                         took = random.randint(0, 5) * 2 #self.root.status[""]
                         decision = random.choice(self.root.status["dictatorCondition"].split("-"))
-                        message = eval(decision + "Message" + str(random.randint(1,2)))
+                        message = str(random.randint(1,2))
                         money = 0 if decision == "ignore" else random.randint(0,5) * 2
                         response = "_".join(map(str, [pair, took, decision, message, money]))    
                     elif self.what == "decision2":     
@@ -427,7 +446,7 @@ class WaitDictator(InstructionsFrame):
                         with urllib.request.urlopen(URL, data = data) as f:
                             response = f.read().decode("utf-8")       
                     except Exception as e:
-                        pass
+                        continue
                 if response:                  
                     if self.what == "pairing":
                         pair, role, condition = response.split("_")                                 
@@ -439,6 +458,7 @@ class WaitDictator(InstructionsFrame):
                         self.write(response)
                     elif self.what == "decision1":   
                         pair, took, decision, message, money = response.split("_")
+                        message = eval(decision + "Message" + message)
                         took, money = int(took), int(money)
                         result = eval(decision + "Result")
                         a = 20 + took
@@ -536,6 +556,16 @@ class DictatorResult(InstructionsFrame):
     def checkAnswers(self):
         pass 
 
+    def send(self):
+        # save data TO DO
+        if self.root.status["dictatorRole"] == "A": 
+            data = {'id': self.id, 'round': "dictator2A", 'offer': self.scaleFrame.valueVar.get()}        
+            self.sendData(data)
+
+    def nextFun(self):
+        self.send()        
+        super().nextFun()
+
 
 
 
@@ -546,9 +576,12 @@ WaitResult2 = (WaitDictator, {"what": "decision2"})
 DictatorEnd = (InstructionsFrame, {"text": "{}", "height": 8, "update": ["dictatorEnd"]})
 DictatorFeelings2 = (DictatorFeelings, {"round": 2})
 
+
+
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([WaitDictator,
+    GUI([Login,
+         WaitDictator,
          InstructionsDictator,
          DictatorDecision,
          DictatorFeelings,
