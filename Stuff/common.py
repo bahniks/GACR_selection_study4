@@ -17,7 +17,7 @@ class ExperimentFrame(Canvas):
         
         self.root = root
         self.file = self.root.file
-        self.id = self.root.id #os.path.basename(self.root.outputfile)
+        self.id = self.root.id
 
     def nextFun(self):
         if self.check():
@@ -417,7 +417,7 @@ class MultipleChoice(Canvas):
         
 
 class InstructionsAndUnderstanding(InstructionsFrame):
-    def __init__(self, root, controlTexts, randomize = True, **kwargs):
+    def __init__(self, root, controlTexts, name, randomize = True, **kwargs):
         super().__init__(root, **kwargs)
         self.controlTexts = controlTexts
         self.randomize = randomize
@@ -433,6 +433,7 @@ class InstructionsAndUnderstanding(InstructionsFrame):
 
         self.controlNum = 0
         self.createQuestion()
+        self.file.write(name + "\n")
 
     def createQuestion(self):
         if self.controlNum:
@@ -445,16 +446,16 @@ class InstructionsAndUnderstanding(InstructionsFrame):
         self.controlstate = "answer"
         
     def nextFun(self):        
-        if self.controlNum == len(self.controlTexts) and self.controlstate == "feedback":
-            self.file.write("\n")
-            super().nextFun()   
-        else:
-            if self.controlstate == "answer":
-                self.controlQuestion.showFeedback()
-                self.controlstate = "feedback"
-            else:                
-                self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.getAnswer() + "\n")
-                self.createQuestion()    
+        if self.controlstate == "feedback":
+            self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.getAnswer() + "\n")
+            if self.controlNum == len(self.controlTexts):
+                self.file.write("\n")
+                super().nextFun()   
+            else:
+                self.createQuestion()                
+        else:            
+            self.controlQuestion.showFeedback()
+            self.controlstate = "feedback"              
 
 
 class OneFrame(Canvas):

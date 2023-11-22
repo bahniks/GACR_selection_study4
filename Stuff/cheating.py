@@ -908,8 +908,8 @@ class Login(InstructionsFrame):
 controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1]]
 controlTexts3 = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
 
-CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 25, "width": 100, "randomize": False, "controlTexts": controlTexts1})
-Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 25, "width": 100, "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
+CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 25, "width": 100, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1})
+Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 25, "width": 100, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
 #Instructions3 = (InstructionsFrame, {"text": intro_third, "height": 30, "update": ["win2", "condition", "source"]})
 VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]})

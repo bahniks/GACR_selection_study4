@@ -393,19 +393,28 @@ class DictatorDecision(InstructionsFrame):
 
     def nextFun(self):
         self.send()        
+        self.write()
         super().nextFun()
 
     def send(self):
         if self.root.status["dictatorRole"] == "A": 
             data = {'id': self.id, 'round': "dictator1A", 'offer': self.scaleFrame.valueVar.get()}
         else:            
-            response = "_".join([frame.getData() for frame in self.frames.values()])
-            data = {'id': self.id, 'round': "dictator1B", 'offer': response}
+            self.response = "_".join([frame.getData() for frame in self.frames.values()])
+            data = {'id': self.id, 'round': "dictator1B", 'offer': self.response}
         self.sendData(data)
 
     def write(self):
-        pass
-        # TO DO
+        self.file.write("Dictator" + self.root.status["dictatorRole"] + "\n")
+        if self.root.status["dictatorRole"] == "A":
+            self.file.write(self.id  + "\t1\t" + self.scaleFrame.valueVar.get())
+            if URL == "TEST":
+                self.root.status["dictatorTestTook"] = self.scaleFrame.valueVar.get()
+        else:
+            self.file.write(self.id + "\t" + self.response.replace("_", "\t").replace("|", "\t"))
+            if URL == "TEST":
+                self.root.status["dictatorTestResponse"] = self.response
+        self.file.write("\n\n")
 
 
 class WaitDictator(InstructionsFrame):
@@ -425,21 +434,27 @@ class WaitDictator(InstructionsFrame):
                 if URL == "TEST":
                     if self.what == "pairing":
                         condition = random.choice(["forgive-ignore", "ignore-punish", "forgive-punish"])
-                        #role = "A" # for testing
+                        #role = "B" # for testing
                         role = random.choice(["A", "B"])                        
                         pair = random.randint(1,20)
                         response = str(pair) + "_" + role + "_" + condition
                     elif self.what == "decision1":                                                                        
-                        #if self.root.status["dictatorRole"] == "A": # TO DO
                         pair = random.randint(1,20)
-                        took = random.randint(0, 5) * 2 #self.root.status[""]
-                        decision = random.choice(self.root.status["dictatorCondition"].split("-"))
-                        message = str(random.randint(1,2))
-                        money = 0 if decision == "ignore" else random.randint(0,5) * 2
+                        if self.root.status["dictatorRole"] == "A":
+                            took = self.root.status["dictatorTestTook"]
+                            decision = random.choice(self.root.status["dictatorCondition"].split("-"))
+                            message = str(random.randint(1,2))
+                            money = 0 if decision == "ignore" else random.randint(0,5) * 2                       
+                        else:
+                            took = random.randint(0, 5) * 2
+                            _, decision, message, money = self.root.status["dictatorTestResponse"].split("_")[took//2].split("|")
                         response = "_".join(map(str, [pair, took, decision, message, money]))    
                     elif self.what == "decision2":     
                         pair = random.randint(1,20)
-                        took = random.randint(0, 10) * 2                
+                        if self.root.status["dictatorRole"] == "A":
+                            took = self.root.status["dictatorTestTook2"]
+                        else:
+                            took = random.randint(0, 10) * 2                
                         response = "_".join(map(str, [pair, took]))
                 else:
                     try:
@@ -454,8 +469,7 @@ class WaitDictator(InstructionsFrame):
                         self.root.texts["firstOption"] = eval(condition.split("-")[0] + "Info")
                         self.root.texts["secondOption"] = eval(condition.split("-")[1] + "Info")
                         self.root.status["dictatorRole"] = role
-                        self.root.status["dictatorPair"] = pair                        
-                        self.write(response)
+                        self.root.status["dictatorPair"] = pair                 
                     elif self.what == "decision1":   
                         pair, took, decision, message, money = response.split("_")
                         message = eval(decision + "Message" + message)
@@ -492,6 +506,7 @@ class WaitDictator(InstructionsFrame):
                         else:
                             text = finalTextB.format(took, b, a, bTotal, aTotal)
                         self.root.texts["dictatorEnd"] = text
+                    self.write(response)
                     self.progressBar.stop()
                     self.nextFun()  
                     return
@@ -503,9 +518,13 @@ class WaitDictator(InstructionsFrame):
         self.checkUpdate()
 
     def write(self, response):
-        self.file.write("Pairing" + "\n")
+        if self.what == "pairing":
+            self.file.write("Pairing" + "\n")
+        elif self.what == "decision1":
+            self.file.write("Dictator Results 1" + "\n")
+        elif self.what == "decision2":
+            self.file.write("Dictator Results 2" + "\n")
         self.file.write(self.id + "\t" + response.replace("_", "\t") + "\n\n") 
-
 
 
 
@@ -525,7 +544,6 @@ class DictatorFeelings(Questionnaire):
             self.expectation.grid(row = 2, column = 1)
             self.next.grid(row = 3, column = 1)
         
-
     def clicked(self):
         super().clicked()     
         if self.root.status["dictatorRole"] == "A" and self.round == 1:            
@@ -536,6 +554,13 @@ class DictatorFeelings(Questionnaire):
                         break
                 else:
                     self.next["state"] = "!disabled"
+
+    def write(self):
+        super().write()        
+        if self.root.status["dictatorRole"] == "A" and self.round == 1:            
+            self.file.write("\nDictator Expectation\n")
+            self.file.write(self.id + "\t" + self.expectation.answer.get() + "\n")
+        
 
                
 
@@ -556,21 +581,28 @@ class DictatorResult(InstructionsFrame):
     def checkAnswers(self):
         pass 
 
-    def send(self):
-        # save data TO DO
+    def send(self):        
         if self.root.status["dictatorRole"] == "A": 
             data = {'id': self.id, 'round': "dictator2A", 'offer': self.scaleFrame.valueVar.get()}        
             self.sendData(data)
 
     def nextFun(self):
-        self.send()        
+        self.send()      
+        self.write()  
         super().nextFun()
 
-
+    def write(self):
+        if self.root.status["dictatorRole"] == "A":
+            self.file.write("Dictator2\n")
+            self.file.write(self.id  + "\t2\t" + self.scaleFrame.valueVar.get())
+            self.file.write("\n\n")
+            if URL == "TEST":
+                self.root.status["dictatorTestTook2"] = self.scaleFrame.valueVar.get()        
+            
 
 
 controlTexts1 = [[DictControl1, DictAnswers1, DictFeedback1], [DictControl2, DictAnswers2, DictFeedback2], [DictControl3, DictAnswers3, DictFeedback3], [DictControl4, DictAnswers4, DictFeedback4], [DictControl5, DictAnswers5, DictFeedback5]]
-InstructionsDictator = (InstructionsAndUnderstanding, {"text": instructions, "height": 30, "width": 110, "randomize": False, "controlTexts": controlTexts1, "update": ["firstOption", "secondOption"]})
+InstructionsDictator = (InstructionsAndUnderstanding, {"text": instructions, "height": 30, "width": 110, "name": "Dictator Control Questions", "randomize": False, "controlTexts": controlTexts1, "update": ["firstOption", "secondOption"]})
 WaitResult1 = (WaitDictator, {"what": "decision1"})
 WaitResult2 = (WaitDictator, {"what": "decision2"})
 DictatorEnd = (InstructionsFrame, {"text": "{}", "height": 8, "update": ["dictatorEnd"]})

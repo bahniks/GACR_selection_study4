@@ -67,7 +67,7 @@ class Questionnaire(ExperimentFrame):
             if not count % blocksize:
                 self.frame.rowconfigure(count + count//blocksize, weight = 1)
 
-        ttk.Label(self.frame, text = "s"*int(maxwidth/1.05), background = "white", font = "helvetica {}".format(fontsize+1),
+        ttk.Label(self.frame, text = "s"*int(maxwidth), background = "white", font = "helvetica {}".format(fontsize+1),
                   foreground = "white", justify = "left", width = maxwidth/1.2).grid(
                       column = 0, padx = 15, sticky = W, row = count + 1 + (count-1)//blocksize)
 
