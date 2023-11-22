@@ -503,8 +503,10 @@ class WaitDictator(InstructionsFrame):
                         bTotal = self.root.status["dictatorRound1BReward"] + b
                         if self.root.status["dictatorRole"] == "A":
                             text = finalTextA.format(took, a, b, aTotal, bTotal)
-                        else:
+                            self.root.texts["dictator"] = aTotal
+                        else:                            
                             text = finalTextB.format(took, b, a, bTotal, aTotal)
+                            self.root.texts["dictator"] = bTotal
                         self.root.texts["dictatorEnd"] = text
                     self.write(response)
                     self.progressBar.stop()

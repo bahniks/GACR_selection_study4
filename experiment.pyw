@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.getcwd(), "Stuff"))
 
 from gui import GUI
 
-from quest import Hexaco, QuestInstructions
+from quest import QuestInstructions #, Hexaco
 from intros import Initial, Intro, Ending
 from demo import Demographics
 from cheating import CheatingInstructions, Cheating, Instructions2, Wait, Voting
@@ -16,8 +16,10 @@ from cheating import EndCheating, Login, Instructions3, OutcomeWait, VotingResul
 from debriefing import DebriefingInstructions, DebriefCheating1, DebriefCheating2, DebriefCheating3, DebriefCheating4
 from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
-from questionnaire import Prosociality
-
+from dictator import WaitDictator, InstructionsDictator, DictatorDecision, DictatorFeelings, WaitResult1, DictatorResult
+from dictator import DictatorFeelings2, WaitResult2, DictatorEnd
+from questionnaire import TEQ
+from tosca import TOSCA
 
 frames = [Initial,
           Login,
@@ -39,13 +41,22 @@ frames = [Initial,
           DebriefCheating2,
           DebriefCheating3,
           DebriefCheating4,
+          WaitDictator,
+          InstructionsDictator,
+          DictatorDecision,
+          DictatorFeelings,
+          WaitResult1,
+          DictatorResult,
+          DictatorFeelings2,
+          WaitResult2,
+          DictatorEnd,
           Lottery,
           LotteryWin,
           LotteryInstructions,
           DiceLottery,
           QuestInstructions,
-          Hexaco,
-          Prosociality,
+          TEQ,
+          TOSCA,
           Demographics,
           Ending
          ]

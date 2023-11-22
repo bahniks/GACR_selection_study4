@@ -163,7 +163,7 @@ class Likert(Canvas):
         self.columnconfigure(options + 1, weight = 1)
         self.rowconfigure(0, weight = 1)
 
-        if TESTING:
+        if False: #TESTING:
             self.answer.set(str(random.randint(1, options)))
 
 

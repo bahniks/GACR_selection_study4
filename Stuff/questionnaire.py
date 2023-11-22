@@ -11,10 +11,10 @@ from gui import GUI
 from constants import TESTING
 
 
-prosocialityintro = """
-Následující tvrzení popisují velké množství běžných situací.
-Nejsou žádné "správné" nebo "špatné" odpovědi; nejlepší odpověď je ta okamžitá, spontánní.
-Přečtěte si pozorně každé tvrzení a označte odpověď, která reflektuje Vaši první reakci.
+TEQintro = """
+Přečtěte si pečlivě každé z následujících tvrzení a ohodnoťte, jak často cítíte nebo jednáte způsobem, který je popsán. 
+Své odpovědi zakroužkujte na formuláři. Neexistují správné nebo špatné odpovědi ani záludné otázky. 
+Prosím, odpovídejte na každou otázku co nejupřímněji, jak jen můžete.
 """
 
 
@@ -67,7 +67,7 @@ class Questionnaire(ExperimentFrame):
             if not count % blocksize:
                 self.frame.rowconfigure(count + count//blocksize, weight = 1)
 
-        ttk.Label(self.frame, text = "s"*int(maxwidth), background = "white", font = "helvetica {}".format(fontsize+1),
+        ttk.Label(self.frame, text = "s"*int(maxwidth/(1+maxwidth/1000)), background = "white", font = "helvetica {}".format(fontsize+1),
                   foreground = "white", justify = "left", width = maxwidth/1.2).grid(
                       column = 0, padx = 15, sticky = W, row = count + 1 + (count-1)//blocksize)
 
@@ -120,18 +120,18 @@ class Questionnaire(ExperimentFrame):
 
 
 
-Prosociality = (Questionnaire,
-                {"words": "prosociality.txt",
-                 "question": prosocialityintro,
-                 "labels": ["nikdy/\ntéměř nikdy\npravdivé",
-                            "občas\npravdivé",
-                            "někdy\npravdivé",
-                            "často\npravdivé",
-                            "téměř vždy/\nvždy\npravdivé"],
+TEQ = (Questionnaire,
+                {"words": "teq.txt",
+                 "question": TEQintro,
+                 "labels": ["Nikdy",
+                            "Zřídka",
+                            "Někdy",
+                            "Často",
+                            "Vždy"],
                  "values": 5,
-                 "labelwidth": 12,
+                 "labelwidth": 6,
                  "text": False,
-                 "fontsize": 12,
+                 "fontsize": 14,
                  "blocksize": 4,
                  "filetext": "Prosociality"})
 
@@ -140,4 +140,4 @@ Prosociality = (Questionnaire,
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([Prosociality])
+    GUI([TEQ])
