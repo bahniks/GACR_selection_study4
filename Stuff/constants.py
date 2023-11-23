@@ -1,6 +1,7 @@
 BONUS = 30
 PARTICIPATION_FEE = 150
 
+AUTOFILL = False
 TESTING = True
 GOTHROUGH = False #"Voting"
 URL = "https://bahnik.pythonanywhere.com/"

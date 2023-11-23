@@ -13,12 +13,12 @@ from intros import Initial, Intro, Ending
 from demo import Demographics
 from cheating import CheatingInstructions, Cheating, Instructions2, Wait, Voting
 from cheating import EndCheating, Login, Instructions3, OutcomeWait, VotingResult
-from debriefing import DebriefingInstructions, DebriefCheating1, DebriefCheating2, DebriefCheating3, DebriefCheating4
+#from debriefing import DebriefingInstructions, DebriefCheating1, DebriefCheating2, DebriefCheating3, DebriefCheating4
 from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
 from dictator import WaitDictator, InstructionsDictator, DictatorDecision, DictatorFeelings, WaitResult1, DictatorResult
 from dictator import DictatorFeelings2, WaitResult2, DictatorEnd
-from questionnaire import TEQ
+from questionnaire import TEQ, RSMS
 from tosca import TOSCA
 
 frames = [Initial,
@@ -35,12 +35,12 @@ frames = [Initial,
           Wait,
           VotingResult,
           Cheating,         
-          EndCheating    
-          DebriefingInstructions,      
-          DebriefCheating1,
-          DebriefCheating2,
-          DebriefCheating3,
-          DebriefCheating4,
+          EndCheating,    
+        #   DebriefingInstructions,      
+        #   DebriefCheating1,
+        #   DebriefCheating2,
+        #   DebriefCheating3,
+        #   DebriefCheating4,
           WaitDictator,
           InstructionsDictator,
           DictatorDecision,
@@ -55,6 +55,7 @@ frames = [Initial,
           LotteryInstructions,
           DiceLottery,
           QuestInstructions,
+          RSMS,
           TEQ,
           TOSCA,
           Demographics,

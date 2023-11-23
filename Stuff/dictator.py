@@ -17,7 +17,7 @@ from cheating import Login
 
 ################################################################################
 # TEXTS
-instructions = """Vítejte v druhé části dnešní studie. Pozorně si přečtěte pokyny, abyste porozuměli studii a své roli v ní. Vaše rozhodnutí budou mít finanční důsledky pro vás a pro dalšího účastníka.
+instructions = """Vítejte v druhé části dnešní studie. Pozorně si přečtěte pokyny, abyste porozuměli studii a své roli v ní. Vaše rozhodnutí budou mít finanční důsledky pro vás a pro dalšího přítomného účastníka.
 
 Tato studie je o rozdělení peněz. Náhodně Vám bude přidělena jedna ze dvou rolí: hráč A, nebo hráč B. Vaše role zůstane po celou dobu studie stejná a v obou kolech studie budete ve dvojici se stejným účastníkem. Vy i účastník ve dvojici budete vědět o rozhodnutích toho druhého.
 
@@ -26,23 +26,24 @@ Tato studie je o rozdělení peněz. Náhodně Vám bude přidělena jedna ze dv
 Hráč A obdrží 20 Kč. Má možnost vzít si od hráče B od 0 do 10 Kč. Uvede, jakou reakci čeká od hráče B.
 
 <i>Odpověď hráče B:</i>
-Hráč B obdrží 20 Kč. Bude mít k dispozici dvě možnosti reakce na rozhodnutí hráče A a bude moci poslat zprávu.
+Hráč B obdrží 20 Kč. Bude mít k dispozici dvě možnosti reakce na rozhodnutí hráče A a bude moci poslat textovou zprávu.
 Reakce mohou být:{}{}
 
-Reakce budou zaznamenány pro všechny možné volby hráče A (vezme 0-10 Kč).
-Uskutečnění: Jakmile oba účastníci učiní svá rozhodnutí, budou provedena a hra postoupí do druhého kola, které je velmi podobné – liší se jen částky.
+Reakce hráče B budou zaznamenány pro všechny možné volby hráče A.
+
+Uskutečnění: Jakmile oba účastníci učiní svá rozhodnutí, budou provedena a hra postoupí do druhého kola, které je velmi podobné - liší se částkou kolik hráč A může vzít hráči B.
 
 <b>Druhé kolo:</b>
 <i>Rozhodnutí hráče A:</i>
 Hráč A obdrží 20 Kč. Má možnost vzít si od hráče B od 0 do 20 Kč. 
 Hráč B obdrží 20 Kč.
+
 Oba hráči se dozví o volbě hráče A a tato část studie končí.
-Budou následovat dotazníky na Vaše názory a postoje.
 
 Níže uvádíme několik otázek, které ověřují, zda studii rozumíte."""
 
 ignoreInfo = "\n<b>Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce."
-punishInfo = "\n<b>Potrestat</b>: Může hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětuje do potrestání, ztratí hráč A 1 Kč."
+punishInfo = "\n<b>Potrestat</b>: Může hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětuje do potrestání, ztratí hráč A také 1 Kč."
 forgiveInfo = "\n<b>Odpustit</b>: Může hráče A odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dá, hráč A dostane 1 Kč." 
 
 DictControl1 = "Jaká je role hráče A a hráče B ve studii?"
@@ -95,14 +96,16 @@ Vaše role zůstává po celou dobu experimentu stejná.
 Vy i hráč A jste dostali v této části studie 20 Kč.
 S hráčem A budete ve dvojici pro obě kola, po které se studie koná. Oba budete znát rozhodnutí toho druhého.
 
-Hráč A Vám může vzít 0 až 10 Kč. Níže uveďte, jak budete reagovat. Máte na výběr z těchto dvou možností:
+Hráč A Vám může vzít 0 až 10 Kč. Níže uveďte, jak budete reagovat. Máte na výběr z těchto dvou možností:	
 {}
 
-<b>Níže uveďte v Kč Vaše reakce na možná rozhodnutí hráče A:</b>"""
+<b>Níže uveďte
+v Kč Vaše reakce na možná rozhodnutí hráče A (posuňte posuvníkem)
+rozhodněte, jakou ze dvou textových zpráv chcete poslat:</b>"""
 
-ignoreResponse = '''<b>Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce a poslat jednu ze zpráv.'''
-punishResponse = '''<b>Potrestat</b>: Můžete hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětujete do potrestání, ztratí hráč A 1 Kč. Navíc pošlete jednu ze zpráv.'''
-forgiveResponse = '''<b>Odpustit</b>: Můžete hráče A odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dáte, hráč A dostane 1 Kč. Navíc pošlete jednu ze zpráv.'''
+ignoreResponse = '''<b>- Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce a poslat jednu ze zpráv.'''
+punishResponse = '''<b>- Potrestat</b>: Můžete hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětujete do potrestání, ztratí hráč A 1 Kč. Navíc pošlete jednu ze zpráv.'''
+forgiveResponse = '''<b>- Odpustit</b>: Můžete hráče A odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dáte, hráč A dostane 1 Kč. Navíc pošlete jednu ze zpráv.'''
 
 ignoreMessage1 = "V reakci na Vaše rozhodnutí neudělám nic a pokračuji v naší interakci."
 ignoreMessage2 = "Volím možnost: Nedělat nic."
@@ -160,14 +163,14 @@ ignoreResult = 'Neudělal nic a poslal zprávu "{}"'
 punishResult = '{} a poslal zprávu "{}" Oba ztrácíte {} Kč.'
 forgiveResult = '{} {} Kč a poslal zprávu "{}"'
 
-punishA = "Vás potrestal"
-punishB = "Hráče A potrestal"
-forgiveA = "Vám odpustil, daroval Vám"
-forgiveB = "Hráči A odpustil, daroval Hráči A"
+punishA = "Vás potrestal/a"
+punishB = "Hráče A potrestal/a"
+forgiveA = "Vám odpustil/a, daroval/a Vám"
+forgiveB = "Hráči A odpustil/a, daroval/a Hráči A"
 
 
-finalTextA = """Rozhodl jste se Hráči B vzít {} Kč.
-V tomto kole jste získal {} Kč a Hráč B {} Kč.
+finalTextA = """Rozhodl/a jste se Hráči B vzít {} Kč.
+V tomto kole jste získal/a {} Kč a Hráč B {} Kč.
 <b>Z této úlohy si dohromady odnášíte {} Kč a Hráč B {} Kč.</b> 
 
 Tímto tato část experimentu končí.
@@ -603,8 +606,22 @@ class DictatorResult(InstructionsFrame):
             
 
 
+class InstructionsDictator(InstructionsAndUnderstanding):
+    def __init__(self, root):
+        out = ["forgive-ignore", "ignore-punish", "forgive-punish"].index(root.status["dictatorCondition"]) + 2
+        controlTexts = controlTexts1
+        controlTexts.pop(out)
+        
+        super().__init__(root, text = instructions, height = 31, width = 110, name = "Dictator Control Questions", randomize = False, controlTexts = controlTexts, update = ["firstOption", "secondOption"])    
+
+
+
+#class Experience(InstructionsFrame):
+
+
+
+
 controlTexts1 = [[DictControl1, DictAnswers1, DictFeedback1], [DictControl2, DictAnswers2, DictFeedback2], [DictControl3, DictAnswers3, DictFeedback3], [DictControl4, DictAnswers4, DictFeedback4], [DictControl5, DictAnswers5, DictFeedback5]]
-InstructionsDictator = (InstructionsAndUnderstanding, {"text": instructions, "height": 30, "width": 110, "name": "Dictator Control Questions", "randomize": False, "controlTexts": controlTexts1, "update": ["firstOption", "secondOption"]})
 WaitResult1 = (WaitDictator, {"what": "decision1"})
 WaitResult2 = (WaitDictator, {"what": "decision2"})
 DictatorEnd = (InstructionsFrame, {"text": "{}", "height": 8, "update": ["dictatorEnd"]})
@@ -614,7 +631,7 @@ DictatorFeelings2 = (DictatorFeelings, {"round": 2})
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([Login,
+    GUI([Login,         
          WaitDictator,
          InstructionsDictator,
          DictatorDecision,

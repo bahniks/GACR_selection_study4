@@ -1,28 +1,32 @@
 from tkinter import *
 from tkinter import ttk
+import tkinter.font as tkfont
 from collections import deque
 from time import perf_counter, sleep
+from math import ceil
 
 import random
 import os
 
 from common import ExperimentFrame, InstructionsFrame, Question, Measure, read_all
 from gui import GUI
-from constants import TESTING
+from constants import TESTING, AUTOFILL
 
 
 TEQintro = """
 Přečtěte si pečlivě každé z následujících tvrzení a ohodnoťte, jak často cítíte nebo jednáte způsobem, který je popsán. 
-Své odpovědi zakroužkujte na formuláři. Neexistují správné nebo špatné odpovědi ani záludné otázky. 
+Své odpovědi označte ve formuláři. Neexistují správné nebo špatné odpovědi ani záludné otázky. 
 Prosím, odpovídejte na každou otázku co nejupřímněji, jak jen můžete.
 """
 
+RSMSintro = """Přečtěte si pečlivě každé z následujících tvrzení a ohodnoťte, jak často je tvrzení o Vás pravdivé. 
+"""
 
 
 
 class Questionnaire(ExperimentFrame):
     def __init__(self, root, words, question = "", labels = None, blocksize = 4, values = 7, text = True,
-                 filetext = "", fontsize = 13, labelwidth = None):
+                 filetext = "", fontsize = 13, labelwidth = None, wraplength = 0, pady = 0, fixedlines = 0):
         super().__init__(root)
 
         self.fontsize = fontsize
@@ -39,17 +43,14 @@ class Questionnaire(ExperimentFrame):
         self.variables = {}
         self.labels = {}
 
-        self.frame = Canvas(self)
+        self.frame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.frame.grid(column = 1, row = 1, sticky = NSEW)
-        self.frame["highlightbackground"] = "white"
-        self.frame["background"] = "white"
-        self.frame["highlightcolor"] = "white"
 
         maxwidth = max(map(len, self.words))
 
         for count, word in enumerate(self.words, 1):
             self.variables[word] = StringVar()
-            if False: #TESTING:  # remove False
+            if AUTOFILL:
                 self.variables[word].set(random.randint(1, values))
             for i in range(1, values+1):
                 if word not in self.buttons:
@@ -58,32 +59,37 @@ class Questionnaire(ExperimentFrame):
                 self.buttons[word][i] = ttk.Radiobutton(self.frame, text = valuetext, value = i,
                                                         command = self.clicked,
                                                         variable = self.variables[word])
-                self.buttons[word][i].grid(column = i, row = count + (count-1)//blocksize, padx = 15)
+                self.buttons[word][i].grid(column = i+1, row = count + (count-1)//blocksize, padx = 15)
+
+            if fixedlines:
+                fillerlabel = ttk.Label(self.frame, text = "l" + "\nl"*int(fixedlines - 1), background = "white", foreground = "white", font = "helvetica {}".format(fontsize+1))
+                fillerlabel.grid(column = 0, row = count + (count-1)//blocksize, pady = pady)
+
             self.labels[word] = ttk.Label(self.frame, text = word, background = "white",
                                           font = "helvetica {}".format(fontsize+1), justify = "left",
-                                          width = maxwidth/1.2)
-            self.labels[word].grid(column = 0, row = count + (count-1)//blocksize, padx = 15,
-                                   sticky = W)
+                                          width = maxwidth/1.2, wraplength = wraplength)
+            self.labels[word].grid(column = 1, row = count + (count-1)//blocksize, padx = 15,
+                                   sticky = W, pady = pady)
             if not count % blocksize:
                 self.frame.rowconfigure(count + count//blocksize, weight = 1)
 
-        ttk.Label(self.frame, text = "s"*int(maxwidth/(1+maxwidth/1000)), background = "white", font = "helvetica {}".format(fontsize+1),
-                  foreground = "white", justify = "left", width = maxwidth/1.2).grid(
-                      column = 0, padx = 15, sticky = W, row = count + 1 + (count-1)//blocksize)
+        ttk.Label(self.frame, text = "s"*int(ceil(maxwidth/(1+maxwidth/1000))), background = "white", font = "helvetica {}".format(fontsize+1),
+                  foreground = "white", justify = "left", width = maxwidth/1.2, wraplength = wraplength).grid(
+                      column = 1, padx = 15, sticky = W, row = count + 1 + (count-1)//blocksize)
 
         self.texts = []
         if not labels:
             labels = [""]*values
         elif len(labels) != values:
             labels = [labels[0]] + [""]*(values - 2) + [labels[-1]]
-
+      
         for count, label in enumerate(labels):
             self.texts.append(ttk.Label(self.frame, text = labels[count], background = "white",
                                         font = "helvetica {}".format(fontsize), anchor = "center",
-                                        justify = "center"))
+                                        justify = "center", wraplength = labelwidth * tkfont.Font(family="helvetica", size=fontsize, weight="normal").measure("0")))
             if labelwidth:
-                self.texts[count]["width"] = labelwidth,
-            self.texts[count].grid(column = count+1, row = 0, sticky = W, pady = 4, padx = 3)
+               self.texts[count]["width"] = labelwidth,
+            self.texts[count].grid(column = count+2, row = 0, sticky = W, pady = 4, padx = 3)
 
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica {}".format(fontsize))
 
@@ -133,11 +139,30 @@ TEQ = (Questionnaire,
                  "text": False,
                  "fontsize": 14,
                  "blocksize": 4,
-                 "filetext": "Prosociality"})
+                 "filetext": "TEQ"})
+
+RSMS = (Questionnaire,
+                {"words": "rsms.txt",
+                 "question": RSMSintro,
+                 "labels": ["určitě vždy pravdivé",
+                            "obvykle pravdivé",
+                            "částečně pravdivé,\nale s výjimkou",
+                            "částečně nepravdivé,\nale s výjimkou",
+                            "obvykle nepravdivé",
+                            "určitě vždy nepravdivé"],
+                 "values": 6,
+                 "labelwidth": 10,
+                 "text": False,
+                 "fontsize": 14,
+                 "blocksize": 13,
+                 "wraplength": 520,
+                 "filetext": "RSMS",
+                 "pady": 2,
+                 "fixedlines": 2})
 
 
 
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([TEQ])
+    GUI([RSMS, TEQ])
