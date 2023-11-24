@@ -62,12 +62,13 @@ class ExperimentFrame(Canvas):
 
 class InstructionsFrame(ExperimentFrame):
     def __init__(self, root, text, proceed = True, firstLine = None, end = False, height = 12,
-                 font = 15, space = False, width = 80, keys = None, update = None, bold = None, wait = 2):
+                 font = 15, space = False, width = 80, keys = None, update = None, bold = None, wait = 2, savedata = False):
         super().__init__(root)
 
         self.root = root
         self.wait = wait
         self.t0 = time()
+        self.savedata = savedata
 
         if update:
             updateTexts = []
@@ -146,6 +147,8 @@ class InstructionsFrame(ExperimentFrame):
                         self.root.unbind("{}".format(key))
                     else:
                         self.root.unbind("<{}>".format(key))
+            if self.savedata:
+                self.write()
             self.destroy()
             self.root.nextFrame()
         else:

@@ -68,8 +68,7 @@ DictAnswers5 = ["Získá navíc 20 Kč a obdrží textovou zprávu.", "Žádné.
 DictFeedback5 = ["Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen textovou zprávu.", "Správná odpověď.", "Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen textovou zprávu.", "Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen textovou zprávu."]
 
 
-wait_text = "Prosím počkejte na druhého hráče."
-
+wait_text = "Prosím počkejte na druhého hráče. Můžete vyplňovat vytištěný dotazník."
 
 
 A1text = """Byla vám náhodně přidělena role: <b>Hráč A</b> 
@@ -615,8 +614,6 @@ class InstructionsDictator(InstructionsAndUnderstanding):
         super().__init__(root, text = instructions, height = 31, width = 110, name = "Dictator Control Questions", randomize = False, controlTexts = controlTexts, update = ["firstOption", "secondOption"])    
 
 
-
-#class Experience(InstructionsFrame):
 
 
 

@@ -22,6 +22,11 @@ Prosím, odpovídejte na každou otázku co nejupřímněji, jak jen můžete.
 RSMSintro = """Přečtěte si pečlivě každé z následujících tvrzení a ohodnoťte, jak často je tvrzení o Vás pravdivé. 
 """
 
+hexacotext = """Pokud jste ještě nedokončili celý tištěný dotazník, prosím odpovězte nyní na zbývající otázky na poskytnutý záznamový arch.
+Zkontrolujte také, že máte v záznamovém archu správně vyplněné své identifikační číslo {}.
+
+Jakmile dotazník dokončíte, klikněte na tlačítko Pokračovat.
+"""
 
 
 class Questionnaire(ExperimentFrame):
@@ -161,6 +166,7 @@ RSMS = (Questionnaire,
                  "fixedlines": 2})
 
 
+HEXACOinfo = (InstructionsFrame, {"text": hexacotext, "height": 5, "update": ["idNumber"]})
 
 
 if __name__ == "__main__":
