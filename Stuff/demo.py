@@ -109,7 +109,7 @@ class Demographics(ExperimentFrame):
     def write(self):
         self.file.write("Demographics\n")
         self.file.write("\t".join([self.id, self.sex.get(), self.age.get(), self.language.get(),
-                                   self.student.get(), self.field.get()]) + "\n\n")
+                                   self.student.get(), self.field.get()]) + "\n")
 
 
 if __name__ == "__main__":

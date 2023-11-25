@@ -850,7 +850,7 @@ class Wait(InstructionsFrame):
                             response = f.read().decode("utf-8")       
                     except Exception as e:
                         continue
-                if response:                  
+                if response:              
                     if self.what == "voting":
                         condition, maxvotes, votes = response.split("_")         
                         if maxvotes == "0":
@@ -965,7 +965,7 @@ class Login(InstructionsFrame):
                     self.root.status["condition"] = condition   
                     self.root.status["number"] = number
                     self.root.status["winning_block"] = winning_block
-                    self.root.texts["idNumber"] = str(int(idNumber) % 1000)
+                    self.root.texts["idNumber"] = '{:03d}'.format(int(idNumber) % 1000)
                     self.update_intro(source, condition)
                     self.create_control_question(source, condition)
                     self.progressBar.stop()

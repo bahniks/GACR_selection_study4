@@ -68,7 +68,8 @@ Po vyplnění identifikačního čísla do záznamového archu klikněte na tla�
 
 class Ending(InstructionsFrame):
     def __init__(self, root):
-        root.texts["reward"] = int(root.texts["dice"]) + int(root.texts["dictator"]) + int(root.texts["lottery_win"]) + PARTICIPATION_FEE
+        dice = int(root.texts["dice"].split(" ")[0])
+        root.texts["reward"] = dice + int(root.texts["dictator"]) + int(root.texts["lottery_win"]) + PARTICIPATION_FEE
         root.texts["rounded_reward"] = ceil(root.texts["reward"] / 10) * 10
         root.texts["participation_fee"] = str(PARTICIPATION_FEE)
         updates = ["block", "dice", "dictator", "lottery_win", "participation_fee", "reward", "rounded_reward"]
