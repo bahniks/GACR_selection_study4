@@ -300,7 +300,7 @@ class ResponseFrame(Canvas):
         if self.responseVar.get() != "ignore":
             self.scale.grid(column = 2, row = 3, columnspan = 2, sticky = W)
             if self.responseVar.get() == "punish":
-                self.scale.actionLab["text"] = "Beru"
+                self.scale.actionLab["text"] = "Trestám"
             else:
                 self.scale.actionLab["text"] = "Dávám"
             self.scale.valueVar.set(self.scaleResponses[self.responseVar.get()])

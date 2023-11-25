@@ -160,13 +160,6 @@ voting_other = "bude hrát hráč {}, pro kterého hlasoval"
 members = [" 1 člen", "i 2 členové", "i 3 členové"]
 
 
-# KONEC
-endtext = """Toto je konec posledního bloku. Pokud bude tento blok vybrán, obdržíte {} Kč
-
-Toto je konec úkolu s kostkou.
-"""
-
-
 # DOPLŇUJÍCÍ OTÁZKY PO ÚLOZE
 debrief_intro = """Nyní odpovězte na několik otázek týkající se této části studie."""
 
@@ -177,6 +170,67 @@ d4 = 'Jak moc jste preferoval(a) Vámi voleného člena skupiny před ostatními
 scale = ["Vůbec ne", "Jen trochu", "Do určité míry", "Spíše hodně", "Velmi"]
 d5 = 'Popište, zda jste dělal(a) něco ve třetím bloku úlohy, abyste byl(a) zvolen(a) pro hraní "PO" verze úlohy ve čtvrtém bloku.'
 
+
+# KONEC
+endtext = """Toto je konec posledního bloku. 
+{}
+Toto je konec úkolu s kostkou.
+"""
+
+
+others_kept_end = '''
+Člen skupiny, který hrál verzi "PO", vyhrál {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bylo rozděleno rovným dílem mezi všechny členy skupiny. 
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy Vaši výhru {} Kč a ze zbylých peněz navíc {} Kč, tedy dohromady {} Kč.</b>
+'''
+
+charity_kept_end = '''
+Člen skupiny, který hrál verzi "PO", vyhrál {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bude darováno charitě Člověk v tísni.
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy Vaši výhru {} Kč a {} Kč bude darováno charitě Člověk v tísni.</b>
+'''
+
+charity_divided_end = '''
+Člen skupiny, který hrál verzi "PO", vyhrál {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bude darováno charitě Člověk v tísni.
+Vy jste vyhrál {} Kč a zbylý dva hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy {} Kč a {} Kč bude darováno charitě Člověk v tísni.</b>
+'''
+
+experimenter_kept_end = '''
+Člen skupiny, který hrál verzi "PO", vyhrál {} Kč. 
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte Vaši výhru {} Kč.</b>
+'''
+
+experimenter_divided_end = '''
+Člen skupiny, který hrál verzi "PO", vyhrál {} Kč.
+Vy jste vyhrál {} Kč a zbylý dva hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy {} Kč.</b>
+'''
+
+you_others_kept_end = '''
+Vyhrál jste {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bylo rozděleno rovným dílem mezi všechny členy skupiny. 
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy Vaši výhru {} Kč a ze zbylých peněz navíc {} Kč, tedy dohromady {} Kč.</b>
+'''
+
+you_charity_kept_end = '''
+Vyhrál jste {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bude darováno charitě Člověk v tísni.
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy Vaši výhru {} Kč a {} Kč bude darováno charitě Člověk v tísni.</b>
+'''
+
+you_charity_divided_end = '''
+Vyhrál jste {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bude darováno charitě Člověk v tísni.
+Zbylý tři hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy {} Kč a {} Kč bude darováno charitě Člověk v tísni.</b>
+'''
+
+you_experimenter_kept_end = '''
+Vyhrál jste {} Kč. 
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte Vaši výhru {} Kč.</b>
+'''
+
+you_experimenter_divided_end = '''
+Vyhrál jste {} Kč.
+Zbylý tři hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
+<b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy {} Kč.</b>
+'''
 ################################################################################
 
 
@@ -272,10 +326,6 @@ class Cheating(ExperimentFrame):
             self.startTrial()
         else:
             self.root.texts["win" + str(self.blockNumber)] = sum(self.rewards[:self.root.wins[self.blockNumber]])
-            if self.blockNumber == 4: # pocet bloku
-                win = int(self.root.status["winning_block"])
-                self.root.texts["dice"] = self.root.texts["win{}".format(win)]
-                self.root.texts["block"] = win
             self.nextFun()
 
 
@@ -807,7 +857,7 @@ class Wait(InstructionsFrame):
                             continue  
                         else:
                             self.root.status["winner"] = int(maxvotes)
-                        self.root.status["conditions"].append(condition)                        
+                        self.root.status["conditions"].append(condition)             
                         self.updateResults(maxvotes, votes)
                         self.write(response)
                     elif self.what == "outcome":   
@@ -819,7 +869,7 @@ class Wait(InstructionsFrame):
                         if not response.endswith("True"):
                             continue
                         else:
-                            self.root.texts["result"] = response # neco udelat dale s timto
+                            self.root.texts["result"] = self.createEndText(response)
                     self.progressBar.stop()
                     self.nextFun()  
                     return
@@ -838,9 +888,52 @@ class Wait(InstructionsFrame):
 
     def write(self, response):
         self.file.write("Voting Result" + "\n")
-        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response.replace("_", "\t") + "\n\n")          
-            
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response.replace("_", "\t") + "\n\n")        
 
+    def createEndText(self, response):
+        outcomes = list(map(int, response.split("_")[1:5]))
+        p1, p2, p3, p4 = outcomes        
+        condition = self.root.status["source"] + "_" + self.root.status["condition"]
+        you = self.root.status["winner"] == int(self.root.status["number"])
+        textname = "you_" if you else ""
+        textname += condition + "_end"
+        text = eval(textname)
+        afterwin = outcomes[self.root.status["winner"] - 1]
+        youwin = outcomes[int(self.root.status["number"]) - 1]
+        remainder = 400 - afterwin
+        split = round(remainder / 4)
+        total = sum(outcomes)
+        divided = round(total/4)
+        if condition == "others_kept":
+            text = text.format(afterwin, remainder, youwin, split, youwin + split)
+            reward = youwin + split
+        elif condition == "charity_kept":
+            text = text.format(afterwin, remainder, youwin, remainder)
+            reward = "{} Kč a charita za Vaši skupinu obdrží {}".format(youwin, remainder)
+        elif condition == "charity_divided":
+            if you:
+                text = text.format(afterwin, remainder, total - youwin, total, divided, remainder)            
+            else:
+                text = text.format(afterwin, remainder, youwin, total - afterwin - youwin, total, divided, remainder)            
+            reward = "{} Kč a charita za Vaši skupinu obdrží {}".format(divided, remainder)
+        elif condition == "experimenter_kept":
+            text = text.format(afterwin, youwin)
+            reward = youwin
+        elif condition == "experimenter_divided":
+            if you:
+                text = text.format(afterwin, total - afterwin, total, divided)
+            else:
+                text = text.format(afterwin, youwin, total - afterwin - youwin, total, divided)
+            reward = divided
+        self.root.texts["win4text"] = text
+
+        # for the final screen
+        win = int(self.root.status["winning_block"])
+        if win == 4:
+            self.root.texts["dice"] = str(reward)
+        else:
+            self.root.texts["dice"] = self.root.texts["win{}".format(win)]
+        self.root.texts["block"] = win
 
 
 class Login(InstructionsFrame):
@@ -932,7 +1025,7 @@ CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "h
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
 Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 26, "width": 100, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
 VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]})
-EndCheating = (InstructionsFrame, {"text": endtext, "height": 5, "update": ["win4"]})
+EndCheating = (InstructionsFrame, {"text": endtext, "height": 10, "update": ["win4text"]})
 OutcomeWait = (Wait, {"what": "outcome"})
 FinalWait = (Wait, {"what": "result"})
 
