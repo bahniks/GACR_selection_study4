@@ -31,11 +31,11 @@ Správných odhadů |  0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |
 -----------------------------------------------------------------------------------------------
 Odměna v Kč      |  0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
 </c>
-Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
+Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
 
 Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie. 
 
-Abychom ověřili, že rozumíte instrukcím, prosím odpovězte na kontrolní otázky:"""
+Abychom ověřili, že rozumíte instrukcím, odpovězte prosím na kontrolní otázky:"""
 
 
 intro_control1 = 'Které tvrzení o úkolu je pravdivé?' 
@@ -66,7 +66,7 @@ treatmenttext2 = "Zvolte, zda jste hádali správně a vydělali v tomto kole {}
 
 controltext = """Blok {}, Kolo {}
 
-Máte za úkol uhodnout, zda na kostce padne liché, nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodě padne liché, nebo sudé číslo, a poté klikněte na tlačítko "Hodit kostkou".
+Máte za úkol uhodnout, zda na kostce padne liché, nebo sudé číslo. Nyní prosím zvolte, zda v následujícím hodu padne liché, nebo sudé číslo, a poté klikněte na tlačítko "Hodit kostkou".
 """
 
 controltext2 = "V tomto kole byla Vaše předpověď {}"
@@ -92,6 +92,8 @@ Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku budete hrát verz
 Před čtvrtým blokem budete náhodně přiřazeni do skupiny spolu s dalšími třemi účastníky studie. {}Jeden z členů skupiny bude hrát ve čtvrtém bloku verzi "PO" a ostatní budou hrát verzi "PŘED". Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO".
 {}
 Každý člen skupiny bude mít jeden hlas, který přidělí některému z ostatních členů skupiny. Před hlasováním uvidíte výhru všech členů skupiny v tomto, třetím bloku a budete ji tedy moct vzít při hlasování v potaz.
+
+Po čtvrtém bloku všichni členové skupiny uvidí výhru zvoleného hráče.
 
 Vylosovaný blok úlohy, ze kterého Vám bude proplacena odměna, bude stejný pro celou Vaši skupinu.
 
@@ -217,7 +219,7 @@ Vyhrál jste {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bud
 
 you_charity_divided_end = '''
 Vyhrál jste {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bude darováno charitě Člověk v tísni.
-Zbylý tři hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
+Zbylí tři hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
 <b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy {} Kč a {} Kč bude darováno charitě Člověk v tísni.</b>
 '''
 
@@ -228,10 +230,11 @@ Vyhrál jste {} Kč.
 
 you_experimenter_divided_end = '''
 Vyhrál jste {} Kč.
-Zbylý tři hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
+Zbylí tři hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
 <b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy {} Kč.</b>
 '''
 ################################################################################
+
 
 
 
@@ -1023,7 +1026,7 @@ controlTexts3 = [[control1, answers1, feedback1], [control2, answers2, feedback2
 
 CheatingInstructions = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 24, "width": 105, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
-Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 26, "width": 100, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
+Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 28, "width": 100, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
 VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]})
 EndCheating = (InstructionsFrame, {"text": endtext, "height": 10, "update": ["win4text"]})
 OutcomeWait = (Wait, {"what": "outcome"})

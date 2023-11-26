@@ -19,11 +19,12 @@ class GUI(Tk):
         
         self.title("Experiment")
         self.config(bg = "white")
-        if TESTING:
+        windowed = TESTING or URL == "http://127.0.0.1:8000/"
+        if windowed:
             self.geometry("1280x1024")
-        self.attributes("-fullscreen", not TESTING)
-        self.attributes("-topmost", not TESTING)
-        self.overrideredirect(not TESTING)
+        self.attributes("-fullscreen", not windowed)
+        self.attributes("-topmost", not windowed)
+        self.overrideredirect(not windowed)
         self.protocol("WM_DELETE_WINDOW", lambda: self.closeFun())
 
         self.screenwidth = 1280 # adjust

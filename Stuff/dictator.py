@@ -98,9 +98,7 @@ S hráčem A budete ve dvojici pro obě kola, po které se studie koná. Oba bud
 Hráč A Vám může vzít 0 až 10 Kč. Níže uveďte, jak budete reagovat. Máte na výběr z těchto dvou možností:	
 {}
 
-<b>Níže uveďte
-v Kč Vaše reakce na možná rozhodnutí hráče A (posuňte posuvníkem)
-rozhodněte, jakou ze dvou textových zpráv chcete poslat:</b>"""
+<b>Níže uveďte v Kč Vaše reakce na možná rozhodnutí hráče A (posuňte posuvníkem) rozhodněte, jakou ze dvou textových zpráv chcete poslat:</b>"""
 
 ignoreResponse = '''<b>- Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce a poslat jednu ze zpráv.'''
 punishResponse = '''<b>- Potrestat</b>: Můžete hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětujete do potrestání, ztratí hráč A 1 Kč. Navíc pošlete jednu ze zpráv.'''
@@ -116,7 +114,7 @@ forgiveMessage2 = "Volím možnost: Odpustit."
 
 followup = "Jak se cítíte poté, co jste učinil/a Vaši volbu?"
 scale = ["Velmi mírně\nnebo vůbec", "Nepatrně", "Mírně", "Docela dost", "Extrémně"]
-dimensions = ["Naštvaný/á", "Rozrušený/á", "Provinilý/á", "Nepřátelský/á", "Hrdý/á", "Nadšený/á", "Zahanbený/á", "Odhodlaný/á", "Bojácný/á"]
+dimensions = ["Naštvaně", "Rozrušeně", "Provinile", "Nepřátelsky", "Hrdě", "Nadšeně", "Zahanbeně", "Odhodlaně", "Bojácně"]
 
 expectText = "Jaké chování očekáváte od hráče B v reakci na Vaši volbu:"
 expectAnswers = {"ignore": "Nebude dělat nic.", "punish": "Potrestá mne (přijdeme oba o 0-10 Kč).", "forgive": "Odpustí mi (pošle mi 0-10 Kč a sám ztratí 0-10 Kč)."}
@@ -352,14 +350,14 @@ class DictatorDecision(InstructionsFrame):
             text = text.format({"forgive-ignore": forgiveText + "\n" + ignoreText, 
                                 "ignore-punish": ignoreText + "\n" + punishText, 
                                 "forgive-punish": forgiveText + "\n" + punishText}[root.status["dictatorCondition"]])
-            height = 19
+            height = 20
             width = 80
         else:
             text = B1text
             text = text.format({"forgive-ignore": forgiveResponse + "\n" + ignoreResponse, 
                     "ignore-punish": ignoreResponse + "\n" + punishResponse, 
                     "forgive-punish": forgiveResponse + "\n" + punishResponse}[root.status["dictatorCondition"]])
-            height = 13
+            height = 15
             width = 100
 
         super().__init__(root, text = text, height = height, font = 15, width = width)
@@ -374,12 +372,12 @@ class DictatorDecision(InstructionsFrame):
             self.frames = {}
             for i in range(6):
                 self.frames[i] = ResponseFrame(self, i)
-                self.frames[i].grid(column = 0, row = 3 + i, pady = 3, columnspan = 3)
-            self.next.grid(column = 1, row = 15)            
-            self.rowconfigure(15, weight = 1)
+                self.frames[i].grid(column = 0, row = 3 + i, pady = 1, columnspan = 3)
+            self.next.grid(column = 1, row = 15, pady = 5, sticky = N)            
+            #self.rowconfigure(15, weight = 1)
       
        
-        self.rowconfigure(0, weight = 2)
+        self.rowconfigure(0, weight = 1)
         self.rowconfigure(1, weight = 0)
         self.rowconfigure(2, weight = 0)
         self.rowconfigure(3, weight = 0)
