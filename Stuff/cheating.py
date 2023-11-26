@@ -192,7 +192,7 @@ charity_kept_end = '''
 
 charity_divided_end = '''
 Člen skupiny, který hrál verzi "PO", vyhrál {} Kč. Tato výhra byla odečtena od 400 Kč a zbylých {} Kč bude darováno charitě Člověk v tísni.
-Vy jste vyhrál {} Kč a zbylý dva hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
+Vy jste vyhrál {} Kč a zbylí dva hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
 <b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy {} Kč a {} Kč bude darováno charitě Člověk v tísni.</b>
 '''
 
@@ -203,7 +203,7 @@ experimenter_kept_end = '''
 
 experimenter_divided_end = '''
 Člen skupiny, který hrál verzi "PO", vyhrál {} Kč.
-Vy jste vyhrál {} Kč a zbylý dva hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
+Vy jste vyhrál {} Kč a zbylí dva hráči vyhráli {} Kč. Celkově tedy Vaše skupina vyhrála {} Kč. Tato výhra se rozdělí mezi všechny členy skupiny rovným dílem.
 <b>Pokud bude tento blok pro Vaši skupinu vybrán, obdržíte tedy {} Kč.</b>
 '''
 
@@ -642,13 +642,16 @@ class Voting(InstructionsFrame):
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
         for i in range(4):
             you = i + 1 == int(self.root.status["number"])
+            removed = int(self.root.texts["outcome"].split("_")[i+1].split("|")[1]) < 0
             player = "Hráč " + str(i + 1) if not you else "Vy"
+            if removed:
+                player += " (Vyřazen)"
             self.labs[i] = ttk.Label(self.voteFrame, text = player, font = "helvetica 15", background = "white")
             self.labs[i].grid(row = i + 1, column = 1, sticky = W, padx = 20)
             win = self.root.texts["outcome"].split("_")[i+1].split("|")[2]
             self.wins[i] = ttk.Label(self.voteFrame, text = win, font = "helvetica 15", background = "white")
             self.wins[i].grid(row = i + 1, column = 2, padx = 20, sticky = E)
-            state = "disabled" if you else "normal"
+            state = "disabled" if you or removed else "normal"
             self.radios[i] = ttk.Radiobutton(self.voteFrame, text = "", variable = self.voteVar, value = str(i + 1), command = self.voted, state = state)
             self.radios[i].grid(row = i + 1, column = 3, padx = 20)
                             
@@ -713,12 +716,13 @@ class Perception(InstructionsFrame):
         row = 3
         for i in range(4):
             if not i + 1 == int(self.root.status["number"]):
-                self.frames[row-3] = OneFrame(self, q3.format(i+1, self.root.texts["outcome"].split("_")[i+1].split("|")[2]), items = characteristics, scale = scale)
-                self.frames[row-3].grid(row = row, column = 1)
-                row += 1
+                if int(self.root.texts["outcome"].split("_")[i+1].split("|")[1]) >= 0:
+                    self.frames[row-3] = OneFrame(self, q3.format(i+1, self.root.texts["outcome"].split("_")[i+1].split("|")[2]), items = characteristics, scale = scale)
+                    self.frames[row-3].grid(row = row, column = 1)
+                    row += 1
 
-        self.frames[3] = OneFrame(self, q4, items = characteristics2, scale = scale)
-        self.frames[3].grid(row = 6, column = 1)
+        self.frames[row - 3] = OneFrame(self, q4, items = characteristics2, scale = scale)
+        self.frames[row - 3].grid(row = row, column = 1)
 
         self.Q1.grid(row = 1, column = 1)
         self.Q2.grid(row = 2, column = 1)
@@ -748,7 +752,7 @@ class Perception(InstructionsFrame):
 
     def write(self):
         self.file.write("Perception\n" + "\t".join([self.id, self.Q1.answer.get(), self.Q2.answer.get(), ""]))
-        for i in range(4):
+        for i in range(len(self.frames)):            
             self.frames[i].write()
             self.file.write("\t")
         self.file.write("\n\n")
@@ -894,7 +898,9 @@ class Wait(InstructionsFrame):
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response.replace("_", "\t") + "\n\n")        
 
     def createEndText(self, response):
-        outcomes = list(map(int, response.split("_")[1:5]))
+        outcomes = list(map(int, response.replace("-99", "0").split("_")[1:5]))
+        removed = response.count("-99")
+        remain = 4 - removed
         p1, p2, p3, p4 = outcomes        
         condition = self.root.status["source"] + "_" + self.root.status["condition"]
         you = self.root.status["winner"] == int(self.root.status["number"])
@@ -904,9 +910,9 @@ class Wait(InstructionsFrame):
         afterwin = outcomes[self.root.status["winner"] - 1]
         youwin = outcomes[int(self.root.status["number"]) - 1]
         remainder = 400 - afterwin
-        split = round(remainder / 4)
+        split = round(remainder / remain)
         total = sum(outcomes)
-        divided = round(total/4)
+        divided = round(total/remain)
         if condition == "others_kept":
             text = text.format(afterwin, remainder, youwin, split, youwin + split)
             reward = youwin + split

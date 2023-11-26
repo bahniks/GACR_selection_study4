@@ -23,6 +23,7 @@ class ExperimentFrame(Canvas):
         if self.check():
             self.write()
             self.file.write("\n")
+            self.sendData({'id': self.id, 'round': self.root.cound, 'offer': "progress"})
             self.destroy()
             self.root.nextFrame()
         else:
