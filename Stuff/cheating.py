@@ -983,6 +983,7 @@ class Login(InstructionsFrame):
                     break
                 elif response == "login_successful" or response == "already_logged":
                     self.changeText("Přihlášen")
+                    self.root.status["logged"] = True
                 elif response == "ongoing":
                     self.changeText("Do studie se již nelze připojit")
                 elif response == "no_open":

@@ -45,6 +45,7 @@ class GUI(Tk):
 
         self.texts = defaultdict(str)
         self.status = defaultdict(str)
+        self.status["logged"] = False
                                     
         self.count = -1
 
@@ -101,7 +102,9 @@ class GUI(Tk):
                 self.frame = nxt[0](self, **nxt[1])
             else:
                 self.frame = nxt(self)
-            self.frame.grid(row = 0, column = 0, sticky = (N, S, E, W))
+            self.frame.grid(row = 0, column = 0, sticky = (N, S, E, W))            
+            if self.status["logged"]:
+                self.frame.sendData({'id': self.id, 'round': self.count, 'offer': "progress"})
 
             if GOTHROUGH and GOTHROUGH != type(self.frame).__name__ and (type(GOTHROUGH) is not int or GOTHROUGH < self.count):                
                 self.update()
