@@ -104,7 +104,7 @@ class GUI(Tk):
                 self.frame = nxt(self)
             self.frame.grid(row = 0, column = 0, sticky = (N, S, E, W))            
             if self.status["logged"]:
-                self.frame.sendData({'id': self.id, 'round': self.count, 'offer': "progress"})
+                self.frame.sendData({'id': self.id, 'round': self.count, 'offer': "progress"}, pause = 0.01, trials = 5)
 
             if GOTHROUGH and GOTHROUGH != type(self.frame).__name__ and (type(GOTHROUGH) is not int or GOTHROUGH < self.count):                
                 self.update()

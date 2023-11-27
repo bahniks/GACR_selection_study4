@@ -40,8 +40,10 @@ class ExperimentFrame(Canvas):
     def gothrough(self):        
         self.nextFun()
 
-    def sendData(self, message):            
-        while True:
+    def sendData(self, message, pause = 0.1, trials = -1): 
+        count = 0           
+        while trials != count:
+            count += 1
             data = urllib.parse.urlencode(message)
             data = data.encode('ascii')
             if URL == "TEST":
@@ -54,7 +56,8 @@ class ExperimentFrame(Canvas):
                     continue
             if response == "ok":                    
                 return            
-            sleep(0.1)               
+            sleep(pause)               
+        return
 
 
 
