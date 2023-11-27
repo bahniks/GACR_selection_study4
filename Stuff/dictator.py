@@ -17,114 +17,111 @@ from cheating import Login
 
 ################################################################################
 # TEXTS
-instructions = """Vítejte v druhé části dnešní studie. Pozorně si přečtěte pokyny, abyste porozuměli studii a své roli v ní. Vaše rozhodnutí budou mít finanční důsledky pro vás a pro dalšího přítomného účastníka.
+instructions = """Vítejte v druhé části dnešní studie. Pozorně si přečtěte pokyny, abyste porozuměli studii a své roli v ní. Vaše rozhodnutí budou mít finanční důsledky pro Vás a pro dalšího přítomného účastníka.
 
-Tato studie je o rozdělení peněz. Náhodně Vám bude přidělena jedna ze dvou rolí: hráč A, nebo hráč B. Vaše role zůstane po celou dobu studie stejná a v obou kolech studie budete ve dvojici se stejným účastníkem. Vy i účastník ve dvojici budete vědět o rozhodnutích toho druhého.
+V této části studie Vám bude náhodně přidělena jedna ze dvou rolí: budete buď hráčem A, nebo hráčem B. Vaše role zůstane stejná po celou dobu úkolu a zároveň budete v obou kolech úkolu ve dvojici se stejným účastníkem. Oba účastníci ve dvojici budou vždy informováni o rozhodnutích toho druhého.
 
-<b>První kolo:</b> 
-<i>Rozhodnutí hráče A:</i>
-Hráč A obdrží 20 Kč. Má možnost vzít si od hráče B od 0 do 10 Kč. Uvede, jakou reakci čeká od hráče B.
-
-<i>Odpověď hráče B:</i>
-Hráč B obdrží 20 Kč. Bude mít k dispozici dvě možnosti reakce na rozhodnutí hráče A a bude moci poslat textovou zprávu.
+<b>První kolo:</b>
+Každý z hráčů A a B obdrží 20 Kč. 
+<i>Hráč A:</i> Má možnost vzít si od hráče B od 0 do 10 Kč (v krocích po 2 Kč).
+<i>Hráč B:</i> Má k dispozici dvě možné reakce na rozhodnutí hráče A a bude moci vybrat zprávu, kterou pošle hráči A.
 Reakce mohou být:{}{}
+Hráč B zvolí svoji reakci a zprávu pro všechna možná rozhodnutí hráče A.
 
-Reakce hráče B budou zaznamenány pro všechny možné volby hráče A.
-
-Uskutečnění: Jakmile oba účastníci učiní svá rozhodnutí, budou provedena a hra postoupí do druhého kola, které je velmi podobné - liší se částkou kolik hráč A může vzít hráči B.
+Jakmile oba účastníci odešlou své odpovědi, jejich rozhodnutí budou provedena a hráči se dozví, co se rozhodl udělat hráč A, jak na to reagoval hráč B a jakou zprávu hráči A poslal. Hra pak postoupí do druhého kola, které je velmi podobné – liší se pouze částkou, kterou hráč A může vzít hráči B: zatímco v prvním kole mohl vzít polovinu z úvodní částky, ve druhém kole může vzít celou úvodní částku.
 
 <b>Druhé kolo:</b>
-<i>Rozhodnutí hráče A:</i>
-Hráč A obdrží 20 Kč. Má možnost vzít si od hráče B od 0 do 20 Kč. 
-Hráč B obdrží 20 Kč.
+Každý z hráčů A a B obdrží 20 Kč.
+<i>Hráč A:</i> Má možnost vzít si od hráče B od 0 do 20 Kč (v krocích po 2 Kč).
+<i>Hráč B:</i> V druhém kole nedělá žádné rozhodnutí.
 
-Oba hráči se dozví o volbě hráče A a tato část studie končí.
+Jakmile hráč A odešle svoji odpověď, hráči se dozví o daném rozhodnutí a tato část studie končí.
 
-Níže uvádíme několik otázek, které ověřují, zda studii rozumíte."""
+Níže zodpovězte několik otázek, abyste si ověřili, že studii rozumíte."""
 
-ignoreInfo = "\n<b>Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce."
-punishInfo = "\n<b>Potrestat</b>: Může hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětuje do potrestání, ztratí hráč A také 1 Kč."
-forgiveInfo = "\n<b>Odpustit</b>: Může hráče A odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dá, hráč A dostane 1 Kč." 
+ignoreInfo = "\n<b>Neudělat nic</b>: Pokračovat ve studii bez jakékoli akce."
+punishInfo = "\n<b>Potrestat</b>: Může hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou hráč B vynaloží na potrestání, ztratí hráč A také 1 Kč."
+forgiveInfo = "\n<b>Odpustit</b>: Může hráči A odpustit a  poslat mu od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou ze svých peněz hráč B pošle, hráč A dostane 1 Kč." 
 
 DictControl1 = "Jaká je role hráče A a hráče B ve studii?"
-DictAnswers1 = ["Hráč A rozhoduje, kolik hráči B vezme peněz. Účastníci studie jsou v obou kolech buď hráčem A nebo hráčem B (role se nemění).",
-"Hráč A rozhoduje, kolik hráči B vezme peněz. Účastníci studie jsou nejprve hráčem A v druhém kole hráčem B (role se vymění).", "Hráč B rozhoduje, kolik hráči A vezme peněz. Účastníci studie jsou v obou kolech buď hráčem A nebo hráčem B (role se nemění).", "Hráč B rozhoduje, kolik hráči A vezme peněz. Účastníci studie jsou nejprve hráčem A v druhém kole hráčem B (role se vymění)."]
-DictFeedback1 = ["Správná odpověď.", "Chybná odpověď. Účastníci studie jsou v obou kolech buď hráčem A nebo hráčem B (role se nemění).", "Chybná odpověď. Hráč A rozhoduje, kolik hráči B vezme peněz.", "Chybná odpověď. Hráč A rozhoduje, kolik hráči B vezme peněz. Účastníci studie jsou v obou kolech buď hráčem A nebo hráčem B (role se nemění)."]
+DictAnswers1 = ["Hráč A rozhoduje, kolik hráči B vezme peněz. Účastníci studie jsou v obou kolech buď hráčem A, nebo hráčem B (role se nemění).",
+"Hráč A rozhoduje, kolik hráči B vezme peněz. Účastníci studie jsou nejprve hráčem A v druhém kole hráčem B (role se vymění).", "Hráč B rozhoduje, kolik hráči A vezme peněz. Účastníci studie jsou v obou kolech buď hráčem A, nebo hráčem B (role se nemění).", "Hráč B rozhoduje, kolik hráči A vezme peněz. Účastníci studie jsou nejprve hráčem A v druhém kole hráčem B (role se vymění)."]
+DictFeedback1 = ["Správná odpověď.", "Chybná odpověď. Účastníci studie jsou v obou kolech buď hráčem A, nebo hráčem B (role se nemění).", "Chybná odpověď. Hráč A rozhoduje, kolik hráči B vezme peněz.", "Chybná odpověď. Hráč A rozhoduje, kolik hráči B vezme peněz. Účastníci studie jsou v obou kolech buď hráčem A, nebo hráčem B (role se nemění)."]
 
 DictControl2 = "Jaký je rozdíl mezi prvním a druhým kolem studie?"
 DictAnswers2 = ["V druhém kole bude druhým hráčem jiný účastník studie.", "V druhém kole hráč B nemá možnost reakce.", "V druhém kole obdrží oba hráči více peněz na začátku.", "V druhém kole se mění role hráčů."]
-DictFeedback2 = ["Chybná odpověď. V obou kolech studie budete ve dvojici se stejným účastníkem.", "Správná odpověď. V druhém kole hráč B pouze vyčkává rozhodnutí hráče A.", "Chybná odpověď. V obou kolech hráči obdrží úvodní přidělení 20 Kč.", "Níže přiřadit dle toho, jakou verzi mají randomizovanou."]
+DictFeedback2 = ["Chybná odpověď. V obou kolech studie budete ve dvojici se stejným účastníkem.", "Správná odpověď. V druhém kole hráč B pouze vyčkává rozhodnutí hráče A.", "Chybná odpověď. V obou kolech hráči obdrží na začátku 20 Kč.", "Chybná odpověď, v druhém kole zůstává role hráčů stejná."]
 
-DictControl3 = 'Pokud hráč B rozhodne “potrestat” hráče A v prvním kole částkou 5 Kč, kolik peněz ztratí hráč A?'
-DictAnswers3 = ["0 Kč ", "5 Kč", "10 Kč", "15 Kč"]
+DictControl3 = 'Pokud se hráč B rozhodne “potrestat” hráče A v prvním kole částkou 6 Kč, kolik peněz ztratí hráč A?'
+DictAnswers3 = ["0 Kč ", "6 Kč", "10 Kč", "12 Kč"]
 DictFeedback3 = ["Chybná odpověď. Za každou 1 Kč trestu, ztratí hráč A také 1 Kč.", "Správná odpověď.", "Chybná odpověď. Za každou 1 Kč trestu, ztratí hráč A také 1 Kč.", "Chybná odpověď. Za každou 1 Kč trestu, ztratí hráč A také 1 Kč."]
 
-DictControl4 = 'Pokud hráč B rozhodne "odpustit" a poslat hráči A 3 Kč v prvním kole, kolik peněz ztratí hráč B a kolik získá hráč A?'
-DictAnswers4 = ["Hráč B ztratí 3 Kč, hráč A získá 0 Kč.", "Hráč B ztratí 6 Kč, hráč A získá 3 Kč.", "Hráč B ztratí 3 Kč, hráč A získá 3 Kč.", "Hráč B ztratí 0 Kč, hráč A získá 3 Kč."]
-DictFeedback4 = ["Chybná odpověď. Hráč B ztratí 3 Kč, hráč A získá 3 Kč.", "Chybná odpověď. Hráč B ztratí 3 Kč, hráč A získá 3 Kč.", "Správná odpověď.", "Chybná odpověď. Hráč B ztratí 3 Kč, hráč A získá 3 Kč."]
+DictControl4 = 'Pokud hráč B rozhodne "odpustit" a poslat hráči A 2 Kč v prvním kole, kolik peněz ztratí hráč B a kolik získá hráč A?'
+DictAnswers4 = ["Hráč B ztratí 2 Kč, hráč A získá 0 Kč.", "Hráč B ztratí 6 Kč, hráč A získá 4 Kč.", "Hráč B ztratí 2 Kč, hráč A získá 2 Kč.", "Hráč B ztratí 0 Kč, hráč A získá 4 Kč."]
+DictFeedback4 = ["Chybná odpověď. Hráč B ztratí 2 Kč, hráč A získá 2 Kč.", "Chybná odpověď. Hráč B ztratí 2 Kč, hráč A získá 2 Kč.", "Správná odpověď.", "Chybná odpověď. Hráč B ztratí 2 Kč, hráč A získá 2 Kč."]
 
-DictControl5 = "Pokud hráč B rozhodne “nedělat nic” v prvním kole, jaké jsou peněžní důsledky pro hráče A?" 
-DictAnswers5 = ["Získá navíc 20 Kč a obdrží textovou zprávu.", "Žádné. Obdrží jen textovou zprávu.", "Získá navíc 1 Kč a obdrží textovou zprávu.", "Ztratí 20 Kč a obdrží textovou zprávu."]
-DictFeedback5 = ["Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen textovou zprávu.", "Správná odpověď.", "Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen textovou zprávu.", "Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen textovou zprávu."]
-
-
-wait_text = "Prosím počkejte na druhého hráče. Můžete vyplňovat vytištěný dotazník."
+DictControl5 = "Pokud se hráč B v prvním kole rozhodne “neudělat nic”, jaké jsou peněžní důsledky pro hráče A?" 
+DictAnswers5 = ["Získá navíc 20 Kč a obdrží zprávu od hráče B.", "Žádné. Obdrží jen zprávu od hráče B.", "Získá navíc 1 Kč a obdrží zprávu od hráče B.", "Ztratí 20 Kč a obdrží zprávu od hráče B."]
+DictFeedback5 = ["Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen zprávu od hráče B.", "Správná odpověď.", "Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen zprávu od hráče B.", "Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen zprávu od hráče B."]
 
 
-A1text = """Byla vám náhodně přidělena role: <b>Hráč A</b> 
-Vaše role zůstává po celou dobu experimentu stejná.
+wait_text = "Prosím počkejte na druhého hráče.  Můžete zatím vyplňovat vytištěný dotazník."
+
+
+
+A1text = """Byla Vám náhodně přidělena role: <b>Hráč A</b> 
+Vaše role zůstává po celou dobu studie stejná.
 
 Vy i hráč B jste dostali v této části studie 20 Kč.
-S hráčem B budete ve dvojici pro obě kola, po které se studie koná. Oba budete znát rozhodnutí toho druhého.
+S hráčem B budete ve dvojici pro obě kola studie. Oba budete informováni o rozhodnutích toho druhého.
 
-Nyní budete mít příležitost se rozhodnout, kolik (0-10 Kč) si od hráče B vezmete.
-Hráč B bude reagovat. Bude mít k dispozici dvě možnosti reakce na Vaše rozhodnutí a vybere pro Vás textovou zprávu:
+Nyní budete mít příležitost se rozhodnout, kolik (0-10 Kč, v krocích po 2 Kč) si od hráče B vezmete.
+Hráč B bude na Vaše rozhodnutí reagovat. Bude mít k dispozici dvě možnosti reakce na Vaše rozhodnutí a vybere pro Vás zprávu:
 {}
 
 <b>Rozhodněte se, kolik si chcete od hráče B vzít (0-10 Kč)</b>:
 """
 
-ignoreText = "\n<b>Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce."
-punishText = "\n<b>Potrestat</b>: Může Vás potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětuje do potrestání, ztratí hráč A 1 Kč."
-forgiveText = "\n<b>Odpustit</b>: Může Vás odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dá, hráč A dostane 1 Kč." 
+ignoreText = "\n<b>Neudělat nic</b>: Pokračovat ve studii bez jakékoli akce."
+punishText = "\n<b>Potrestat</b>: Může Vás potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou vynaloží na potrestání, ztratíte 1 Kč."
+forgiveText = "\n<b>Odpustit</b>: Může Vám odpustit a poslat Vám od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou Vám ze svých peněz pošle, dostanete 1 Kč." 
 
 
 B1text = """Byla vám náhodně přidělena role: <b>Hráč B</b> 
-Vaše role zůstává po celou dobu experimentu stejná.
-
+Vaše role zůstává po celou dobu studie stejná.
 Vy i hráč A jste dostali v této části studie 20 Kč.
-S hráčem A budete ve dvojici pro obě kola, po které se studie koná. Oba budete znát rozhodnutí toho druhého.
+S hráčem A budete ve dvojici pro obě kola studie. Oba budete informováni o rozhodnutích toho druhého.
 
-Hráč A Vám může vzít 0 až 10 Kč. Níže uveďte, jak budete reagovat. Máte na výběr z těchto dvou možností:	
+Hráč A Vám může vzít 0 až 10 Kč (v krocích po 2 Kč). Níže uveďte, jak budete reagovat v případě všech možných rozhodnutí hráče A. Máte na výběr z těchto dvou možností:	
 {}
 
-<b>Níže uveďte v Kč Vaše reakce na možná rozhodnutí hráče A (posuňte posuvníkem) rozhodněte, jakou ze dvou textových zpráv chcete poslat:</b>"""
+<b>Níže uveďte v Kč Vaše reakce na možná rozhodnutí hráče A (posuňte posuvníkem) a rozhodněte, kterou ze dvou textových zpráv chcete hráči A poslat:</b>"""
 
-ignoreResponse = '''<b>- Nedělat nic</b>: Pokračovat v interakci bez jakékoli akce a poslat jednu ze zpráv.'''
-punishResponse = '''<b>- Potrestat</b>: Můžete hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou obětujete do potrestání, ztratí hráč A 1 Kč. Navíc pošlete jednu ze zpráv.'''
-forgiveResponse = '''<b>- Odpustit</b>: Můžete hráče A odměnit od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou dáte, hráč A dostane 1 Kč. Navíc pošlete jednu ze zpráv.'''
+ignoreResponse = '''<b>- Neudělat nic</b>: Pokračovat ve studii bez jakékoli akce a poslat jednu ze zpráv.'''
+punishResponse = '''<b>- Potrestat</b>: Můžete hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou vynaložíte na potrestání, ztratí hráč A 1 Kč. Navíc pošlete jednu ze zpráv.'''
+forgiveResponse = '''<b>- Odpustit</b>: Můžete hráči A odpustit a poslat mu od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou ze svých peněz pošlete, hráč A dostane 1 Kč. Navíc pošlete jednu ze zpráv.'''
 
-ignoreMessage1 = "V reakci na Vaše rozhodnutí neudělám nic a pokračuji v naší interakci."
-ignoreMessage2 = "Volím možnost: Nedělat nic."
+ignoreMessage1 = "V reakci na Vaše rozhodnutí neudělám nic a jen pokračuji ve studii."
+ignoreMessage2 = "Volím možnost: Neudělat nic."
 punishMessage1 = "V reakci na Vaše rozhodnutí Vás tímto trestám."
 punishMessage2 = "Volím možnost: Potrestat."
-forgiveMessage1 = "Je mi líto, že jste mi vzal peníze. Takto by se k sobě lidé chovat neměli. Já Vám ale odpouštím."
+forgiveMessage1 = "Je mi líto, že jste mi vzal/a peníze. Takto by se k sobě lidé chovat neměli. Já Vám ale odpouštím."
 forgiveMessage2 = "Volím možnost: Odpustit."
 
 
 followup = "Jak se cítíte poté, co jste učinil/a Vaši volbu?"
-scale = ["Velmi mírně\nnebo vůbec", "Nepatrně", "Mírně", "Docela dost", "Extrémně"]
+scale = ["Nepatrně\nnebo vůbec", "Velmi mírně", "Mírně", "Docela dost", "Extrémně"]
 dimensions = ["Naštvaně", "Rozrušeně", "Provinile", "Nepřátelsky", "Hrdě", "Nadšeně", "Zahanbeně", "Odhodlaně", "Bojácně"]
 
 expectText = "Jaké chování očekáváte od hráče B v reakci na Vaši volbu:"
-expectAnswers = {"ignore": "Nebude dělat nic.", "punish": "Potrestá mne (přijdeme oba o 0-10 Kč).", "forgive": "Odpustí mi (pošle mi 0-10 Kč a sám ztratí 0-10 Kč)."}
+expectAnswers = {"ignore": "Nebude dělat nic.", "punish": "Potrestá mne (přijdeme oba o 0-10 Kč).", "forgive": "Odpustí mi (pošle mi 0-10 Kč a sám/sama ztratí 0-10 Kč)."}
 
-followupB2 = """Hráč A Vám může vzít 0 až 20 Kč. Vyčkáváte na rozhodnutí hráče A.
+followupB2 = """Hráč A Vám může vzít 0 až 20 Kč. Vyčkejte na rozhodnutí hráče A.
 
 Jak se cítíte?"""
 
 
-dictatorResultTextA = """Rozhodl jste se Hráči B vzít {} Kč.
+dictatorResultTextA = """Rozhodl/a jste se Hráči B vzít {} Kč.
 
 Jako reakci Hráč B:
 <b>{}
@@ -134,10 +131,10 @@ Nyní přistoupíme k druhému kolu.
 
 <b>Druhé kolo</b>
 Máte stejnou roli: Hráč A
-Vy i Hráč B dostáváte 20 Kč.
+Vy i Hráč B jste dostali 20 Kč.
 
-Rozhodnete se, kolik (0-20 Kč) si od hráče B vezmete.
-Hráč B vyčkává Vašeho rozhodnutí.
+Rozhodněte se, kolik (0-20 Kč) si od hráče B vezmete.
+Hráč B čeká na Vaše rozhodnutí.
 
 <b>Rozhodněte se nyní, kolik si chcete od hráče B vzít (0-20 Kč):</b>"""
 
@@ -151,10 +148,10 @@ Nyní přistoupíme k druhému kolu.
 
 <b>Druhé kolo</b>
 Máte stejnou roli: Hráč B
-Vy i Hráč A dostáváte 20 Kč.
+Vy i Hráč A jste dostali 20 Kč.
 
 Hráč A se rozhodne, kolik (0-20 Kč) si od Vás vezme.
-Vy vyčkáte rozhodnutí Hráče A."""
+Vy čekáte na rozhodnutí Hráče A."""
 
 ignoreResult = 'Neudělal nic a poslal zprávu "{}"'
 punishResult = '{} a poslal zprávu "{}" Oba ztrácíte {} Kč.'
@@ -170,14 +167,14 @@ finalTextA = """Rozhodl/a jste se Hráči B vzít {} Kč.
 V tomto kole jste získal/a {} Kč a Hráč B {} Kč.
 <b>Z této úlohy si dohromady odnášíte {} Kč a Hráč B {} Kč.</b> 
 
-Tímto tato část experimentu končí.
+Tímto tato část studie končí.
 Ve studii pokračujte kliknutím na tlačítko "Pokračovat"."""
 
 finalTextB = """Hráč A se rozhodl Vám vzít {} Kč.
-V tomto kole jste získal {} Kč a Hráč A {} Kč.
+V tomto kole jste získal/a {} Kč a Hráč A {} Kč.
 <b>Z této úlohy si dohromady odnášíte {} Kč a Hráč A {} Kč.</b> 
 
-Tímto tato část experimentu končí.
+Tímto tato část studie končí.
 Ve studii pokračujte kliknutím na tlačítko "Pokračovat"."""
 
 
@@ -185,12 +182,14 @@ Ve studii pokračujte kliknutím na tlačítko "Pokračovat"."""
 
 
 
+
 class ScaleFrame(Canvas):
-    def __init__(self, root, round = 1, font = 15):
+    def __init__(self, root, round = 1, font = 15, rounding = 2):
         super().__init__(root, background = "white", highlightbackground = "white", highlightcolor = "white")
 
         self.parent = root
         self.root = root.root
+        self.rounding = rounding
 
         self.valueVar = StringVar()
         self.valueVar.set("0")
@@ -211,7 +210,7 @@ class ScaleFrame(Canvas):
 
 
     def changedValue(self, value):                
-        self.valueVar.set(str(int(round(eval(self.valueVar.get())/2, 0)*2)))
+        self.valueVar.set(str(int(round(eval(self.valueVar.get())/self.rounding, 0)*self.rounding)))
         if self.root.status["dictatorRole"] == "B":
             self.parent.changedValue()
         else:
@@ -266,7 +265,7 @@ class ResponseFrame(Canvas):
         self.messageVar = StringVar()        
         self.messageBut1 = ttk.Radiobutton(self, text = " ", value = "1", command = self.message1, variable = self.messageVar)
         self.messageBut2 = ttk.Radiobutton(self, text = " ", value = "2", command = self.message2, variable = self.messageVar)
-        self.scale = ScaleFrame(self, font = 14)
+        self.scale = ScaleFrame(self, font = 14, rounding = 1)
 
         self.messageBut1.grid(column = 3, row = 1, sticky = W, padx = 10)
         self.messageBut2.grid(column = 3, row = 2, sticky = W, padx = 10)
@@ -434,7 +433,8 @@ class WaitDictator(InstructionsFrame):
                 if URL == "TEST":
                     if self.what == "pairing":
                         condition = random.choice(["forgive-ignore", "ignore-punish", "forgive-punish"])
-                        #role = "B" # for testing
+                        condition = "forgive-punish" # for testing
+                        role = "B" # for testing
                         role = random.choice(["A", "B"])                        
                         pair = random.randint(1,20)
                         response = str(pair) + "_" + role + "_" + condition

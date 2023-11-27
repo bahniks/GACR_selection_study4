@@ -28,6 +28,8 @@ Zkontrolujte také, že máte v záznamovém archu správně vyplněné své ide
 Jakmile dotazník dokončíte, klikněte na tlačítko Pokračovat.
 """
 
+polwillintro = "Označte, do jaké míry souhlasíte s následujícímí tvrzeními, na poskytnuté škále."
+
 
 class Questionnaire(ExperimentFrame):
     def __init__(self, root, words, question = "", labels = None, blocksize = 4, values = 7, text = True,
@@ -49,7 +51,7 @@ class Questionnaire(ExperimentFrame):
         self.labels = {}
 
         self.frame = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
-        self.frame.grid(column = 1, row = 1, sticky = NSEW)
+        self.frame.grid(column = 1, row = 1, sticky = NSEW, pady = 10)
 
         maxwidth = max(map(len, self.words))
 
@@ -149,12 +151,12 @@ TEQ = (Questionnaire,
 RSMS = (Questionnaire,
                 {"words": "rsms.txt",
                  "question": RSMSintro,
-                 "labels": ["určitě vždy pravdivé",
-                            "obvykle pravdivé",
-                            "částečně pravdivé,\nale s výjimkou",
-                            "částečně nepravdivé,\nale s výjimkou",
-                            "obvykle nepravdivé",
-                            "určitě vždy nepravdivé"],
+                 "labels": ["Určitě vždy pravdivé",
+                            "Obvykle pravdivé",
+                            "Částečně pravdivé,\nale s výjimkou",
+                            "Částečně nepravdivé,\nale s výjimkou",
+                            "Obvykle nepravdivé",
+                            "Určitě vždy nepravdivé"],
                  "values": 6,
                  "labelwidth": 10,
                  "text": False,
@@ -165,10 +167,30 @@ RSMS = (Questionnaire,
                  "pady": 2,
                  "fixedlines": 2})
 
+PoliticalWill = (Questionnaire,
+                {"words": "polwill.txt",
+                 "question": polwillintro,
+                 "labels": ["Zcela\nnesouhlasím",
+                            "Nesouhlasím",
+                            "Mírně\nnesouhlasím",
+                            "Neutrální",
+                            "Mírně\nsouhlasím",
+                            "Souhlasím",
+                            "Zcela\nsouhlasím"],
+                 "values": 7,
+                 "labelwidth": 11,
+                 "text": False,
+                 "fontsize": 13,
+                 "blocksize": 9,
+                 "wraplength": 450,
+                 "filetext": "Political Will",
+                 "fixedlines": 2,
+                 "pady": 3})
+
 
 HEXACOinfo = (InstructionsFrame, {"text": hexacotext, "height": 5, "update": ["idNumber"]})
 
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([RSMS, TEQ])
+    GUI([PoliticalWill, RSMS, TEQ])

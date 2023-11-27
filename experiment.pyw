@@ -17,7 +17,7 @@ from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
 from dictator import WaitDictator, InstructionsDictator, DictatorDecision, DictatorFeelings, WaitResult1, DictatorResult
 from dictator import DictatorFeelings2, WaitResult2, DictatorEnd
-from questionnaire import TEQ, RSMS, HEXACOinfo
+from questionnaire import TEQ, RSMS, HEXACOinfo, PoliticalWill
 from tosca import TOSCA
 
 frames = [Initial,
@@ -56,6 +56,7 @@ frames = [Initial,
           RSMS,
           TEQ,
           TOSCA,
+          PoliticalWill,
           HEXACOinfo,
           Demographics,
           Ending

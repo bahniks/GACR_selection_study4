@@ -57,7 +57,7 @@ class Quest(ExperimentFrame):
             self.instructions["state"] = "disabled"
 
         self.questions = []
-        with open(os.path.join("Stuff", file)) as f:
+        with open(os.path.join("Stuff", file), encoding = "utf-8") as f:
             for line in f:
                 self.questions.append(line.strip())
 
@@ -188,11 +188,13 @@ class Likert(Canvas):
 
 
 
-class Hexaco(Quest):
-    def __init__(self, root):
-        super().__init__(root, 9, "hexaco.txt", "Hexaco", instructions = hexacoinstructions, width = 85,
-                         left = "silně nesouhlasím", right = "silně souhlasím", checks = 3,
-                         height = 3, options = 5, center = True)
+# polwillintro = "Označte, do jaké míry souhlasíte s následujícímí tvrzeními, na poskytnuté škále."
+
+# class PoliticalWill(Quest):
+#     def __init__(self, root):
+#         super().__init__(root, 9, "polwill.txt", "Political Will", instructions = polwillintro, width = 85,
+#                          left = "Zcela nesouhlasím", right = "Zcela souhlasím",
+#                          height = 3, options = 7, center = True)
 
 
 
@@ -203,6 +205,5 @@ QuestInstructions = (InstructionsFrame, {"text": questintro, "height": 15})
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([QuestInstructions,
-         Hexaco
+    GUI([QuestInstructions
          ])
