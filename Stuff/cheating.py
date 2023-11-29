@@ -132,7 +132,7 @@ Byli jste přiřazeni do skupiny s dalšími třemi účastníky studie. {}
 
 Z každé skupiny bude v následujícím bloku jeden účastník hrát verzi "PO", ve které se uvádí, zda jste uhodli, či nikoliv, až po zobrazení výsledku hodu kostkou. Zbývající účastníci budou hrát verzi "PŘED". 
 {}
-Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO".
+Kdo ze skupiny bude hrát verzi "PO" bude rozhodnuto hlasováním všech členů skupiny. Člen skupiny s nejvíce hlasy bude hrát verzi "PO". V případě rovnosti hlasů bude vybrán jeden z hráčů s nejvíce hlasy náhodně.
 
 Níže jsou zobrazeny výhry ostatních účastníků studie ve třetím bloku. Označte, pro koho ze své skupiny hlasujete, aby hrál verzi "PO" v následujícím bloku, a zmáčkněte tlačítko "Pokračovat".
 """
@@ -622,7 +622,7 @@ class Voting(InstructionsFrame):
         if TESTING and not "outcome" in root.texts:
             root.texts["outcome"] = "outcome_1|1|5_2|3|30_3|12|390_4|10|275_True"
 
-        super().__init__(root, text = root.texts["intro_block_4"], height = 21, font = 15, update = ["win3"])
+        super().__init__(root, text = root.texts["intro_block_4"], height = 23, font = 15, update = ["win3"])
 
         # vote frame
         self.voteVar = StringVar()

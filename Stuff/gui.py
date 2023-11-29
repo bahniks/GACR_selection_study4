@@ -21,14 +21,15 @@ class GUI(Tk):
         self.config(bg = "white")
         windowed = TESTING or URL == "http://127.0.0.1:8000/"
         if windowed:
+            #self.geometry("1920x1080")
             self.geometry("1280x1024")
         self.attributes("-fullscreen", not windowed)
         self.attributes("-topmost", not windowed)
         self.overrideredirect(not windowed)
         self.protocol("WM_DELETE_WINDOW", lambda: self.closeFun())
 
-        self.screenwidth = 1280 # adjust
-        self.screenheight = 1024 # adjust
+        self.screenwidth = 1280 #1920#  adjust
+        self.screenheight = 1024 #1080#  adjust
 
         os.chdir(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
         filepath = os.path.join(os.getcwd(), "Data")

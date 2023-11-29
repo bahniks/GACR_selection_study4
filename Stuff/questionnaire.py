@@ -123,7 +123,7 @@ class Questionnaire(ExperimentFrame):
             if not self.variables[word].get():
                 end = False
             else:
-                self.labels[word]["font"] = "helvetica {}".format(self.fontsize - 3)
+                self.labels[word]["foreground"] = "grey"
         if end:
             self.next["state"] = "!disabled"
 

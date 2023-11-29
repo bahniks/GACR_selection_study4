@@ -101,12 +101,12 @@ ignoreResponse = '''<b>- Neudělat nic</b>: Pokračovat ve studii bez jakékoli 
 punishResponse = '''<b>- Potrestat</b>: Můžete hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou vynaložíte na potrestání, ztratí hráč A 1 Kč. Navíc pošlete jednu ze zpráv.'''
 forgiveResponse = '''<b>- Odpustit</b>: Můžete hráči A odpustit a poslat mu od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou ze svých peněz pošlete, hráč A dostane 1 Kč. Navíc pošlete jednu ze zpráv.'''
 
-ignoreMessage1 = "V reakci na Vaše rozhodnutí neudělám nic a jen pokračuji ve studii."
-ignoreMessage2 = "Volím možnost: Neudělat nic."
-punishMessage1 = "V reakci na Vaše rozhodnutí Vás tímto trestám."
-punishMessage2 = "Volím možnost: Potrestat."
-forgiveMessage1 = "Je mi líto, že jste mi vzal/a peníze. Takto by se k sobě lidé chovat neměli. Já Vám ale odpouštím."
-forgiveMessage2 = "Volím možnost: Odpustit."
+ignoreMessage1 = '"V reakci na Vaše rozhodnutí neudělám nic a jen pokračuji ve studii."'
+ignoreMessage2 = '"Volím možnost: Neudělat nic."'
+punishMessage1 = '"V reakci na Vaše rozhodnutí Vás tímto trestám."'
+punishMessage2 = '"Volím možnost: Potrestat."'
+forgiveMessage1 = '"Je mi líto, že jste mi vzal/a peníze. Takto by se k sobě lidé chovat neměli. Já Vám ale odpouštím."'
+forgiveMessage2 = '"Volím možnost: Odpustit."'
 
 
 followup = "Jak se cítíte poté, co jste učinil/a Vaši volbu?"

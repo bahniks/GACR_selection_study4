@@ -21,11 +21,6 @@ V následující části studie budete odpovídat na otázky o sobě, Vašich po
 Každou otázku si pečlivě přečtěte. Snažte se však na otázky nemyslet příliš dlouho; první odpověď, která Vám přijde na mysl, je obvykle nejlepší.
 """
 
-hexacoinstructions = """Na následujících stránkách najdete řadu prohlášení o Vaší osobě.
-
-Přečtěte si prosím každé prohlášení a rozhodněte se, do jaké míry s ním souhlasíte, nebo nesouhlasíte.
-"""
-
 attentiontext = "Chcete-li prokázat, že zadání věnujete pozornost, vyberte možnost "
 
 ################################################################################
