@@ -42,23 +42,22 @@ columns = {"Login": ("id", "source", "condition", "number_in_group", "winning_bl
            "Voting Result": ("id", "block", "condition", "elected", "number_of_votes"),
            "Cheating 4": ("id", "block", "trial", "version", "source", "condition", "roll", "prediction", "report", "reward", "time", "time1", "time2"), 
            "Debrief": ("id", "wanted_elected", "believed_elected", "preference_strength", "decision_process", "strategy"),
-           # dodelano sem
-
-           "Debriefing2": ("id", "bdm_reward", "bdm_charity_loss", "bdm_charity_loss_others", "bdm_others_bids", "bdm_others_prediction", "bdm_fun", "bdm_ease", "bdm_reward_influence", "bdm_charity_loss_influence", "bdm_winner", "bdm_overcome_others", "auction_reward", "auction_charity_loss", "auction_charity_loss_others", "auction_others_bids", "auction_others_prediction", "auction_fun", "auction_ease", "auction_reward_influence", "auction_charity_loss_influence", "auction_winner", "auction_overcome_others"),
-           "Debriefing3": ("id", "bdm_unfair", "bdm_risky", "bdm_not_understood", "bdm_complicated", "auction_unfair", "auction_risky", "auction_not_understood", "auction_complicated"),
-           "Debriefing4": ("id", "others_charity_interest", "you_charity_interest", "aware_cheating", "aware_preventing_cheating", "aware_preventing_loss"),           
+           "Pairing": ("id", "pair", "role", "condition"),
+           "Dictator Control Questions": ("id", "item", "answer"),
+           "DictatorA": ("id", "round", "withdrawal"),
+           "DictatorB": ("id", "withdrawal0", "response0", "message0", "money0", "withdrawal2", "response2", "message2", "money2", "withdrawal4", "response4", "message4", "money4", "withdrawal6", "response6", "message6", "money6", "withdrawal8", "response8", "message8", "money8", "withdrawal10", "response10", "message10", "money10"),
+           "Dictator Feelings1": ("id", "feeling", "rating"),
+           "Dictator Results 1": ("id", "pair", "withdrawal", "response", "message", "money"),
+           "Dictator Feelings2": ("id", "feeling", "rating"),
+           "Dictator Results 2": ("id", "pair", "withdrawal"),
            "Lottery": ("id", "choice1", "choice2", "choice3", "choice4", "choice5", "chosen", "win"),
            "Dice Lottery": ("id", "rolls", "reward"),
-           "Hexaco": ("id", "number", "answer", "item"),           
-           "Attention checks": ("id", "part", "correct"),
-           "Prosociality": ("id", "item", "answer"),
+           "RSMS": ("id", "item", "answer"),
+           "TEQ": ("id", "item", "answer"),
+           "TOSCA": ("id", "number", "answer", "item"),  
+           "Political Will": ("id", "item", "answer"),           
            "Demographics": ("id", "sex", "age", "language", "student", "field"),
-           "Ending": ("id", "reward", "chosen_block"),
-
-           "Perception cheating": ("id", "before_attention", "before_thinking", "before_cheating", "before_fun",
-                                   "before_justification", "before_random", "after_attention", "after_thinking",
-                                   "after_cheating",  "after_fun", "after_justification", "after_random"),
-           "Debriefing": ("id", "comments", "aim_dice", "aim_correct", "demand", "immoral", "truth") 
+           "Ending": ("id", "reward", "chosen_block")
            }
 
 frames = ["Initial",
