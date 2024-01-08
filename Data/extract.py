@@ -13,7 +13,8 @@ studies = ["Login",
            "Debrief",
            "Pairing",
            "Dictator Control Questions",
-           "DictatorA", # DictatorB
+           "DictatorA", 
+           "DictatorB",
            "Dictator Feelings1",
            "Dictator Expectation",
            "Dictator Results 1",
@@ -141,8 +142,3 @@ for directory in dirs:
                                 break
                             else:
                                 results.write("\n" + content)
-                        
-                
-
-    
-        
