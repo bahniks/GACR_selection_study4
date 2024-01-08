@@ -40,7 +40,7 @@ columns = {"Login": ("id", "source", "condition", "number_in_group", "winning_bl
            "Cheating 3": ("id", "block", "trial", "version", "source", "condition", "roll", "prediction", "report", "reward", "time", "time1", "time2"),
            "Voting": ("id", "block", "vote"),  
            "Perception": ("id", "prediction_voted_report", "prediction_my_votes", "p1_honest", "p1_selfish", "p1_calculating", "p2_honest", "p2_selfish", "p2_calculating", "p3_honest", "p3_selfish", "p3_calculating", "me_honest", "me_selfish", "me_calculating"),
-           "Voting Result": ("id", "block", "condition", "elected", "number_of_votes"),
+           "Voting Results": ("id", "block", "condition", "elected", "number_of_votes"),
            "Cheating 4": ("id", "block", "trial", "version", "source", "condition", "roll", "prediction", "report", "reward", "time", "time1", "time2"), 
            "Debrief": ("id", "wanted_elected", "believed_elected", "preference_strength", "decision_process", "strategy"),
            "Pairing": ("id", "pair", "role", "condition"),
@@ -48,7 +48,9 @@ columns = {"Login": ("id", "source", "condition", "number_in_group", "winning_bl
            "DictatorA": ("id", "round", "withdrawal"),
            "DictatorB": ("id", "withdrawal0", "response0", "message0", "money0", "withdrawal2", "response2", "message2", "money2", "withdrawal4", "response4", "message4", "money4", "withdrawal6", "response6", "message6", "money6", "withdrawal8", "response8", "message8", "money8", "withdrawal10", "response10", "message10", "money10"),
            "Dictator Feelings1": ("id", "feeling", "rating"),
+           "Dictator Expectation": ("id", "expectation"),
            "Dictator Results 1": ("id", "pair", "withdrawal", "response", "message", "money"),
+           "Dictator2": ("id", "round", "withdrawal"),
            "Dictator Feelings2": ("id", "feeling", "rating"),
            "Dictator Results 2": ("id", "pair", "withdrawal"),
            "Lottery": ("id", "choice1", "choice2", "choice3", "choice4", "choice5", "chosen", "win"),
@@ -100,7 +102,8 @@ frames = ["Initial",
           "PoliticalWill",
           "HEXACOinfo",
           "Demographics",
-          "Ending"
+          "Ending",
+          "end"
          ]
 
 for study in studies:
@@ -110,35 +113,27 @@ for study in studies:
 with open("Time results.txt", mode = "w") as times:
     times.write("\t".join(["id", "order", "frame", "time"]))
 
-dirs = os.listdir()
-#filecount = 0 #
-for directory in dirs:
-    if ".py" in directory or "results" in directory:
+files = os.listdir()
+for file in files:
+    if ".py" in file or "results" in file or "file.txt" in file or "STATION" in file or ".txt" not in file:
         continue
-    files = os.listdir(directory)
-    for file in files:
-        if ".py" in file or "results" in file or "file.txt" in file or "STATION" in file or ".txt" not in file:
-            continue
 
-        with open(os.path.join(directory, file)) as datafile:
-            #filecount += 1 #
-            count = 1
-            for line in datafile:
-                study = line.strip()
-                if line.startswith("time: "):
-                    with open("Time results.txt", mode = "a") as times:
-                        times.write("\n" + "\t".join([file, str(count), frames[count-1], line.split()[1]]))
-                        count += 1
-                        continue
-                if study in studies:
-                    with open("{} results.txt".format(study), mode = "a") as results:
-                        for line in datafile:
-                            content = line.strip()
-                            if columns[study][0] == "id" and content: #
-                                identificator = content.split()[0] #
-                                content = content.replace(identificator, identificator + "_" + directory) #
-                                #content = content.replace(identificator, identificator + "_" + str(filecount)) #
-                            if not content:
-                                break
-                            else:
-                                results.write("\n" + content)
+    with open(file) as datafile:
+        #filecount += 1 #
+        count = 1
+        for line in datafile:
+
+            study = line.strip()
+            if line.startswith("time: "):
+                with open("Time results.txt", mode = "a") as times:
+                    times.write("\n" + "\t".join([file, str(count), frames[count-1], line.split()[1]]))
+                    count += 1
+                    continue
+            if study in studies:
+                with open("{} results.txt".format(study), mode = "a") as results:
+                    for line in datafile:
+                        content = line.strip()
+                        if not content or content.startswith("time: "):
+                            break
+                        else:
+                            results.write("\n" + content)
