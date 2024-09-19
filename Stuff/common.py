@@ -423,14 +423,14 @@ class MultipleChoice(Canvas):
         
 
 class InstructionsAndUnderstanding(InstructionsFrame):
-    def __init__(self, root, controlTexts, name, randomize = True, **kwargs):
+    def __init__(self, root, controlTexts, name, randomize = True, fillerHeight = 255, **kwargs):
         super().__init__(root, **kwargs)
         self.controlTexts = controlTexts
         self.randomize = randomize
 
         self.controlFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
-        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = 255,
+        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = fillerHeight,
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
 

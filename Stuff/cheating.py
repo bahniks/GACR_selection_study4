@@ -6,6 +6,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from time import perf_counter, sleep
 from collections import defaultdict
+from math import ceil
 
 import random
 import os
@@ -31,15 +32,15 @@ Tuto úlohu hrajete ve skupině, do které jste byli náhodně přiděleni, spol
 
 Celkové odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
 <c>
-Správných odhadů      |  0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |  10 |  11 |  12 |
---------------------------------------------------------------------------------------------------------------------
-Vaše odměna v Kč      |  0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
---------------------------------------------------------------------------------------------------------------------
-Odměna ostatních v Kč | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |
+Správných odhadů |   0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |  10 |  11 |  12 |
+------------------------------------------------------------------------------------------------
+Vaše odměna v Kč |   0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
+------------------------------------------------------------------------------------------------
+Odměna ostatních |{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|
 </c>
 Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte. 
 
-Zbývající dva členové skupiny hrají hru za stejných podmínek. K odměně, kterou získáte, održíte tedy navíc zbývající odměnu od ostatních členů skupiny.
+Zbývající dva členové skupiny hrají hru za stejných podmínek. K odměně, kterou získáte, održíte tedy navíc zbývající odměnu od nich.
 
 Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie. 
 
@@ -111,6 +112,11 @@ Nyní Vás čeká čtvrtý blok s dvanácti koly. V tomto bloku opět můžete h
 Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 """
 
+# INFORMACE O ZVOLENÉ VERZI
+info_condition = "Vaše skupina zvolila verzi {}"
+after_voted = "PO, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou."
+before_voted = "PŘED, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali."
+
 
 # ČEKÁNÍ
 wait_text = "Prosím počkejte na ostatní účastníky studie."
@@ -118,8 +124,8 @@ wait_text = "Prosím počkejte na ostatní účastníky studie."
 
 
 # KONEC
-endtext = """Toto je konec posledního bloku. 
-{}
+endtext = """Toto je konec posledního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.
+
 Toto je konec úkolu s kostkou.
 """
 
@@ -158,7 +164,6 @@ class Cheating(ExperimentFrame):
             self.root.status["block"] = 1
             conditions = ["treatment", "control"]
             random.shuffle(conditions)  
-            conditions += ["treatment"]
             self.root.status["conditions"] = conditions
         self.blockNumber = self.root.status["block"]      
         
@@ -226,8 +231,10 @@ class Cheating(ExperimentFrame):
             self.currentTrial += 1
             self.startTrial()
         else:
-            self.root.texts["win" + str(self.blockNumber)] = sum(self.rewards[:self.root.wins[self.blockNumber]])
-            self.root.texts["otherwin" + str(self.blockNumber)] = round((400 - (2.5 * i) * (i + 1))*coefficient / 2, 1)
+            win = sum(self.rewards[:self.root.wins[self.blockNumber]])
+            self.root.texts["win" + str(self.blockNumber)] = win            
+            coefficient = {"low": COEFFICIENTS[0], "high": COEFFICIENTS[2], "control": COEFFICIENTS[1]}[self.root.status["condition"]]
+            self.root.texts["otherwin" + str(self.blockNumber)] = round((400 - win * coefficient) / 2, 1)
             self.nextFun()
 
 
@@ -622,6 +629,7 @@ class Wait(InstructionsFrame):
                         othervote2 = random.randint(0, 1)                        
                         response = "treatment" if myvote + othervote1 + othervote2 > 1 else "control"                        
                     elif self.what == "result":
+                        # to do
                         response = "result"
                         for i in range(4):
                             if i + 1 == int(self.root.status["number"]):
@@ -638,8 +646,9 @@ class Wait(InstructionsFrame):
                         continue
                 if response:              
                     if self.what == "voting":
-                        condition = response                         
-                        self.root.status["conditions"].append(condition)                                     
+                        condition = response
+                        self.root.status["conditions"].append(condition)                                   
+                        self.root.texts["voted_condition"] = after_voted if condition == "treatment" else before_voted
                         self.write(response)
                     elif self.what == "result":   
                         if not response.endswith("True"):
@@ -732,11 +741,12 @@ class Login(InstructionsFrame):
         self.progressBar.start()
         self.login()
 
-    def update_intro(self, condition):
-        conditionText = {"low": condition_text.format(COEFFICIENTS[2]), "high": condition_text.format(COEFFICIENTS[2]), "control": ""}[condition]
+    def update_intro(self, condition):   
+        conditionText = {"low": condition_text.format(COEFFICIENTS[0]), "high": condition_text.format(COEFFICIENTS[2]), "control": ""}[condition]
         global intro_block_1        
-        coefficient = {"low": condition_text.format(COEFFICIENTS[0]), "high": COEFFICIENTS[2], "control": COEFFICIENTS[1]}[condition]
-        self.root.texts["introtext"] = intro_block_1.format(conditionText, *[round((400 - (2.5 * i) * (i + 1))*coefficient / 2, 1) for i in range(13)])
+        coefficient = {"low": COEFFICIENTS[0], "high": COEFFICIENTS[2], "control": COEFFICIENTS[1]}[condition]
+        otherRewards = ["{num: >4} ".format(num = ceil((400 - (2.5 * i) * (i + 1))*coefficient / 2)) for i in range(13)]
+        self.root.texts["introtext"] = intro_block_1.format(conditionText, *otherRewards)
 
     def create_control_question(self, source, condition):        
         condition = source + "_" + condition
@@ -763,10 +773,12 @@ class Login(InstructionsFrame):
 controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1], [intro_control2, intro_answers2, intro_feedback2]]
 #controlTexts3 = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
 
-CheatingInstructions = (InstructionsAndUnderstanding, {"text": "{}", "height": 24, "width": 105, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1, "update": ["introtext"]})
+CheatingInstructions = (InstructionsAndUnderstanding, {"text": "{}", "height": 31, "width": 110, "fillerHeight": 150, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1, "update": ["introtext"]})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1", "otherwin1"]})
 Instructions3 = (Selection, {"text": intro_block_3, "update": ["win2", "otherwin2"]})
 Instructions4 = (Selection, {"text": intro_block_4, "update": ["win3", "otherwin3"]})
+ConditionInformation = (InstructionsFrame, {"text": info_condition, "update": ["voted_condition"]})
+
 #Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 28, "width": 100, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
 # VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]}) # to do
 EndCheating = (InstructionsFrame, {"text": endtext, "height": 10, "update": ["win4", "otherwin4"]})
@@ -784,9 +796,11 @@ if __name__ == "__main__":
          Cheating,
          Instructions3,
          Wait,
+         ConditionInformation,
          Cheating,
          Instructions4,
          Wait,
+         ConditionInformation,
          Cheating,         
          #FinalWait, 
          EndCheating
