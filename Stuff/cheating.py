@@ -28,7 +28,7 @@ intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální
 
 Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč. 
 
-Tuto úlohu hrajete ve skupině, do které jste byli náhodně přiděleni, spolu s dalšími dvěma účastníky studie. Celková odměna, kterou v bloku získáte, bude odečtena od částky 400 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.
+<b>Tuto úlohu hrajete ve skupině, do které jste byli náhodně přiděleni, spolu s dalšími dvěma účastníky studie. Celková odměna, kterou v bloku získáte, bude odečtena od částky 400 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.</b>
 
 Celkové odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
 <c>
@@ -234,7 +234,7 @@ class Cheating(ExperimentFrame):
             win = sum(self.rewards[:self.root.wins[self.blockNumber]])
             self.root.texts["win" + str(self.blockNumber)] = win            
             coefficient = {"low": COEFFICIENTS[0], "high": COEFFICIENTS[2], "control": COEFFICIENTS[1]}[self.root.status["condition"]]
-            self.root.texts["otherwin" + str(self.blockNumber)] = round((400 - win * coefficient) / 2, 1)
+            self.root.texts["otherwin" + str(self.blockNumber)] = ceil(round((400 - win * coefficient) / 2, 1))
             self.nextFun()
 
 
@@ -773,7 +773,7 @@ class Login(InstructionsFrame):
 controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1], [intro_control2, intro_answers2, intro_feedback2]]
 #controlTexts3 = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
 
-CheatingInstructions = (InstructionsAndUnderstanding, {"text": "{}", "height": 31, "width": 110, "fillerHeight": 150, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1, "update": ["introtext"]})
+CheatingInstructions = (InstructionsAndUnderstanding, {"text": "{}", "height": 32, "width": 110, "fillerHeight": 1, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1, "update": ["introtext"]})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1", "otherwin1"]})
 Instructions3 = (Selection, {"text": intro_block_3, "update": ["win2", "otherwin2"]})
 Instructions4 = (Selection, {"text": intro_block_4, "update": ["win3", "otherwin3"]})
