@@ -24,30 +24,22 @@ from constants import TESTING, URL, COEFFICIENTS
 # PRVNÍ BLOK
 intro_block_1 = """V následujícím úkolu budete hádat, jestli na virtuální kostce (generátor náhodných čísel) na Vašem počítači padne liché, nebo sudé číslo. Každé z čísel 1, 2, 3, 4, 5 a 6 může padnout se stejnou pravděpodobností. Lichá čísla jsou 1, 3 a 5. Sudá čísla jsou 2, 4 a 6. 
 
-Úkol je rozdělen do čtyř samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednotlivých hodů kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Pravidla níže však platí pro všechny čtyři bloky.
+Úkol je rozdělen do pěti samostatných bloků a každý blok sestává z dvanácti kol. V každém kole budete hádat výsledek jednotlivých hodů kostkou. Bloky se odlišují pravidly, dle nichž budete hádat hody kostkou. Pravidla níže však platí pro všechny pět bloků.
 
 Uhodnete-li první hod v daném bloku, získáte 5 Kč, uhodnete-li další, získáte za něj dalších 10 Kč, uhodnete-li další hod, získáte za něj dalších 15 Kč a tak dále. Za každý další uhodnutý hod získáte navíc částku o 5 Kč vyšší, než byla předchozí odměna. Pokud tedy uhodnete všech 12 hodů v daném bloku, za poslední dvanáctý uhodnutý hod získáte 60 Kč a celkem získáte 390 Kč. 
-
-<b>Tuto úlohu hrajete ve skupině, do které jste byli náhodně přiděleni, spolu s dalšími dvěma účastníky studie. Celková odměna, kterou v bloku získáte, bude odečtena od částky 400 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.</b>
 
 Celkové odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
 <c>
 Správných odhadů |   0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |  10 |  11 |  12 |
 ------------------------------------------------------------------------------------------------
 Vaše odměna v Kč |   0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
-------------------------------------------------------------------------------------------------
-Odměna ostatních |{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|
 </c>
-Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte. 
 
-Zbývající dva členové skupiny hrají hru za stejných podmínek. K odměně, kterou získáte, održíte tedy navíc zbývající odměnu od nich.
+Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
 
 Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie. 
 
 Abychom ověřili, že rozumíte instrukcím, odpovězte prosím na kontrolní otázky:"""
-
-condition_text = ", vynásoben koeficientem {}"
-
 
 
 intro_control1 = 'Které tvrzení o úkolu je pravdivé?' 
@@ -88,29 +80,60 @@ losstext = "špatná a nevydělali jste možných {} Kč."
 
 # DRUHÝ BLOK
 intro_block_2 = """
-Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč. Nyní začne druhý blok s dvanácti koly.
+Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč. Nyní začne druhý blok s dvanácti koly.
 """
 
 
 # TŘETÍ BLOK
-intro_block_3 = """Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.
+intro_block_3 = """Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
 
 Jak jste zaznamenali, úkol měl dvě verze:
 <b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
 <b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
-Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, aby všichni členové Vaší skupiny hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny.
+<b>Pro následující tři bloky jste byli náhodně přiděleni do skupiny spolu s dalšími dvěma účastníky studie. Všichni hráči mají stejná pravidla. Celková odměna, kterou v bloku získáte, bude odečtena od částky 400 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.</b>
 
-Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
+Celkové odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
+<c>
+Správných odhadů |   0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |  10 |  11 |  12 |
+------------------------------------------------------------------------------------------------
+Vaše odměna v Kč |   0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
+------------------------------------------------------------------------------------------------
+Odměna ostatních |{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|
+</c>
+Například uhádnete 6 odhadů, získáte tedy 105 Kč (“Vaše odměna v Kč”). Ostatní dle uvedených pravidel získají 400 - 105 = 295 Kč * 1,4 = 413 Kč, rozděleno dvěma spoluhráčům znamená, že každý dostane zhruba 207 Kč (“Odměna ostatních”). 
+
+K odměně, kterou získáte Vy ve svých odhadech, obdržíte navíc zbývající odměnu od dvou svých spoluhráčů (Vy získáte to, co u nich je v položce “Odměna ostatních”).
+
+<b>Důležité opakování:</b> Zbývající dva členové skupiny hrají hru za stejných podmínek. Platí tedy, že čím více získáte Vy, tím méně získají ostatní. Oni se však rozhodují zcela stejně.
+
+Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, zda budete hrát verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny.
+
+Chcete, hrát verzi “PŘED” nebo “PO”?
 """
 
+condition_text = ", vynásoben koeficientem {}"
 
+
+# ČTVRTÝ a PÁTÝ BLOK
 intro_block_4 = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.
 
-Nyní Vás čeká čtvrtý blok s dvanácti koly. V tomto bloku opět můžete hlasovat, jestli bude chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”.
+Nyní Vás čeká čtvrtý blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, aby všichni členové Vaší skupiny hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro všechny členy skupiny. Může se také stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
 
 Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 """
+
+
+intro_block_5 = """Toto je konec čtvrtého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.{}
+
+Nyní Vás čeká pátý blok s dvanácti koly. V tomto bloku opět můžete hlasovat, jestli chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”.
+
+Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
+"""
+
+
+from_others_text = " Od zbývajících dvou hráčů byste v tomto kole získal(a) dohromady {} Kč."
+
 
 # INFORMACE O ZVOLENÉ VERZI
 info_condition = "Vaše skupina zvolila verzi {}"
@@ -124,7 +147,7 @@ wait_text = "Prosím počkejte na ostatní účastníky studie."
 
 
 # KONEC
-endtext = """Toto je konec posledního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.
+endtext = """Toto je konec posledního bloku. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.{}
 
 Toto je konec úkolu s kostkou.
 """
@@ -398,7 +421,7 @@ class Cheating(ExperimentFrame):
 
     
     def nextFun(self):
-        if self.blockNumber >= 3: # send the results of the after version in the third and fourth round            
+        if self.blockNumber >= 3: # send the results of the after version in the third to fifth round            
             wins = self.root.wins[self.blockNumber]
             reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
             outcome = "|".join(["outcome", str(wins), str(reward), self.condition])
@@ -445,8 +468,12 @@ class Cheating(ExperimentFrame):
 
 
 class Selection(InstructionsFrame):
-    def __init__(self, root, text, update = []):
-        super().__init__(root, text = text, proceed = False, update = update, height = 17)
+    def __init__(self, root, text, **kwargs):
+
+        if root.status["block"] == 3:
+            text = root.texts["introtext"]
+
+        super().__init__(root, text = text, proceed = False, savedata = True, **kwargs)
 
         ttk.Style().configure("TButton", font = "helvetica 15", width = 16)
 
@@ -463,9 +490,12 @@ class Selection(InstructionsFrame):
     
     def write(self):
         #self.root.texts["votingResponse"] = self.voteVar.get()
-
-        self.file.write("Voting\n")
+        self.file.write("Selection\n")       
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.choice + "\n\n")
+
+        if self.root.status["block"] == 3:
+            self.root.status["conditions"].append(self.choice)
+            return
 
         data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.choice})
         data = data.encode('ascii')
@@ -627,16 +657,14 @@ class Wait(InstructionsFrame):
                         myvote = 1 if self.root.status["TESTvote"] == "treatment" else 0                        
                         othervote1 = random.randint(0, 1)
                         othervote2 = random.randint(0, 1)                        
-                        response = "treatment" if myvote + othervote1 + othervote2 > 1 else "control"                        
+                        response = "treatment" if myvote + othervote1 + othervote2 > 1 else "control"        
                     elif self.what == "result":
-                        # to do
-                        response = "result"
-                        for i in range(4):
-                            if i + 1 == int(self.root.status["number"]):
-                                response += "_" + self.root.texts["testResult"]
-                            else:
-                                outcome = random.randint(0,12)   
-                                response += "_" + str(sum([i*5 + 5 for i in range(12)][:outcome]))
+                        response = "result"                                           
+                        outcome1 = random.randint(0,12)   
+                        outcome2 = random.randint(0,12)   
+                        reward1 = ceil((400 - (2.5 * outcome1) * (outcome1 + 1))*self.root.status["coefficient"] / 2)  
+                        reward2 = ceil((400 - (2.5 * outcome2) * (outcome2 + 1))*self.root.status["coefficient"] / 2)  
+                        response += "_" + str(reward1 + reward2)
                         response += "_True"
                 else:
                     try:
@@ -654,7 +682,11 @@ class Wait(InstructionsFrame):
                         if not response.endswith("True"):
                             continue
                         else:
-                            self.root.texts["result"] = self.createEndText(response)
+                            block = str(self.root.status["block"])
+                            fromOthers = response.split("_")[1]
+                            #self.root.status["win_from_others" + block] = fromOthers
+                            self.root.texts["information" + block] = from_others_text.format(fromOthers) if self.root.status["information"] == "yes" else ""
+                            #self.root.texts["result"] = self.createEndText(response)
                     self.progressBar.stop()
                     self.nextFun()  
                     return
@@ -703,9 +735,10 @@ class Login(InstructionsFrame):
                 data = urllib.parse.urlencode({'id': self.root.id, 'round': 0, 'offer': "login"})
                 data = data.encode('ascii')
                 if URL == "TEST":
-                    condition = random.choice(["low", "control", "high"])                    
+                    condition = random.choice(["low", "control", "high"])
+                    information = random.choice(["yes", "no"])                    
                     winning_block = str(random.randint(1,4))                                        
-                    response = "|".join(["start", condition, winning_block])
+                    response = "|".join(["start", condition, information, winning_block])
                 else:
                     response = ""
                     try:
@@ -714,8 +747,10 @@ class Login(InstructionsFrame):
                     except Exception:
                         self.changeText("Server nedostupný")
                 if "start" in response:
-                    info, condition, winning_block = response.split("|")              
-                    self.root.status["condition"] = condition                       
+                    info, condition, information, winning_block = response.split("|")              
+                    self.root.status["condition"] = condition        
+                    self.root.status["information"] = information
+                    self.root.status["coefficient"] = {"low": COEFFICIENTS[0], "high": COEFFICIENTS[2], "control": COEFFICIENTS[1]}[condition]
                     self.root.texts["block"] = self.root.status["winning_block"] = winning_block                    
                     self.update_intro(condition)
                     #self.create_control_question(condition) # todo
@@ -742,24 +777,23 @@ class Login(InstructionsFrame):
         self.login()
 
     def update_intro(self, condition):   
-        conditionText = {"low": condition_text.format(COEFFICIENTS[0]), "high": condition_text.format(COEFFICIENTS[2]), "control": ""}[condition]
-        global intro_block_1        
-        coefficient = {"low": COEFFICIENTS[0], "high": COEFFICIENTS[2], "control": COEFFICIENTS[1]}[condition]
-        otherRewards = ["{num: >4} ".format(num = ceil((400 - (2.5 * i) * (i + 1))*coefficient / 2)) for i in range(13)]
-        self.root.texts["introtext"] = intro_block_1.format(conditionText, *otherRewards)
+        conditionText = {"low": condition_text.format(str(COEFFICIENTS[0]).replace(".", ",")), "high": condition_text.format(str(COEFFICIENTS[2]).replace(".", ",")), "control": ""}[condition]
+        global intro_block_3        
+        otherRewards = ["{num: >4} ".format(num = ceil((400 - (2.5 * i) * (i + 1))*self.root.status["coefficient"] / 2)) for i in range(13)]
+        self.root.texts["introtext"] = intro_block_3.format("{}", conditionText, *otherRewards)
 
-    def create_control_question(self, source, condition):        
-        condition = source + "_" + condition
-        global answers3
-        correctAnswer = correct_answers3[condition]
-        answers3 += [correctAnswer]
-        global feedback3
-        if condition == "experimenter_divided":
-            correctAnswer.replace("Sečte se", "se sečte")
-        else:
-            correctAnswer = correctAnswer[:1].lower() + correctAnswer[1:]
-        for i in range(4):
-            feedback3[i] += correctAnswer
+    # def create_control_question(self, source, condition):        
+    #     condition = source + "_" + condition
+    #     global answers3
+    #     correctAnswer = correct_answers3[condition]
+    #     answers3 += [correctAnswer]
+    #     global feedback3
+    #     if condition == "experimenter_divided":
+    #         correctAnswer.replace("Sečte se", "se sečte")
+    #     else:
+    #         correctAnswer = correctAnswer[:1].lower() + correctAnswer[1:]
+    #     for i in range(4):
+    #         feedback3[i] += correctAnswer
 
     def write(self, response):
         self.file.write("Login" + "\n")
@@ -773,35 +807,37 @@ class Login(InstructionsFrame):
 controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1], [intro_control2, intro_answers2, intro_feedback2]]
 #controlTexts3 = [[control1, answers1, feedback1], [control2, answers2, feedback2], [control3, answers3, feedback3]]
 
-CheatingInstructions = (InstructionsAndUnderstanding, {"text": "{}", "height": 32, "width": 110, "fillerHeight": 1, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1, "update": ["introtext"]})
-Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1", "otherwin1"]})
-Instructions3 = (Selection, {"text": intro_block_3, "update": ["win2", "otherwin2"]})
-Instructions4 = (Selection, {"text": intro_block_4, "update": ["win3", "otherwin3"]})
+Instructions1 = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 26, "width": 110, "fillerHeight": 1, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1})
+Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
+Instructions3 = (Selection, {"text": "", "height": 33, "width": 110, "update": ["win2"]})
+Instructions4 = (Selection, {"text": intro_block_4, "update": ["win3", "otherwin3", "information3"]})
+Instructions5 = (Selection, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4"]})
 ConditionInformation = (InstructionsFrame, {"text": info_condition, "update": ["voted_condition"]})
 
 #Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 28, "width": 100, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
-# VotingResult = (InstructionsFrame, {"text": voting_result, "height": 3, "update": ["voting_result_text"]}) # to do
-EndCheating = (InstructionsFrame, {"text": endtext, "height": 10, "update": ["win4", "otherwin4"]})
-
-#OutcomeWait = (Wait, {"what": "outcome"})
-# FinalWait = (Wait, {"what": "result"}) # to do
+EndCheating = (InstructionsFrame, {"text": endtext, "height": 10, "update": ["win4", "otherwin4", "information5"]})
+OutcomeWait = (Wait, {"what": "result"})
 
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
-         CheatingInstructions,
+         Instructions1,
          Cheating,
          Instructions2,
          Cheating,
-         Instructions3,
-         Wait,
-         ConditionInformation,
+         Instructions3,         
          Cheating,
+         OutcomeWait, 
          Instructions4,
          Wait,
          ConditionInformation,
          Cheating,         
-         #FinalWait, 
+         OutcomeWait,
+         Instructions5,
+         Wait,
+         ConditionInformation,
+         Cheating,     
+         OutcomeWait,  
          EndCheating
          ])
