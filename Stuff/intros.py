@@ -10,7 +10,7 @@ from time import sleep
 from common import InstructionsFrame
 from gui import GUI
 
-from constants import BONUS, PARTICIPATION_FEE, URL
+from constants import BONUS, PARTICIPATION_FEE, URL, PREDICTION_BONUS
 from cheating import Login
 
 
@@ -18,11 +18,10 @@ from cheating import Login
 # TEXTS
 intro = """
 Studie se skládá z několika různých úkolů a otázek. Níže je uveden přehled toho, co Vás čeká:
-1) Hod kostkou: Vaším úkolem bude uhodnout, zda na kostce padne liché nebo sudé číslo. Budete hádat ve čtyřech blocích, každém po dvanácti kolech. V tomto úkolu můžete vydělat peníze.
-2) Dělení peněz: Budete se rozhodovat, jak dělit peníze v páru s jiným účastníkem studie. V tomto úkolu můžete vydělat peníze.
-3) Loterie: můžete se rozhodnout zúčastnit se loterie a získat další peníze v závislosti na výsledcích loterie.
-4) Dotazníky: budete odpovídat na otázky ohledně Vašich vlastností a postojů. 
-5) Konec studie a platba: poté, co skončíte, půjdete do vedlejší místnosti, kde podepíšete pokladní dokument, na základě kterého obdržíte vydělané peníze v hotovosti. <b>Jelikož v dokumentu bude uvedena pouze celková suma, experimentátor, který Vám bude vyplácet odměnu, nebude vědět, kolik jste vydělali v jednotlivých částech studie.</b>
+1) Hod kostkou: Vaším úkolem bude uhodnout, zda na kostce padne liché nebo sudé číslo. Budete hádat v pěti blocích, každém po dvanácti kolech. V tomto úkolu můžete vydělat peníze.
+2) Loterie: můžete se rozhodnout zúčastnit se loterie a získat další peníze v závislosti na výsledcích loterie.
+3) Dotazníky: budete odpovídat na otázky ohledně Vašich vlastností a postojů. 
+4) Konec studie a platba: poté, co skončíte, půjdete do vedlejší místnosti, kde podepíšete pokladní dokument, na základě kterého obdržíte vydělané peníze v hotovosti. <b>Jelikož v dokumentu bude uvedena pouze celková suma, experimentátor, který Vám bude vyplácet odměnu, nebude vědět, kolik jste vydělali v jednotlivých částech studie.</b>
 
 V případě, že máte otázky nebo narazíte na technický problém během úkolů, zvedněte ruku a tiše vyčkejte příchodu výzkumného asistenta.
 
@@ -30,7 +29,7 @@ Všechny informace, které v průběhu studie uvidíte, jsou pravdivé a nebudet
 
 
 ending = """
-V úloze s házením kostek byl náhodně vybrán blok {}. V úkolu s kostkou jste tedy vydělali {} Kč. V úkolu, kde se dělily peníze s dalším účastníkem studie, jste získali {} Kč. V loteriích jste vydělali {} Kč. Za účast na studii dostáváte {} Kč. Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky korun nahoru získáváte {} Kč. Napište prosím tuto (zaokrouhlenou) částku do příjmového dokladu na stole před Vámi. 
+V úloze s házením kostek byl náhodně vybrán blok {}. V úkolu s kostkou jste tedy vydělali {} Kč{}. {} V loteriích jste vydělali {} Kč. Za účast na studii dostáváte {} Kč. Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky korun nahoru získáváte {} Kč. Napište prosím tuto (zaokrouhlenou) částku do příjmového dokladu na stole před Vámi. 
 
 Výsledky experimentu budou volně dostupné na stránkách Centra laboratorního a experimentálního výzkumu FPH VŠE, krátce po vyhodnocení dat a publikaci výsledků. Žádáme Vás, abyste nesdělovali detaily této studie možným účastníkům, aby jejich volby a odpovědi nebyly ovlivněny a znehodnoceny.
   
@@ -39,6 +38,10 @@ Můžete si vzít všechny svoje věci, vyplněný příjmový doklad a záznamo
 Toto je konec experimentu. Děkujeme za Vaši účast!
  
 Centrum laboratorního a experimentálního výzkumu FPH VŠE""" 
+
+additional = "a na základě voleb ostatních hráčů v této úloze jste obdrželi navíc {} Kč"
+correct_prediction = "Oba Vaše odhady počtu správných odhadů v úloze s kostkou účastníků dřívější studie byly správné a získali jste za správné odhady tedy {} Kč.".format(PREDICTION_BONUS)
+incorrect_prediction = "Alespoň jeden z Vašich odhadů počtu správných odhadů v úloze s kostkou účastníků dřívější studie byl špatný a za odhady jste tedy nezískali nic."
 
 
 login = """
@@ -68,12 +71,15 @@ Po vyplnění identifikačního čísla do záznamového archu klikněte na tla�
 
 
 class Ending(InstructionsFrame):
-    def __init__(self, root):
-        dice = int(str(root.texts["dice"]).split(" ")[0])
-        root.texts["reward"] = dice + int(root.texts["dictator"]) + int(root.texts["lottery_win"]) + PARTICIPATION_FEE
+    def __init__(self, root):        
+        root.texts["addOthers"] = additional.format(root.texts["fromOthers"]) if int(root.status["winning_block"]) >= 3 else ""        
+        dice = int(root.texts["dice"]) + int(root.texts["fromOthers"])
+        prediction = 0 if root.status["prediction"] == "incorrect" else PREDICTION_BONUS
+        root.texts["predictionText"] = incorrect_prediction if root.status["prediction"] == "incorrect" else correct_prediction
+        root.texts["reward"] = dice + prediction + int(root.texts["lottery_win"]) + PARTICIPATION_FEE
         root.texts["rounded_reward"] = ceil(root.texts["reward"] / 10) * 10
         root.texts["participation_fee"] = str(PARTICIPATION_FEE)
-        updates = ["block", "dice", "dictator", "lottery_win", "participation_fee", "reward", "rounded_reward"]
+        updates = ["block", "dice", "addOthers", "predictionText", "lottery_win", "participation_fee", "reward", "rounded_reward"]
         super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)
         self.file.write("Ending\n")
         self.file.write(self.id + "\t" + "\t".join([str(root.texts["rounded_reward"]), str(root.texts["block"])]) + "\n\n")

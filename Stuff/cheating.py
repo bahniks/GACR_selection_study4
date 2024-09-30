@@ -15,7 +15,7 @@ import urllib.parse
 
 from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, InstructionsAndUnderstanding, OneFrame, Question, TextArea
 from gui import GUI
-from constants import TESTING, URL, COEFFICIENTS
+from constants import TESTING, URL, COEFFICIENTS, PREDICTION_BONUS, BEFORE, AFTER
 
 
 ################################################################################
@@ -34,7 +34,6 @@ Správných odhadů |   0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 
 ------------------------------------------------------------------------------------------------
 Vaše odměna v Kč |   0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 | 275 | 330 | 390 |
 </c>
-
 Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
 
 Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie. 
@@ -85,13 +84,7 @@ Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} K�
 
 
 # TŘETÍ BLOK
-intro_block_3 = """Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
-
-Jak jste zaznamenali, úkol měl dvě verze:
-<b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
-<b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
-
-<b>Pro následující tři bloky jste byli náhodně přiděleni do skupiny spolu s dalšími dvěma účastníky studie. Všichni hráči mají stejná pravidla. Celková odměna, kterou v bloku získáte, bude odečtena od částky 400 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.</b>
+intro_block_3 = """<b>Pro následující tři bloky jste byli náhodně přiděleni do skupiny spolu s dalšími dvěma účastníky studie. Všichni ve skupině máte stejná pravidla. Celková odměna, kterou v bloku získáte, bude odečtena od částky 400 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.</b>
 
 Celkové odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
 <c>
@@ -101,13 +94,13 @@ Vaše odměna v Kč |   0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 
 ------------------------------------------------------------------------------------------------
 Odměna ostatních |{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|
 </c>
-Například uhádnete 6 odhadů, získáte tedy 105 Kč (“Vaše odměna v Kč”). Ostatní dle uvedených pravidel získají 400 - 105 = 295 Kč * 1,4 = 413 Kč, rozděleno dvěma spoluhráčům znamená, že každý dostane zhruba 207 Kč (“Odměna ostatních”). 
+Například uhádnete-li 6 odhadů, získáte 105 Kč (“Vaše odměna v Kč”). Ostatní dle uvedených pravidel získají 400 - 105 = 295 Kč * {} = {} Kč, rozděleno dvěma spoluhráčům znamená, že každý dostane{} Kč (“Odměna ostatních”). 
 
 K odměně, kterou získáte Vy ve svých odhadech, obdržíte navíc zbývající odměnu od dvou svých spoluhráčů (Vy získáte to, co u nich je v položce “Odměna ostatních”).
 
 <b>Důležité opakování:</b> Zbývající dva členové skupiny hrají hru za stejných podmínek. Platí tedy, že čím více získáte Vy, tím méně získají ostatní. Oni se však rozhodují zcela stejně.
 
-Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, zda budete hrát verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny.
+Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, zda budete hrát verzi “PŘED” nebo “PO”. <b>Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny.</b>
 
 Chcete, hrát verzi “PŘED” nebo “PO”?
 """
@@ -115,16 +108,33 @@ Chcete, hrát verzi “PŘED” nebo “PO”?
 condition_text = ", vynásoben koeficientem {}"
 
 
+prediction_third = """Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
+
+Jak jste zaznamenali, úkol měl dvě verze:
+<b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
+<b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
+
+Podobně jako jste hráli tato dvě kola úlohy nyní Vy, tak ji hráli v dřívější studii za stejných podmínek jiní účastníci studie.
+
+Odhadněte, kolik správných odpovědí průměrně učinili tito účastníci studie v PŘED verzi úkolu a kolik nahlásili průměrně správných odpovědí v PO verzi úkolu. Pokud se ani jeden z Vašich odhadů nebude od reálné průměrné hodnoty lišit o více než 0,2, dostanete k dnešní výhře navíc {} Kč.
+
+Odhad musí být v rozmezi od 0 do 12 a je možné používat desetinná místa.
+
+Odhad uveďte pro každou z verzí níže:
+"""
+
+
+
 # ČTVRTÝ a PÁTÝ BLOK
 intro_block_4 = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.
 
-Nyní Vás čeká čtvrtý blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, aby všichni členové Vaší skupiny hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro všechny členy skupiny. Může se také stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
+Nyní Vás čeká čtvrtý blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, aby <b>všichni členové Vaší skupiny</b> hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro všechny členy skupiny. Může se také stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
 
 Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 """
 
 
-intro_block_5 = """Toto je konec čtvrtého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.{}
+intro_block_5 = """Toto je konec čtvrtého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny získají od Vás po {} Kč.{}
 
 Nyní Vás čeká pátý blok s dvanácti koly. V tomto bloku opět můžete hlasovat, jestli chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”.
 
@@ -133,6 +143,16 @@ Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 
 
 from_others_text = " Od zbývajících dvou hráčů byste v tomto kole získal(a) dohromady {} Kč."
+
+
+
+prediction_later = """Odhadněte, kolik správných odpovědí si myslíte, že průměrně učiní zbývající dva členové Vaší skupiny, pokud budete Vaše skupina hrát PŘED verzi úkolu, a kolik si myslíte, že průměrně nahlásí správných odpovědí, pokud bude Vaše skupina hrát PO verzi úkolu.
+
+Odhad musí být v rozmezi od 0 do 12 a je možné používat desetinná místa.
+
+Odhad uveďte pro každou z verzí níže:
+"""
+
 
 
 # INFORMACE O ZVOLENÉ VERZI
@@ -487,7 +507,8 @@ class Selection(InstructionsFrame):
     def response(self, choice):
         self.choice = choice
         self.nextFun()
-    
+ 
+ 
     def write(self):
         #self.root.texts["votingResponse"] = self.voteVar.get()
         self.file.write("Selection\n")       
@@ -520,69 +541,69 @@ class Selection(InstructionsFrame):
 
 
 
-# class CheatingInstructions(InstructionsFrame):
-#     def __init__(self, root):
-#         super().__init__(root, text = intro_block_1, height = 33, font = 15, width = 100)
+class Prediction(InstructionsFrame):
+    def __init__(self, root):    
+        if root.status["block"] == 3:    
+            text = prediction_third.format(root.texts["win2"], PREDICTION_BONUS)  
+        else:
+            text = prediction_later
 
-#         self.checkVar = StringVar()
-#         self.vcmd = (self.register(self.onValidate), '%P')
-#         self.checkFrame = Canvas(self, background = "white", highlightbackground = "white",
-#                                  highlightcolor = "white")
-#         self.checkFrame.grid(row = 2, column = 1)
-#         self.entry = ttk.Entry(self.checkFrame, textvariable = self.checkVar, width = 10, justify = "right",
-#                                font = "helvetica 15", validate = "key", validatecommand = self.vcmd)
-#         self.entry.grid(row = 2, column = 1, padx = 6)
-#         self.currencyLabel = ttk.Label(self.checkFrame, text = "Kč", font = "helvetica 15",
-#                                        background = "white")
-#         self.currencyLabel.grid(row = 2, column = 2, sticky = NSEW)
+        super().__init__(root, text = text, height = 20, font = 15, savedata = True)    
+   
+        self.checkVar = StringVar()
+        self.checkVar2 = StringVar()
 
-#         self.lowerText = Text(self, font = "helvetica 15", relief = "flat", background = "white",
-#                               width = 100, height = 2, wrap = "word", highlightbackground = "white")
-#         self.lowerText.grid(row = 3, column = 1, pady = 15)
-#         self.lowerText["state"] = "disabled"
+        self.vcmd = (self.register(self.onValidate), '%P', "before")
+        self.vcmd2 = (self.register(self.onValidate), '%P', "after")
+
+        self.textBefore = ttk.Label(self, text = "PŘED verze:", background = "white", font = "helvetica 15")
+        self.textBefore.grid(row = 2, column = 1, pady = 10, sticky = E, padx = 10)
+        self.entryBefore = ttk.Entry(self, textvariable = self.checkVar, width = 7, justify = "right",
+                               font = "helvetica 15", validate = "key", validatecommand = self.vcmd)
+        self.entryBefore.grid(row = 2, column = 2, pady = 10)
+
+        self.textAfter = ttk.Label(self, text = "PO verze:", background = "white", font = "helvetica 15")
+        self.textAfter.grid(row = 3, column = 1, pady = 10, sticky = E, padx = 10)
+        self.entryAfter = ttk.Entry(self, textvariable = self.checkVar2, width = 7, justify = "right",
+                               font = "helvetica 15", validate = "key", validatecommand = self.vcmd2)
+        self.entryAfter.grid(row = 3, column = 2, pady = 10)
+
+        self.next["state"] = "disabled"        
+        self.next.grid(row = 4, column = 1, columnspan = 2)
+
+        self.text.grid(row = 1, column = 0, columnspan = 4)
         
-#         self.next.grid(row = 7, column = 1)
-#         self.next["state"] = "disabled"
-#         self.text.grid(row = 1, column = 1, columnspan = 1)
+        self.rowconfigure(0, weight = 1)
+        self.rowconfigure(2, weight = 0)
+        self.rowconfigure(3, weight = 0)
+        self.rowconfigure(4, weight = 1)
+        self.rowconfigure(5, weight = 1)
 
-#         self.rowconfigure(0, weight = 1)
-#         self.rowconfigure(2, weight = 0)
-#         self.rowconfigure(3, weight = 0)
-#         self.rowconfigure(7, weight = 1)
-#         self.rowconfigure(8, weight = 2)
+        self.columnconfigure(2, weight = 0)
+        self.columnconfigure(3, weight = 1)
 
-#         self.checked = False
-        
-#     def onValidate(self, P):
-#         try:
-#             if int(P) >= 0:
-#                 self.next["state"] = "!disabled"
-#             else:
-#                 self.next["state"] = "disabled"
-#         except Exception as e:
-#             self.next["state"] = "disabled"
-#         return True
-    
-#     def nextFun(self):
-#         if self.checked:
-#             super().nextFun()
-#         else:
-#             answer = int(self.checkVar.get())
-#             if answer == 15:
-#                 text = correct_answer.format(answer)
-#             else:
-#                 text = wrong_answer.format(answer)
-#             self.lowerText["state"] = "normal"
-#             self.lowerText.insert("1.0", text)
-#             self.lowerText["state"] = "disabled"
-#             self.checked = True
+    def onValidate(self, P, entry):
+        try:
+            P = P.replace(",", ".")   
+            Q = self.checkVar.get() if entry == "after" else self.checkVar2.get()
+            Q = Q.replace(",", ".")
+            if float(P) >= 0 and float(P) <= 12 and float(Q) >= 0 and float(Q) <= 12:
+                self.next["state"] = "!disabled"
+            else:
+                self.next["state"] = "disabled"
+        except Exception as e:
+            self.next["state"] = "disabled"
+        return True
 
-#     def gothrough(self):
-#         self.entry.focus_set()
-#         self.event_generate('<KeyPress-1>')
-#         self.event_generate('<KeyPress-5>')
-#         self.after(500, self.next.invoke)
-#         self.after(500, self.next.invoke)
+    def write(self):
+        if self.root.status["block"] == 3:
+            if float(self.checkVar.get()) - BEFORE <= 0.2 and float(self.checkVar2.get()) - AFTER <= 0.2:
+                self.root.status["prediction"] = "correct"
+            else:
+                self.root.status["prediction"] = "incorrect"
+
+        self.file.write("Prediction\n")       
+        self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.checkVar.get() + "\t" + self.checkVar2.get() + "\n\n")        
 
 
 
@@ -684,9 +705,13 @@ class Wait(InstructionsFrame):
                         else:
                             block = str(self.root.status["block"])
                             fromOthers = response.split("_")[1]
-                            #self.root.status["win_from_others" + block] = fromOthers
-                            self.root.texts["information" + block] = from_others_text.format(fromOthers) if self.root.status["information"] == "yes" else ""
-                            #self.root.texts["result"] = self.createEndText(response)
+                            #self.root.status["win_from_others" + block] = fromOthers                            
+                            if self.root.status["block"] == int(self.root.status["winning_block"]):
+                                self.root.texts["fromOthers"] = fromOthers
+                            elif int(self.root.status["winning_block"]) < 3:
+                                self.root.texts["fromOthers"] = "0"
+                                self.root.texts["dice"] = str(self.root.texts["win{}".format(self.root.status["winning_block"])])
+                            self.root.texts["information" + block] = from_others_text.format(fromOthers) if self.root.status["information"] == "yes" else ""                  
                     self.progressBar.stop()
                     self.nextFun()  
                     return
@@ -707,17 +732,7 @@ class Wait(InstructionsFrame):
         self.file.write("Voting Result" + "\n")
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response + "\n\n")        
 
-    # def createEndText(self, response):
-    #     outcomes = list(map(int, response.replace("-99", "0").split("_")[1:5]))
-    #     self.root.texts["win4text"] = text
 
-    #     # for the final screen
-    #     win = int(self.root.status["winning_block"])
-    #     if win == 4:
-    #         self.root.texts["dice"] = str(reward)
-    #     else:
-    #         self.root.texts["dice"] = self.root.texts["win{}".format(win)]
-    #     self.root.texts["block"] = win
 
 
 class Login(InstructionsFrame):
@@ -779,8 +794,9 @@ class Login(InstructionsFrame):
     def update_intro(self, condition):   
         conditionText = {"low": condition_text.format(str(COEFFICIENTS[0]).replace(".", ",")), "high": condition_text.format(str(COEFFICIENTS[2]).replace(".", ",")), "control": ""}[condition]
         global intro_block_3        
-        otherRewards = ["{num: >4} ".format(num = ceil((400 - (2.5 * i) * (i + 1))*self.root.status["coefficient"] / 2)) for i in range(13)]
-        self.root.texts["introtext"] = intro_block_3.format("{}", conditionText, *otherRewards)
+        otherRewards = ["{num: >4} ".format(num = ceil((400 - (2.5 * i) * (i + 1))*self.root.status["coefficient"] / 2)) for i in range(13)]        
+        coef = str(self.root.status["coefficient"]).replace(".", ",")
+        self.root.texts["introtext"] = intro_block_3.format(conditionText, *otherRewards, coef, int(otherRewards[6])*2, otherRewards[6])
 
     # def create_control_question(self, source, condition):        
     #     condition = source + "_" + condition
@@ -809,7 +825,7 @@ controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1], [intro_contr
 
 Instructions1 = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 26, "width": 110, "fillerHeight": 1, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
-Instructions3 = (Selection, {"text": "", "height": 33, "width": 110, "update": ["win2"]})
+Instructions3 = (Selection, {"text": "", "height": 33, "width": 110})
 Instructions4 = (Selection, {"text": intro_block_4, "update": ["win3", "otherwin3", "information3"]})
 Instructions5 = (Selection, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4"]})
 ConditionInformation = (InstructionsFrame, {"text": info_condition, "update": ["voted_condition"]})
@@ -826,15 +842,18 @@ if __name__ == "__main__":
          Cheating,
          Instructions2,
          Cheating,
+         Prediction,
          Instructions3,         
          Cheating,
          OutcomeWait, 
          Instructions4,
+         Prediction,
          Wait,
          ConditionInformation,
          Cheating,         
          OutcomeWait,
          Instructions5,
+         Prediction,
          Wait,
          ConditionInformation,
          Cheating,     
