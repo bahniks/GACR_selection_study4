@@ -36,8 +36,6 @@ Vaše odměna v Kč |   0 |   5 |  15 |  30 |  50 |  75 | 105 | 140 | 180 | 225 
 </c>
 Po skončení studie bude jeden blok náhodně vylosován. Obdržíte peníze, které jste vydělali pouze v tomto vylosovaném bloku. Pokud správně uhodnete všech dvanáct hodů v daném bloku, a tento blok bude později vylosován, obdržíte 390 Kč. Vaše výsledky v ostatních blocích nijak neovlivní množství peněz, které obdržíte.
 
-Při obdržení odměny za dnešní studii Vám bude vyplacena celková suma za všechny části studie. Experimentátor, který Vám bude vyplácet odměnu, neuvidí, kolik jste vyhráli v jednotlivých částech studie. 
-
 Abychom ověřili, že rozumíte instrukcím, odpovězte prosím na kontrolní otázky:"""
 
 
@@ -57,7 +55,7 @@ eventext = "Sudé (2, 4 nebo 6)"
 rolltext = "Hodit kostkou"
 correcttext = "Správně"
 incorrecttext = "Špatně"    
-predictiontext = "Zvolil/a jsem, jestli na kostce padne liché, nebo sudé číslo"
+predictiontext = "Zvolil/a jsem, jestli na kostce padne liché, nebo sudé číslo."
 
 treatmenttext = '''Blok {}, Kolo {}
 
@@ -84,7 +82,9 @@ Toto je konec prvního bloku. Pokud bude tento blok vylosován, obdržíte {} K�
 
 
 # TŘETÍ BLOK
-intro_block_3 = """<b>Pro následující tři bloky jste byli náhodně přiděleni do skupiny spolu s dalšími dvěma účastníky studie. Všichni ve skupině máte stejná pravidla. Celková odměna, kterou v bloku získáte, bude odečtena od částky 400 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.</b>
+intro_block_3 = """<b>Pro následující tři bloky jste byli náhodně přiděleni do skupiny spolu s dalšími dvěma účastníky studie. Všichni ve skupině máte stejná pravidla.
+
+Celková odměna, kterou v bloku získáte, bude odečtena od částky 400 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.</b>
 
 Celkové odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
 <c>
@@ -98,9 +98,9 @@ Například uhádnete-li 6 odhadů, získáte 105 Kč (“Vaše odměna v Kč”
 
 K odměně, kterou získáte Vy ve svých odhadech, obdržíte navíc zbývající odměnu od dvou svých spoluhráčů (Vy získáte to, co u nich je v položce “Odměna ostatních”).
 
-<b>Důležité opakování:</b> Zbývající dva členové skupiny hrají hru za stejných podmínek. Platí tedy, že čím více získáte Vy, tím méně získají ostatní. Oni se však rozhodují zcela stejně.
+<b>Důležité opakování:</b> Zbývající dva členové skupiny hrají hru za stejných podmínek. Platí tedy, že čím více získáte Vy, tím méně získají ostatní. Obdobně platí, že čím více získají ostatní, tím méně získáte Vy.
 
-Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, zda budete hrát verzi “PŘED” nebo “PO”. <b>Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny.</b>
+Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, zda <b>Vy budete hrát verzi “PŘED” nebo “PO”.</b> Ostatní členové skupiny rovněž sami rozhodují, zda sami budou hrát verzi “PŘED” nebo “PO”.
 
 Chcete, hrát verzi “PŘED” nebo “PO”?
 """
@@ -114,11 +114,11 @@ Jak jste zaznamenali, úkol měl dvě verze:
 <b>Verzi “PŘED”</b>, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
 <b>Verzi “PO”</b>, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
-Podobně jako jste hráli tato dvě kola úlohy nyní Vy, tak ji hráli v dřívější studii za stejných podmínek jiní účastníci studie.
+Podobně jako jste hráli tato dvě kola úlohy Vy, hráli ji v dřívější studii za stejných podmínek jiní účastníci studie.
 
-Odhadněte, kolik správných odpovědí průměrně učinili tito účastníci studie v PŘED verzi úkolu a kolik nahlásili průměrně správných odpovědí v PO verzi úkolu. Pokud se ani jeden z Vašich odhadů nebude od reálné průměrné hodnoty lišit o více než 0,2, dostanete k dnešní výhře navíc {} Kč.
+Odhadněte, kolik správných předpovědí u hodu kostkou průměrně učinili tito účastníci studie v PŘED verzi úkolu a kolik nahlásili průměrně správných předpovědí v PO verzi úkolu. Pokud se ani jeden z Vašich odhadů nebude od reálné průměrné hodnoty lišit o více než 0,2, dostanete k dnešní výhře navíc {} Kč.
 
-Odhad musí být v rozmezi od 0 do 12 a je možné používat desetinná místa.
+Odhad musí být v rozmezí od 0 do 12 a je možné používat desetinná místa.
 
 Odhad uveďte pro každou z verzí níže:
 """
@@ -128,25 +128,31 @@ Odhad uveďte pro každou z verzí níže:
 # ČTVRTÝ a PÁTÝ BLOK
 intro_block_4 = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.
 
-Nyní Vás čeká čtvrtý blok s dvanácti koly. V tomto bloku si můžete vybrat, jestli chcete, aby <b>všichni členové Vaší skupiny</b> hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro všechny členy skupiny. Může se také stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
+Nyní Vás čeká čtvrtý blok s dvanácti koly. 
+
+<b>Zde je důležitá změna:</b> V tomto bloku můžete vybrat, jestli chcete, aby <b>všichni členové Vaší skupiny</b> hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
+
+Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro všechny členy skupiny. Může se také stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
 
 Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 """
+
 
 
 intro_block_5 = """Toto je konec čtvrtého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny získají od Vás po {} Kč.{}
 
-Nyní Vás čeká pátý blok s dvanácti koly. V tomto bloku opět můžete hlasovat, jestli chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”.
+Nyní Vás čeká pátý blok s dvanácti koly. V tomto bloku opět můžete hlasovat, jestli chcete, aby <b>Vaše skupina hrála verzi “PŘED” nebo “PO”.</b> Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
 
 Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 """
+
 
 
 from_others_text = " Od zbývajících dvou hráčů byste v tomto kole získal(a) dohromady {} Kč."
 
 
 
-prediction_later = """Odhadněte, kolik správných odpovědí si myslíte, že průměrně učiní zbývající dva členové Vaší skupiny, pokud budete Vaše skupina hrát PŘED verzi úkolu, a kolik si myslíte, že průměrně nahlásí správných odpovědí, pokud bude Vaše skupina hrát PO verzi úkolu.
+prediction_later = """Odhadněte, kolik správných odpovědí průměrně učiní zbývající dva členové Vaší skupiny, pokud budete Vaše skupina hrát PŘED verzi úkolu, a kolik si myslíte, že průměrně nahlásí správných odpovědí, pokud bude Vaše skupina hrát PO verzi úkolu.
 
 Odhad musí být v rozmezi od 0 do 12 a je možné používat desetinná místa.
 

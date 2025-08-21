@@ -18,7 +18,7 @@ from cheating import Login
 # TEXTS
 intro = """
 Studie se skládá z několika různých úkolů a otázek. Níže je uveden přehled toho, co Vás čeká:
-1) Hod kostkou: Vaším úkolem bude uhodnout, zda na kostce padne liché nebo sudé číslo. Budete hádat v pěti blocích, každém po dvanácti kolech. V tomto úkolu můžete vydělat peníze.
+1) Hod kostkou: Vaším úkolem bude uhodnout, zda na kostce padne liché, nebo sudé číslo. Budete hádat v pěti blocích, v každém po dvanácti kolech. V tomto úkolu můžete vydělat peníze.
 2) Loterie: můžete se rozhodnout zúčastnit se loterie a získat další peníze v závislosti na výsledcích loterie.
 3) Dotazníky: budete odpovídat na otázky ohledně Vašich vlastností a postojů. 
 4) Konec studie a platba: poté, co skončíte, půjdete do vedlejší místnosti, kde podepíšete pokladní dokument, na základě kterého obdržíte vydělané peníze v hotovosti. <b>Jelikož v dokumentu bude uvedena pouze celková suma, experimentátor, který Vám bude vyplácet odměnu, nebude vědět, kolik jste vydělali v jednotlivých částech studie.</b>
@@ -29,19 +29,19 @@ Všechny informace, které v průběhu studie uvidíte, jsou pravdivé a nebudet
 
 
 ending = """
-V úloze s házením kostek byl náhodně vybrán blok {}. V úkolu s kostkou jste tedy vydělali {} Kč{}. {} V loteriích jste vydělali {} Kč. Za účast na studii dostáváte {} Kč. Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky korun nahoru získáváte {} Kč. Napište prosím tuto (zaokrouhlenou) částku do příjmového dokladu na stole před Vámi. 
+V úloze s házením kostek byl náhodně vybrán blok {}. V úkolu s kostkou jste tedy vydělal(a) {} Kč{}. {} V loteriích jste vydělali {} Kč. Za účast na studii dostáváte {} Kč. Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky korun nahoru získáváte {} Kč. Napište prosím tuto (zaokrouhlenou) částku do pokladního dokladu na stole před Vámi. 
 
 Výsledky experimentu budou volně dostupné na stránkách Centra laboratorního a experimentálního výzkumu FPH VŠE, krátce po vyhodnocení dat a publikaci výsledků. Žádáme Vás, abyste nesdělovali detaily této studie možným účastníkům, aby jejich volby a odpovědi nebyly ovlivněny a znehodnoceny.
   
-Můžete si vzít všechny svoje věci, vyplněný příjmový doklad a záznamový arch, a aniž byste rušili ostatní účastníky, odeberte se do vedlejší místnosti za výzkumným asistentem, od kterého obdržíte svoji odměnu. 
+Můžete si vzít všechny svoje věci, vyplněný pokladní doklad a záznamový arch, a aniž byste rušili ostatní účastníky, odeberte se do vedlejší místnosti za výzkumným asistentem, od kterého obdržíte svoji odměnu. 
 
 Toto je konec experimentu. Děkujeme za Vaši účast!
  
 Centrum laboratorního a experimentálního výzkumu FPH VŠE""" 
 
-additional = "a na základě voleb ostatních hráčů v této úloze jste obdrželi navíc {} Kč"
-correct_prediction = "Oba Vaše odhady počtu správných odhadů v úloze s kostkou účastníků dřívější studie byly správné a získali jste za správné odhady tedy {} Kč.".format(PREDICTION_BONUS)
-incorrect_prediction = "Alespoň jeden z Vašich odhadů počtu správných odhadů v úloze s kostkou účastníků dřívější studie byl špatný a za odhady jste tedy nezískali nic."
+additional = "a na základě voleb ostatních hráčů v této úloze jste obdržel(a) navíc {} Kč"
+correct_prediction = "Oba Vaše odhady počtu správných odhadů v úloze s kostkou účastníků dřívější studie byly správné a získal(a) jste za správné odhady {} Kč.".format(PREDICTION_BONUS)
+incorrect_prediction = "Alespoň jeden z Vašich odhadů počtu správných odhadů v úloze s kostkou účastníků dřívější studie byl špatný a za odhady jste nezískal(a) nic."
 
 
 login = """
@@ -61,7 +61,7 @@ Počkejte na pokyn experimentátora.""".format(PARTICIPATION_FEE)
 hexacointrotext = """
 Před sebou máte na papíře vytištěný dotazník a záznamový arch. Do záznamového archu vyplňte do pole vlevo dole své identifikační číslo <b>{}</b>. Samotný dotazník ještě nevyplňujte.
 
-Jelikož probíhá v některých částech studie interakce s ostatními účastníky studie, může se stát, že na ně budete muset chvíli čekat. Během případného čekání můžete vyplňovat odpovědi na vytištěný dotazník do přiloženého záznamového archu. Aby nemuseli ostatní účastníci studie čekat na Vás, nevyplňujte dotazník, když je možné pokračovat ve studii na počítači.
+Jelikož probíhá v některých částech studie interakce s ostatními účastníky studie, může se stát, že na ně budete muset chvíli čekat. Během případného čekání můžete vyplňovat odpovědi na vytištěný dotazník do přiloženého záznamového archu. <b>Aby nemuseli ostatní účastníci studie čekat na Vás, nevyplňujte dotazník, když je možné pokračovat ve studii na počítači.</b>
 
 Po vyplnění identifikačního čísla do záznamového archu klikněte na tlačítko Pokračovat."""
 ################################################################################
