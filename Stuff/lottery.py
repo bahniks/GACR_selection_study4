@@ -32,9 +32,10 @@ Bylo náhodně vybráno Vaše rozhodnutí číslo {}.
 {}
 """
 
-sure = "Protože jste zvolil/a jistou odměnu, vyhráváte {} Kč."
-risky = "Protože jste zvolil/a loterii, loterie byla realizována a vyhráváte {} Kč."
+sure = "Protože jste zvolil(a) jistou odměnu, vyhráváte {} Kč."
+risky = "Protože jste zvolil(a) loterii, loterie byla realizována a vyhráváte {} Kč."
 
+endText = "V úloze s výběrem loterie či jisté odměny jste vydělal(a) {} Kč."
 
 
 ################################################################################
@@ -106,6 +107,8 @@ class Lottery(ExperimentFrame):
             self.root.texts["lottery_chosen"] = "safe"
             win = self.options[0][selected - 1]
         self.file.write("Lottery\n")
+        self.root.status["reward"] += win
+        self.root.status["results"] += [endText.format(win)]
         self.root.texts["lottery_win"] = win
         self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected), str(win)]) + "\n")
 
@@ -118,8 +121,7 @@ class LotteryWin(InstructionsFrame):
             append = risky
         else:
             append = sure
-        text = wintext.format(self.root.texts["lottery_selected"],
-                              append.format(self.root.texts["lottery_win"]))       
+        text = wintext.format(self.root.texts["lottery_selected"], append.format(self.root.texts["lottery_win"]))       
         super().__init__(root, text = text, proceed = True, height = 5)  
 
 

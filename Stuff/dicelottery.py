@@ -36,6 +36,8 @@ winningText = "Vaše současná výhra je: {} Kč"
 losingText = "Tímto úloha končí. Výhru jste ztratili."
 maximumText = "Více již vyhrát nemůžete. Tímto úloha končí. Vyhráli jste: {} Kč"
 
+endText = "V loterii s házením kostkou jste vydělal(a) {} Kč."
+
 ################################################################################
 
 
@@ -126,7 +128,7 @@ class DiceLottery(ExperimentFrame):
 
 
     def end(self):
-        self.root.texts["lottery_win"] += self.currentReward
+        #self.root.texts["lottery_win"] += self.currentReward
         self.nextFun()
 
 
@@ -149,6 +151,8 @@ class DiceLottery(ExperimentFrame):
         
                    
     def write(self):
+        self.root.status["reward"] += int(self.currentReward)
+        self.root.status["results"] += [endText.format(self.currentReward)]
         self.file.write("\t".join([self.id, str(self.numberOfRolls), str(self.currentReward)]) + "\n")
         
 

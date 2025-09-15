@@ -28,8 +28,10 @@ V případě, že máte otázky nebo narazíte na technický problém během úk
 Všechny informace, které v průběhu studie uvidíte, jsou pravdivé a nebudete za žádných okolností klamáni či jinak podváděni."""
 
 
-ending = """
-V úloze s házením kostek byl náhodně vybrán blok {}. V úkolu s kostkou jste tedy vydělal(a) {} Kč{}. {} V loteriích jste vydělali {} Kč. Za účast na studii dostáváte {} Kč. Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky korun nahoru získáváte {} Kč. Napište prosím tuto (zaokrouhlenou) částku do pokladního dokladu na stole před Vámi. 
+ending = """Toto byl poslední úkol studie.
+{}
+Za účast na studii dostáváte {} Kč.
+Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky korun nahoru <b>získáváte {} Kč. Napište prosím tuto (zaokrouhlenou) částku do pokladního dokladu na stole před Vámi.</b>
 
 Výsledky experimentu budou volně dostupné na stránkách Centra laboratorního a experimentálního výzkumu FPH VŠE, krátce po vyhodnocení dat a publikaci výsledků. Žádáme Vás, abyste nesdělovali detaily této studie možným účastníkům, aby jejich volby a odpovědi nebyly ovlivněny a znehodnoceny.
   
@@ -38,10 +40,6 @@ Můžete si vzít všechny svoje věci, vyplněný pokladní doklad a záznamov�
 Toto je konec experimentu. Děkujeme za Vaši účast!
  
 Centrum laboratorního a experimentálního výzkumu FPH VŠE""" 
-
-additional = "a na základě voleb ostatních hráčů v této úloze jste obdržel(a) navíc {} Kč"
-correct_prediction = "Oba Vaše odhady počtu správných odhadů v úloze s kostkou účastníků dřívější studie byly správné a získal(a) jste za správné odhady {} Kč.".format(PREDICTION_BONUS)
-incorrect_prediction = "Alespoň jeden z Vašich odhadů počtu správných odhadů v úloze s kostkou účastníků dřívější studie byl špatný a za odhady jste nezískal(a) nic."
 
 
 login = """
@@ -70,19 +68,53 @@ Po vyplnění identifikačního čísla do záznamového archu klikněte na tla�
 
 
 
+# class Ending(InstructionsFrame):
+#     def __init__(self, root):        
+#         root.texts["addOthers"] = additional.format(root.texts["fromOthers"]) if int(root.status["winning_block"]) >= 3 else ""        
+#         dice = int(root.texts["dice"]) + int(root.texts["fromOthers"])
+#         prediction = 0 if root.status["prediction"] == "incorrect" else PREDICTION_BONUS
+#         root.texts["predictionText"] = incorrect_prediction if root.status["prediction"] == "incorrect" else correct_prediction
+#         root.texts["reward"] = dice + prediction + int(root.texts["lottery_win"]) + PARTICIPATION_FEE
+#         root.texts["rounded_reward"] = ceil(root.texts["reward"] / 10) * 10
+#         root.texts["participation_fee"] = str(PARTICIPATION_FEE)
+#         updates = ["block", "dice", "addOthers", "predictionText", "lottery_win", "participation_fee", "reward", "rounded_reward"]
+#         super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)
+#         self.file.write("Ending\n")
+#         self.file.write(self.id + "\t" + "\t".join([str(root.texts["rounded_reward"]), str(root.texts["block"])]) + "\n\n")
+
+#     def run(self):
+#         self.sendInfo()
+
+#     def sendInfo(self):
+#         while True:
+#             self.update()    
+#             data = urllib.parse.urlencode({'id': self.root.id, 'round': -99, 'offer': self.root.texts["rounded_reward"]})
+#             data = data.encode('ascii')
+#             if URL == "TEST":
+#                 response = "ok"
+#             else:
+#                 try:
+#                     with urllib.request.urlopen(URL, data = data) as f:
+#                         response = f.read().decode("utf-8") 
+#                 except Exception:
+#                     pass
+#             if "ok" in response:                     
+#                 break              
+#             sleep(5)
+
+
+
 class Ending(InstructionsFrame):
-    def __init__(self, root):        
-        root.texts["addOthers"] = additional.format(root.texts["fromOthers"]) if int(root.status["winning_block"]) >= 3 else ""        
-        dice = int(root.texts["dice"]) + int(root.texts["fromOthers"])
-        prediction = 0 if root.status["prediction"] == "incorrect" else PREDICTION_BONUS
-        root.texts["predictionText"] = incorrect_prediction if root.status["prediction"] == "incorrect" else correct_prediction
-        root.texts["reward"] = dice + prediction + int(root.texts["lottery_win"]) + PARTICIPATION_FEE
-        root.texts["rounded_reward"] = ceil(root.texts["reward"] / 10) * 10
-        root.texts["participation_fee"] = str(PARTICIPATION_FEE)
-        updates = ["block", "dice", "addOthers", "predictionText", "lottery_win", "participation_fee", "reward", "rounded_reward"]
-        super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)
+    def __init__(self, root):
+        root.texts["results"] = "\n" + "\n".join(root.status["results"]) + "\n"
+
+        root.texts["reward"] = str(root.status["reward"])
+        root.texts["rounded_reward"] = ceil(root.status["reward"] / 10) * 10
+        root.texts["participation_fee"] = PARTICIPATION_FEE
+        updates = ["results", "participation_fee", "reward", "rounded_reward"]
+        super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 38, update = updates, width = 100)
         self.file.write("Ending\n")
-        self.file.write(self.id + "\t" + "\t".join([str(root.texts["rounded_reward"]), str(root.texts["block"])]) + "\n\n")
+        self.file.write(self.id + "\t" + str(root.texts["rounded_reward"]) + "\n\n")
 
     def run(self):
         self.sendInfo()
@@ -103,10 +135,6 @@ class Ending(InstructionsFrame):
             if "ok" in response:                     
                 break              
             sleep(5)
-
-
-
-
 
 
 
