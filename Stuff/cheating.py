@@ -95,13 +95,17 @@ Vaše odměna v Kč |   0 |   3 |   9 |  18 |  30 |  45 |  63 |  84 | 108 | 135 
 ------------------------------------------------------------------------------------------------
 Odměna ostatních |{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|
 </c>
-Například uhádnete-li 6 odhadů, získáte 63 Kč (“Vaše odměna v Kč”). Ostatní dle uvedených pravidel získají 250 - 63 = 187 Kč * {} = {} Kč, rozděleno dvěma spoluhráčům znamená, že <b>každý</b> dostane {} Kč (“Odměna ostatních”). 
+Například uhodnete-li 6 hodů, získáte 63 Kč (“Vaše odměna v Kč”). Ostatní dle uvedených pravidel získají 250 - 63 = 187 Kč{}, rozděleno dvěma spoluhráčům znamená, že <b>každý</b> dostane {} Kč (“Odměna ostatních”). 
 
 K odměně, kterou získáte Vy ve svých odhadech, obdržíte navíc zbývající odměnu od dvou svých spoluhráčů (Vy získáte to, co u nich je v položce “Odměna ostatních”).
 
 <b>Důležité opakování:</b> Zbývající dva členové skupiny hrají hru za stejných podmínek. Platí tedy, že čím více získáte Vy, tím méně získají ostatní. Obdobně platí, že čím více získají ostatní, tím méně získáte Vy.
 
 Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, zda <b>Vy budete hrát verzi “PŘED” nebo “PO”.</b> Ostatní členové skupiny rovněž sami rozhodují, zda sami budou hrát verzi “PŘED” nebo “PO”.
+
+Pro připomenutí:
+Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
+Ve <b>verzi “PO”</b> uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
 Chcete, hrát verzi “PŘED” nebo “PO”?
 """
@@ -135,6 +139,10 @@ Nyní Vás čeká čtvrtý blok s dvanácti koly.
 
 Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro všechny členy skupiny. Může se také stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
 
+Pro připomenutí:
+Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
+Ve <b>verzi “PO”</b> uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
+
 Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 """
 
@@ -144,12 +152,16 @@ intro_block_5 = """Toto je konec čtvrtého bloku o dvanácti kolech. Pokud bude
 
 Nyní Vás čeká pátý blok s dvanácti koly. V tomto bloku opět můžete hlasovat, jestli chcete, aby <b>Vaše skupina hrála verzi “PŘED” nebo “PO”.</b> Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
 
+Pro připomenutí:
+Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
+Ve <b>verzi “PO”</b> uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
+
 Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 """
 
 
 
-from_others_text = " Od zbývajících dvou hráčů byste v tomto kole získal(a) dohromady {} Kč."
+from_others_text = " <b>Od zbývajících dvou hráčů byste v tomto kole získal(a) dohromady {} Kč, pokud by pro ně byl tento blok vylosován.</b>"
 
 
 
@@ -529,7 +541,11 @@ class Selection(InstructionsFrame):
         # global intro_block_3        
         otherRewards = ["{num: >4} ".format(num = ceil((250 - (1.5 * i) * (i + 1))*root.status["coefficient"] / 2)) for i in range(13)]        
         coef = str(root.status["coefficient"]).replace(".", ",")
-        root.texts["introtext"] = intro_block_3.format(conditionText, *otherRewards, coef, int(otherRewards[6])*2, otherRewards[6].strip())
+        if coef != "1":
+             coefText  = " × {} = {} Kč".format(coef, int(otherRewards[6])*2)
+        else:
+             coefText = ""
+        root.texts["introtext"] = intro_block_3.format(conditionText, *otherRewards, coefText, otherRewards[6].strip())
 
     def write(self):
         #self.root.texts["votingResponse"] = self.voteVar.get()
@@ -619,7 +635,7 @@ class Prediction(InstructionsFrame):
 
     def write(self):
         if self.root.status["block"] == 3:
-            if float(self.checkVar.get()) - BEFORE <= 0.2 and float(self.checkVar2.get()) - AFTER <= 0.2:
+            if abs(float(self.checkVar.get().replace(",", ".")) - BEFORE) <= 0.2 and abs(float(self.checkVar2.get().replace(",", ".")) - AFTER) <= 0.2:
                 self.root.status["prediction"] = "correct"
             else:
                 self.root.status["prediction"] = "incorrect"
