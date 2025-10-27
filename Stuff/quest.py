@@ -36,7 +36,7 @@ bonusNotGained = f"Protože jste neodpověděl(a) správně na všechny kontroln
 
 
 
-cclass Quest(ExperimentFrame):
+class Quest(ExperimentFrame):
     def __init__(self, root, perpage, file, name, left, right, options = 5, shuffle = True,
                  instructions = "", height = 3, width = 80, center = False, checks = 0, wraplength = "auto"):
         super().__init__(root)
@@ -186,7 +186,7 @@ class Likert(Canvas):
 class Hexaco(Quest):
     def __init__(self, root):
         super().__init__(root, 9, "hexaco.txt", "Hexaco", instructions = hexacoinstructions, width = 85,
-                         left = "silně nesouhlasím", right = "silně souhlasím", checks = 3,
+                         left = "silně nesouhlasím", right = "silně souhlasím",
                          height = 3, options = 5, center = True)
         
         
