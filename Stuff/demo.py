@@ -6,21 +6,24 @@ import os
 
 from math import ceil
 
-from common import ExperimentFrame
+from common import InstructionsFrame
 from gui import GUI
-from constants import BONUS
 
 
-class Demographics(ExperimentFrame):
+intro = "Uveďte své demografické údaje."
+
+
+class Demographics(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root)
+        super().__init__(root, text = intro, width = 50, height = 1, savedata = True)
+        self.text.grid(row = 0, column = 1, columnspan = 4, sticky = E)
        
         self.sex = StringVar()
         self.language = StringVar()
         self.age = StringVar()
         self.student = StringVar()
         self.field = StringVar()
-        self.field.set("Nestuduju VŠ")
+        self.field.set("Nestuduji VŠ")
 
         self.lab1 = ttk.Label(self, text = "Pohlaví:", background = "white",
                               font = "helvetica 15")
@@ -42,6 +45,8 @@ class Demographics(ExperimentFrame):
                                     command = self.checkAllFilled)
         self.female = ttk.Radiobutton(self, text = "žena", variable = self.sex,
                                       value = "female", command = self.checkAllFilled)
+        self.otherSex = ttk.Radiobutton(self, text = "jiné", variable = self.sex,
+                                      value = "other", command = self.checkAllFilled)
 
         self.czech = ttk.Radiobutton(self, text = "český", variable = self.language,
                                      value = "czech", command = self.checkAllFilled)
@@ -63,7 +68,7 @@ class Demographics(ExperimentFrame):
         self.ageCB["values"] = tuple([""] + [str(i) for i in range(18, 80)])
         self.ageCB.bind("<<ComboboxSelected>>", lambda e: self.checkAllFilled())
 
-        self.fieldCB = ttk.Combobox(self, textvariable = self.field, width = 15,
+        self.fieldCB = ttk.Combobox(self, textvariable = self.field, width = 25,
                                     font = "helvetica 15", state = "readonly")
         self.fieldCB["values"] = ["Nestuduji VŠ",
                                   "Ekonomie / management",
@@ -81,35 +86,37 @@ class Demographics(ExperimentFrame):
 
         self.male.grid(column = 2, row = 1, pady = 7, padx = 7, sticky = W)
         self.female.grid(column = 3, row = 1, pady = 7, padx = 7, sticky = W)
+        self.otherSex.grid(column = 4, row = 1, pady = 7, padx = 45, sticky = W)
         self.czech.grid(column = 2, row = 3, pady = 7, padx = 7, sticky = W)
         self.slovak.grid(column = 3, row = 3, pady = 7, padx = 7, sticky = W)
         self.other.grid(column = 4, row = 3, pady = 7, padx = 45, sticky = W)
         self.ageCB.grid(column = 2, row = 2, pady = 7, padx = 7, sticky = W)
         self.yes.grid(column = 2, row = 5, pady = 7, padx = 7, sticky = W)
         self.no.grid(column = 3, row = 5, pady = 7, padx = 7, sticky = W)
-        self.fieldCB.grid(column = 2, columnspan = 2, row = 6, pady = 7, padx = 7, sticky = W)
+        self.fieldCB.grid(column = 2, columnspan = 3, row = 6, pady = 7, padx = 7, sticky = W)
 
         self.columnconfigure(5, weight = 1)
         self.columnconfigure(0, weight = 1)
+        self.columnconfigure(2, weight = 0)
         self.rowconfigure(0, weight = 1)
-        self.rowconfigure(8, weight = 1)
+        for i in range(1,7):
+            self.rowconfigure(i, weight = 0)
+        self.rowconfigure(7, weight = 1)
 
-        ttk.Style().configure("TButton", font = "helvetica 15")
-        self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun,
-                               state = "disabled")
         self.next.grid(row = 7, column = 2, pady = 15)
+        self.next["command"] = self.nextFun
+        self.next["state"] = "disabled"
 
 
     def checkAllFilled(self, _ = None):
-        if all([v.get() for v in [self.language, self.age, self.sex,
-                                  self.field, self.student]]):
+        if all([v.get() for v in [self.language, self.age, self.sex, self.field, self.student]]):
             self.next["state"] = "!disabled"
 
 
     def write(self):
         self.file.write("Demographics\n")
         self.file.write("\t".join([self.id, self.sex.get(), self.age.get(), self.language.get(),
-                                   self.student.get(), self.field.get()]) + "\n")
+                                   self.student.get(), self.field.get()]) + "\n\n")
 
 
 if __name__ == "__main__":

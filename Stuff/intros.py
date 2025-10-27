@@ -1,4 +1,6 @@
 #! python3
+from tkinter import *
+from tkinter import ttk
 
 import os
 import urllib.request
@@ -16,6 +18,20 @@ from cheating import Login
 
 ################################################################################
 # TEXTS
+login = """
+Vítejte na výzkumné studii pořádané Fakultou podnikohospodářskou Vysoké školy ekonomické v Praze! 
+
+Za účast na studii obdržíte {} Kč. Kromě toho můžete vydělat další peníze v průběhu studie. 
+
+Studie bude trvat cca 50-70 minut.
+
+Děkujeme, že jste vypnuli své mobilní telefony, a že nebudete s nikým komunikovat v průběhu studie. Pokud s někým budete komunikovat, nebo pokud budete nějakým jiným způsobem narušovat průběh studie, budete požádáni, abyste opustili laboratoř, bez nároku na vyplacení peněz.
+
+Pokud jste již tak neučinili, přečtěte si informovaný souhlas a pokud s ním budete souhlasit, podepište ho. 
+
+Počkejte na pokyn experimentátora.""".format(PARTICIPATION_FEE)
+
+
 intro = """
 Studie se skládá z několika různých úkolů a otázek. Níže je uveden přehled toho, co Vás čeká:
 1) Hod kostkou: Vaším úkolem bude uhodnout, zda na kostce padne liché, nebo sudé číslo. Budete hádat v pěti blocích, v každém po dvanácti kolech. V tomto úkolu můžete vydělat peníze.
@@ -25,7 +41,9 @@ Studie se skládá z několika různých úkolů a otázek. Níže je uveden př
 
 V případě, že máte otázky nebo narazíte na technický problém během úkolů, zvedněte ruku a tiše vyčkejte příchodu výzkumného asistenta.
 
-Všechny informace, které v průběhu studie uvidíte, jsou pravdivé a nebudete za žádných okolností klamáni či jinak podváděni."""
+Všechny informace, které v průběhu studie uvidíte, jsou pravdivé a nebudete za žádných okolností klamáni či jinak podváděni.
+
+Po přečtení stiskněte tlačítko “Pokračovat”."""
 
 
 ending = """Toto byl poslední úkol studie.
@@ -39,21 +57,7 @@ Můžete si vzít všechny svoje věci, vyplněný pokladní doklad a záznamov�
 
 Toto je konec experimentu. Děkujeme za Vaši účast!
  
-Centrum laboratorního a experimentálního výzkumu FPH VŠE""" 
-
-
-login = """
-Vítejte na výzkumné studii pořádané Fakultou podnikohospodářskou Vysoké školy ekonomické v Praze! 
-
-Za účast na studii obdržíte {} Kč. Kromě toho můžete vydělat další peníze v průběhu studie. 
-
-Studie bude trvat cca 50-70 minut.
-
-Děkujeme, že jste vypnuli své mobilní telefony, a že nebudete s nikým komunikovat v průběhu studie. Pokud s někým budete komunikovat, nebo pokud budete nějakým jiným způsobem narušovat průběh studie, budete požádáni, abyste opustili laboratoř, bez nároku na vyplacení peněz.
-
-Pokud jste již tak neučinili, přečtěte si informovaný souhlas a pokud s ním budete souhlasit, podepište ho. 
-
-Počkejte na pokyn experimentátora.""".format(PARTICIPATION_FEE)
+Decision Lab při FPH VŠE""" 
 
 
 hexacointrotext = """

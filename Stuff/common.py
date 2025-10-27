@@ -1,14 +1,16 @@
 from tkinter import *
 from tkinter import ttk
-from time import time
+from time import time, sleep, perf_counter
 
 import os
 import sys
+import ctypes
 import random
 import urllib.request
 import urllib.parse
 
 from constants import TESTING, URL
+import re
 
 
 class ExperimentFrame(Canvas):
@@ -41,6 +43,8 @@ class ExperimentFrame(Canvas):
         self.nextFun()
 
     def sendData(self, message, pause = 0.1, trials = -1): 
+        if URL == "http://127.0.0.1:8000/":
+            print(message)
         count = 0           
         while trials != count:
             count += 1
@@ -52,6 +56,8 @@ class ExperimentFrame(Canvas):
                 try:
                     with urllib.request.urlopen(URL, data = data) as f:
                         response = f.read().decode("utf-8")       
+                        if URL == "http://127.0.0.1:8000/":
+                            print(response)
                 except Exception:
                     continue
             if response == "ok":                    
@@ -89,26 +95,17 @@ class InstructionsFrame(ExperimentFrame):
             self.text.tag_configure(firstLine, font = "helvetica 20 {}".format(firstLine))
         else:
             self.text.insert("1.0", text)
-       
-        def addtags(starttag, endtag, tag):            
-            i_index = "1.0"
-            while True:
-                i_index = self.text.search(starttag, i_index)
-                if not i_index:
-                    break
-                e_index = self.text.search(endtag, i_index)
-                self.text.tag_add(tag, i_index, e_index)
-                self.text.delete(e_index, e_index + "+{}c".format(len(endtag)))
-                self.text.delete(i_index, i_index + "+{}c".format(len(starttag)))
-                i_index = e_index
-
+ 
         self.text.tag_configure("bold", font = "helvetica {} bold".format(font))
-        addtags("<b>", "</b>", "bold")
-        self.text.tag_configure("italic", font = "helvetica {} italic".format(font))
-        addtags("<i>", "</i>", "italic")
-        self.text.tag_configure("courier", font = "courier {}".format(font))
-        addtags("<c>", "</c>", "courier")
-            
+        self.text.tag_configure("italic", font = "helvetica {} italic".format(font))    
+        self.text.tag_configure("courier", font = "courier {}".format(font))      
+        self.text.tag_configure("center", justify="center")               
+        self.text.tag_configure("blue", foreground = "blue")
+        self.text.tag_configure("red", foreground = "red")
+        self.text.tag_configure("green", foreground = "green")
+
+        self.addStandardTags()
+
         self.text.config(state = "disabled")
 
         if proceed:
@@ -131,10 +128,52 @@ class InstructionsFrame(ExperimentFrame):
         self.rowconfigure(2, weight = 3)
         self.rowconfigure(3, weight = 3)
 
-    def changeText(self, newtext):
+    # Overload addStandardTags to handle <color: xxx>...</color>
+    def addStandardTags(self):
+        self.addtags("<b>", "</b>", "bold")
+        self.addtags("<i>", "</i>", "italic")
+        self.addtags("<c>", "</c>", "courier")
+        self.addtags("<center>", "</center>", "center")
+        self.addtags("<blue>", "</blue>", "blue")
+        self.addtags("<red>", "</red>", "red")  
+        self.addtags("<green>", "</green>", "green")
+        # Handle all <color: xxx>...</color> tags
+        text_content = self.text.get("1.0", "end")
+        for match in re.finditer(r"<color:\s*([^>]+)\s*>", text_content):
+            color = match.group(1).strip()
+            starttag = f"<color: {color}>"
+            self.addtags(starttag, "</color>", f"color_{color}")
+
+    def addtags(self, starttag, endtag, tag):            
+        i_index = "1.0"
+        while True:
+            i_index = self.text.search(starttag, i_index, regexp=False)
+            if not i_index:
+                break
+            e_index = self.text.search(endtag, i_index, regexp=False)
+            if not e_index:
+                break
+            # Handle <color: xxx>...</color>
+            if starttag.startswith("<color:"):
+                # Extract color name
+                color_name = starttag[7:-1].strip()
+                tag_name = f"color_{color_name}"
+                # Add tag if not already present
+                if not tag_name in self.text.tag_names():
+                    self.text.tag_configure(tag_name, foreground=color_name)
+                self.text.tag_add(tag_name, i_index, e_index)
+            else:
+                self.text.tag_add(tag, i_index, e_index)
+            self.text.delete(e_index, f"{e_index}+{len(endtag)}c")
+            self.text.delete(i_index, f"{i_index}+{len(starttag)}c")
+            i_index = e_index
+
+    def changeText(self, newtext, tags = True):
         self.text.config(state = "normal")
         self.text.delete("1.0", "end")
         self.text.insert("1.0", newtext)
+        if tags:
+            self.addStandardTags()
         self.text.config(state = "disabled")
 
     def proceed(self):
@@ -251,12 +290,52 @@ class Question(Canvas):
             self.cond.config(state = "disabled")
 
 
+class TextFrame(ExperimentFrame):
+    def __init__(self, root, text, width = 80, qlines = 2, alines = 5, name = "", timeDisabled_s = 0, requiredLength = 0):
+        super().__init__(root)
+
+        self.timeDisabled_s = timeDisabled_s
+        self.requiredLength = requiredLength
+
+        self.file.write(name + "\n")
+        self.textarea = TextArea(self, text, width, qlines, alines, on_text_change = lambda e: self.checkEnabling())
+        self.textarea.grid(row = 1, column = 1)
+
+        ttk.Style().configure("TButton", font = "helvetica 15")
+        self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun)
+        self.next.grid(column = 1, row = 2) 
+
+        self.columnconfigure(0, weight = 1)
+        self.columnconfigure(2, weight = 1)
+        self.rowconfigure(0, weight = 1)
+        self.rowconfigure(2, weight = 1)
+        self.rowconfigure(3, weight = 1)
+
+        self.time0 = perf_counter()
+
+        if timeDisabled_s or requiredLength:            
+            self.next.config(state = "disabled")
+            self.after(timeDisabled_s * 1000, self.checkEnabling)
+
+    def write(self):
+        self.file.write(self.id + "\t")
+        self.textarea.write()
+        
+    def checkEnabling(self):
+        if len(self.textarea.check()) >= self.requiredLength and perf_counter() - self.time0 >= self.timeDisabled_s:
+            self.next.config(state = "normal")
+        else:
+            self.next.config(state = "disabled")
+
+
 class TextArea(Canvas):
-    def __init__(self, root, text, width = 80, qlines = 2, alines = 5):
+    def __init__(self, root, text, width = 80, qlines = 2, alines = 5, on_text_change = None):
         super().__init__(root)
         self["background"] = "white"
         self["highlightbackground"] = "white"
         self["highlightcolor"] = "white"
+
+        self.on_text_change = on_text_change if on_text_change else lambda x: None
 
         self.root = root
 
@@ -269,12 +348,13 @@ class TextArea(Canvas):
         self.label.config(state = "disabled")
         self.label.grid(column = 0, row = 0)
 
-        self.field = Text(self, width = int(width*1.2), wrap = "word", font = "helvetica 15",
-                          height = alines, relief = "solid")
+        self.field = Text(self, width = width, wrap = "word", font = "helvetica 15",
+                  height = alines, relief = "solid")
+        self.field.bind("<KeyRelease>", self.on_text_change)
+
         self.field.grid(column = 0, row = 1, pady = 6)
 
         self.columnconfigure(0, weight = 1)
-
 
     def check(self):
         return self.field.get("1.0", "end").strip()
@@ -291,7 +371,7 @@ class TextArea(Canvas):
 class Measure(Canvas):
     def __init__(self, root, text, values, left, right, shortText = "", function = None,
                  questionPosition = "next", labelPosition = "above", middle = "",
-                 funconce = False, filler = 0):
+                 funconce = False, filler = 0, center = False):
         super().__init__(root)
 
         self.root = root
@@ -301,37 +381,42 @@ class Measure(Canvas):
         self["highlightbackground"] = "white"
         self["highlightcolor"] = "white"
 
-        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 14")
+        ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
 
         if text:        
             if questionPosition == "next":
-                self.question = ttk.Label(self, text = text, background = "white", anchor = "e", font = "helvetica 14")
+                self.question = ttk.Label(self, text = text, background = "white", anchor = "e", font = "helvetica 15")
                 self.question.grid(column = 0, row = 2, sticky = E, padx = 5)
             elif questionPosition == "above":
                 self.question = ttk.Label(self, text = text, background = "white", anchor = "center",
-                                          font = "helvetica 14")
+                                          font = "helvetica 15")
                 self.question.grid(column = 0, row = 0, columnspan = 4, pady = 5)
 
         if labelPosition != "none":
-            self.left = ttk.Label(self, text = "{:>15}".format(left), background = "white",
-                                  font = "helvetica 14")
-            self.right = ttk.Label(self, text = "{:<15}".format(right), background = "white",
-                                   font = "helvetica 14")
+            self.left = ttk.Label(self, text = "{:>15}".format(left), background = "white", font = "helvetica 15")
+            self.right = ttk.Label(self, text = "{:<15}".format(right), background = "white", font = "helvetica 15")
         if labelPosition == "above":
             self.left.grid(column = 1, row = 1, sticky = W)
             self.right.grid(column = 2, row = 1, sticky = E)
         elif labelPosition == "next":
             self.left.grid(column = 0, row = 2, sticky = E)
             self.right.grid(column = 3, row = 2, sticky = W)
+            self.root.update_idletasks()
+            if center:
+                width = max(self.left.winfo_width(), self.right.winfo_width())
+                self.leftFiller = Canvas(self, background = "white", width = width, height = 1,
+                                 highlightbackground = "white", highlightcolor = "white")
+                self.leftFiller.grid(row = 1, column = 0)
+                self.rightFiller = Canvas(self, background = "white", width = width, height = 1,
+                                 highlightbackground = "white", highlightcolor = "white")
+                self.rightFiller.grid(row = 1, column = 3)
 
         if middle:
-            self.middle = ttk.Label(self, text = middle, background = "white",
-                                    font = "helvetica 14")
+            self.middle = ttk.Label(self, text = middle, background = "white", font = "helvetica 15")
             self.middle.grid(column = 1, row = 1, columnspan = 2)
-            self.question["font"] = "helvetica 16"
+            self.question["font"] = "helvetica 15"
 
-        self.scale = Canvas(self, background = "white", highlightbackground = "white",
-                            highlightcolor = "white")
+        self.scale = Canvas(self, background = "white", highlightbackground = "white", highlightcolor = "white")
         self.scale.grid(column = 1, row = 2, sticky = EW, columnspan = 2, padx = 40)
 
         self.radios = []
@@ -352,6 +437,15 @@ class Measure(Canvas):
         self.function = function            
         self.functionProcessed = False
         self.funconce = funconce
+
+    
+    def enable(self):
+        for radio in self.radios:
+            radio["state"] = "normal"
+
+    def disable(self): 
+        for radio in self.radios:
+            radio["state"] = "disabled"
 
 
     def func(self):
@@ -423,14 +517,19 @@ class MultipleChoice(Canvas):
         
 
 class InstructionsAndUnderstanding(InstructionsFrame):
-    def __init__(self, root, controlTexts, name, randomize = True, fillerHeight = 255, **kwargs):
+    def __init__(self, root, controlTexts, name, showFeedback = True, randomize = True, fillerheight = 255, finalButton = None, **kwargs):
         super().__init__(root, **kwargs)
-        self.controlTexts = controlTexts
+        if type(controlTexts) == str:
+            self.controlTexts = self.root.texts[controlTexts]
+        else:
+            self.controlTexts = controlTexts
         self.randomize = randomize
+        self.showFeedback = showFeedback
+        self.finalButton = finalButton
 
         self.controlFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
-        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = fillerHeight,
+        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = fillerheight,
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
 
@@ -452,7 +551,7 @@ class InstructionsAndUnderstanding(InstructionsFrame):
         self.controlstate = "answer"
         
     def nextFun(self):        
-        if self.controlstate == "feedback":
+        if self.controlstate == "feedback" or not self.showFeedback:
             self.file.write(self.id + "\t" + str(self.controlNum) + "\t" + self.controlQuestion.getAnswer() + "\n")
             if self.controlNum == len(self.controlTexts):
                 self.file.write("\n")
@@ -461,7 +560,9 @@ class InstructionsAndUnderstanding(InstructionsFrame):
                 self.createQuestion()                
         else:            
             self.controlQuestion.showFeedback()
-            self.controlstate = "feedback"              
+            self.controlstate = "feedback"     
+            if self.controlNum == len(self.controlTexts) and self.finalButton:         
+                self.next["text"] = self.finalButton
 
 
 class OneFrame(Canvas):
@@ -497,9 +598,22 @@ class OneFrame(Canvas):
                 self.file.write("\t")
 
 
-def read_all(file, encoding = "utf-8"):
+def read_all(file, encoding = "utf-8", comments = False):
     text = ""
     with open(os.path.join(os.path.dirname(__file__), file), encoding = encoding) as f:
         for line in f:
+            if comments and line.startswith("#"):
+                continue
+            if comments and "#" in line:
+                line = line[:line.find("#")]
             text += line.rstrip(" \t")
     return text
+
+
+# Load and activate keyboard layout
+# Language IDs: "00000405" = Czech, "00000409" = English US
+def change_keyboard_layout(language_id):
+    user32 = ctypes.windll.user32
+    layout = user32.LoadKeyboardLayoutW(language_id, 1)  # 1 = KLF_ACTIVATE
+    if layout:
+        user32.ActivateKeyboardLayout(layout, 0)

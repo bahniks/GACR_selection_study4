@@ -11,6 +11,7 @@ import os
 import json
 
 from constants import TESTING, URL, GOTHROUGH, PARTICIPATION_FEE
+from common import change_keyboard_layout
 
 
 class GUI(Tk):
@@ -22,14 +23,15 @@ class GUI(Tk):
         windowed = TESTING or URL == "http://127.0.0.1:8000/"
         if windowed:
             #self.geometry("1920x1080")
+            #self.geometry("1680x1050")
             self.geometry("1280x1024")
         self.attributes("-fullscreen", not windowed)
         self.attributes("-topmost", not windowed)
         self.overrideredirect(not windowed)
         self.protocol("WM_DELETE_WINDOW", lambda: self.closeFun())
 
-        self.screenwidth = 1280 #1920#  adjust
-        self.screenheight = 1024 #1080#  adjust
+        self.screenwidth = 1280 # 1680 # 1920 # adjust
+        self.screenheight = 1024 # 1050 # 1080 # adjust
 
         os.chdir(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
         filepath = os.path.join(os.getcwd(), "Data")
@@ -56,19 +58,41 @@ class GUI(Tk):
         self.rowconfigure(0, weight = 1)
 
         if load and URL != "TEST":            
-            with open('temp.json') as f:
-                data = json.load(f)            
-            message = urllib.parse.urlencode({"id": data["id"], "round": data["count"], "offer": "continue"})
-            message = message.encode('ascii')
-            with urllib.request.urlopen(URL, data = message) as f:
-                response = f.read().decode("utf-8")                
-            if response == "continue":
-                for key, value in data.items():
-                    setattr(self, key, value)    
-                      
+            if os.path.exists("temp.json"):
+                ans = messagebox.askyesno(
+                    message="Má se načíst započatý experiment?",
+                    icon="question",
+                    parent=self,
+                    title="Pokračovat v experimentu?"
+                )
+                if ans:
+                    with open('temp.json') as f:
+                        data = json.load(f)            
+                    message = urllib.parse.urlencode({"id": data["id"], "round": data["count"], "offer": "continue"})
+                    message = message.encode('ascii')
+                    with urllib.request.urlopen(URL, data = message) as f:
+                        response = f.read().decode("utf-8")                
+                    if response == "continue":
+                        for key, value in data.items():
+                            setattr(self, key, value)  
+                    else:
+                        load = False  
+                else:
+                    load = False
+                self.focus_force()
+
+        if TESTING:
+            self.title("TEST " + self.id)
+        else:
+            try:
+                change_keyboard_layout("00000405") # Change to Czech layout
+            except Exception as e:
+                print(f"Error changing keyboard layout: {e}")
+
         mode = "a" if load else "w"
         with open(self.outputfile, mode = mode, encoding = "utf-8") as self.file:
             self.nextFrame()
+            self.after(100, self.frame.focus_force)
             self.mainloop()
             
 
@@ -105,7 +129,7 @@ class GUI(Tk):
                 self.frame = nxt[0](self, **nxt[1])
             else:
                 self.frame = nxt(self)
-            self.frame.grid(row = 0, column = 0, sticky = (N, S, E, W))            
+            self.frame.grid(row = 0, column = 0, sticky = (N, S, E, W))     
             if self.status["logged"]:
                 self.frame.sendData({'id': self.id, 'round': self.count, 'offer': "progress"}, pause = 0.01, trials = 5)
 
@@ -132,7 +156,7 @@ class GUI(Tk):
 
 
     def uploadResults(self):
-        for i in range(5):
+        for i in range(20):
             # Set the URL of the Django app that handles file uploads
             url = URL + "results/"
 
