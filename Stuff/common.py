@@ -476,8 +476,7 @@ class MultipleChoice(Canvas):
         self.answers = answers
         self.callback = callback
         
-        self.question = ttk.Label(self, text = text, background = "white", anchor = "center",
-                                          font = "helvetica 15 bold")
+        self.question = ttk.Label(self, text = text, background = "white", anchor = "center", font = "helvetica 15 bold", wraplength = 950)
         self.question.grid(column = 0, row = 0, pady = 5, sticky = W)
 
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")

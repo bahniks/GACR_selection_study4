@@ -105,14 +105,15 @@ Před pokračováním si odpovězte na následující kontrolní otázku."""
 
 condition_text = ", vynásobena koeficientem {}"
 
-q3 = "Kolik Kč získají vaši spoluhráči dohromady dle pravidel uvedených výše, pokud ve svém bloku uhádnete 8 odhadů?"
-answers3 = ["66 Kč", "180 Kč", "8 Kč", "132 Kč"]
-feedback3 = ["Správná odpověď. Každý získá 66 Kč (“Odměna ostatních”) pro 8 správných odhadů, dohromady proto získají 66 * 2 = 132 Kč (hrajete s dvěma účastníky).", "Špatná odpověď. Každý získá 66 Kč (“Odměna ostatních”) pro 8 správných odhadů, dohromady proto získají 66 *2 = 132 Kč (hrajete s dvěma účastníky).", "Špatná odpověď. Každý získá 66 Kč (“Odměna ostatních”) pro 8 správných odhadů, dohromady proto získají 66 *2 = 132 Kč (hrajete s dvěma účastníky).", "Špatná odpověď. Každý získá 66 Kč (“Odměna ostatních”) pro 8 správných odhadů, dohromady proto získají 66 *2 = 132 Kč (hrajete s dvěma účastníky)."]
+q3 = "Kolik Kč dohromady získají členové Vaší skupiny dle pravidel uvedených výše,\npokud správně uhádnete 8 hodů a bude vylosován tento blok k proplacení?"
+answers3 = ["{} Kč", "{} Kč", "{} Kč", "{} Kč"]
+feedback3 = ["Špatná odpověď {}.", "Špatná odpověď {}.", "Špatná odpověď {}.", "Správná odpověď. {}"]
+explanation3 = "Každý získá {} Kč (“Odměna ostatních”) pro 8 správných odhadů, dohromady proto získají {} × 2 = {} Kč (hrajete s dvěma účastníky)."
 
 choice_third = """Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, zda <b>Vy budete hrát verzi “PŘED” nebo “PO”.</b> Ostatní členové skupiny rovněž sami rozhodují, zda budou oni sami hrát verzi “PŘED” nebo “PO”.
 
 Pro připomenutí:
-Celková odměna, kterou v bloku získáte, bude odečtena od částky 250 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.</b>
+Celková odměna, kterou v bloku získáte, bude odečtena od částky 250 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny.
 
 Celkové odměny za různé množství správných odhadů jsou zobrazeny v této tabulce:
 <c>
@@ -122,9 +123,9 @@ Vaše odměna v Kč |   0 |   3 |   9 |  18 |  30 |  45 |  63 |  84 | 108 | 135 
 ------------------------------------------------------------------------------------------------
 Odměna ostatních |{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|
 </c>
-
 Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
 Ve <b>verzi “PO”</b> uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
+
 
 Chcete, hrát verzi “PŘED” nebo “PO”?"""
 
@@ -155,8 +156,8 @@ Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro v
 
 Před pokračováním si odpovězte na následující kontrolní otázku."""
 
-q4 = "Co se stane, pokud si vyberete verzi „PO“ a další jeden člen skupiny také hlasuje pro tuto verzi?"
-answers4 = ["Budete hrát verzi „PO”.", "Budete hrát verzi „PŘED”.", "Verze bude zvolena náhodně.", "Každý člen skupiny bude hrát svou vlastní verzi."]
+q4 = "Co se stane, pokud si vyberete verzi „PO“ a jeden ze zbývajících dvou členů skupiny také hlasuje pro tuto verzi?"
+answers4 = ["Všichni budete hrát verzi „PO”.", "Všichni budete hrát verzi „PŘED”.", "Verze bude zvolena pro všechny náhodně.", "Každý člen skupiny bude hrát svou vybranou verzi."]
 feedback4 = ["Správná odpověď. Jste ve skupině tří osob, pakliže Vy a další člen hlasujete pro “PO” verzi, pak většina zvolila “PO” verzi. “PO” verzi budete hrát všichni.", "Špatná odpověď. Jste ve skupině tří osob, pakliže Vy a další člen hlasujete pro “PO” verzi, pak většina zvolila “PO” verzi. “PO” verzi budete hrát všichni.", "Špatná odpověď. Jste ve skupině tří osob, pakliže Vy a další člen hlasujete pro “PO” verzi, pak většina zvolila “PO” verzi. “PO” verzi budete hrát všichni.", "Špatná odpověď. Jste ve skupině tří osob, pakliže Vy a další člen hlasujete pro “PO” verzi, pak většina zvolila “PO” verzi. “PO” verzi budete hrát všichni."]
 
 choice_fourth = """Nyní můžete vybrat, jestli chcete, aby <b>všichni členové Vaší skupiny</b> hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
@@ -793,10 +794,11 @@ class Wait(InstructionsFrame):
 class Instructions3Check(InstructionsAndUnderstanding):
     def __init__(self, root):
 
+        self.controlTexts = controlTexts3[0]
         self.update_intro(root.status["condition"], root)
         text = root.texts["introtext"]
 
-        super().__init__(root, text = text, controlTexts=controlTexts3, name = "Cheating Round 3 Control Questions", height = 25, width = 110)
+        super().__init__(root, text = text, controlTexts = [self.controlTexts], name = "Cheating Round 3 Control Questions", height = 25, width = 110)
 
         ttk.Style().configure("TButton", font = "helvetica 15", width = 16)
  
@@ -810,6 +812,12 @@ class Instructions3Check(InstructionsAndUnderstanding):
         else:
              coefText = ""
         root.texts["introtext"] = intro_block_3.format(conditionText, *otherRewards, coefText, otherRewards[6].strip())
+        self.controlTexts[1][0] = self.controlTexts[1][0].format(108)
+        self.controlTexts[1][1] = self.controlTexts[1][1].format(otherRewards[8].strip())
+        self.controlTexts[1][2] = self.controlTexts[1][2].format(216)
+        self.controlTexts[1][3] = self.controlTexts[1][3].format(int(otherRewards[8].strip()) * 2)
+        explanation = explanation3.format(int(otherRewards[8].strip()), int(otherRewards[8].strip()), int(otherRewards[8].strip()) * 2)
+        self.controlTexts[2] = [i.format(explanation) for i in self.controlTexts[2]]
 
 
 
@@ -822,8 +830,8 @@ controlTexts4 = [[q4, answers4, feedback4]]
 Instructions1 = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 26, "width": 110, "fillerHeight": 1, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
 Instructions3 = (Selection, {"text": "", "height": 35, "width": 110})
-Instructions4Check = (InstructionsAndUnderstanding, {"text": intro_block_4, "update": ["win3", "otherwin3", "conditionText"], "height": 26, "width": 110, "fillerHeight": 1, "name": "Cheating Round 4 Control Questions", "randomize": False, "controlTexts": controlTexts4})
-Instructions4 = (Selection, {"text": choice_fourth, "height": 26})
+Instructions4Check = (InstructionsAndUnderstanding, {"text": intro_block_4, "update": ["win3", "otherwin3", "conditionText"], "height": 26, "width": 80, "fillerHeight": 1, "name": "Cheating Round 4 Control Questions", "randomize": False, "controlTexts": controlTexts4})
+Instructions4 = (Selection, {"text": choice_fourth, "update": ["conditionText"], "height": 26})
 Instructions5 = (Selection, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4", "conditionText"], "height": 26})
 ConditionInformation = (InstructionsFrame, {"text": info_condition, "update": ["voted_condition"]})
 
