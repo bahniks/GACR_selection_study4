@@ -56,7 +56,7 @@ eventext = "Sudé (2, 4 nebo 6)"
 rolltext = "Hodit kostkou"
 correcttext = "Správně"
 incorrecttext = "Špatně"    
-predictiontext = "Zvolil/a jsem, jestli na kostce padne liché, nebo sudé číslo."
+predictiontext = "Zvolil(a) jsem, jestli na kostce padne liché, nebo sudé číslo."
 
 treatmenttext = '''Blok {}, Kolo {}
 
@@ -99,9 +99,9 @@ Například uhodnete-li 6 hodů, získáte 63 Kč (“Vaše odměna v Kč”). O
 
 K odměně, kterou získáte Vy ve svých odhadech, obdržíte navíc zbývající odměnu od dvou svých spoluhráčů (Vy získáte to, co u nich je v položce “Odměna ostatních”).
 
-<b>Důležité opakování:</b> Zbývající dva členové skupiny hrají hru za stejných podmínek. Platí tedy, že čím více získáte Vy, tím méně získají ostatní. Obdobně platí, že čím více získají ostatní, tím méně získáte Vy.
+<b>Důležité opakování:</b> Zbývající dva členové skupiny hrají hru za stejných podmínek. Platí tedy, že čím více získáte při hraní úlohy Vy, tím méně získají ostatní. Obdobně platí, že čím více získají při hraní úlohy ostatní, tím méně získáte Vy.
 
-Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, zda <b>Vy budete hrát verzi “PŘED” nebo “PO”.</b> Ostatní členové skupiny rovněž sami rozhodují, zda sami budou hrát verzi “PŘED” nebo “PO”.
+Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, zda <b>Vy budete hrát verzi “PŘED” nebo “PO”.</b> Ostatní členové skupiny rovněž sami rozhodují, zda budou oni sami hrát verzi “PŘED” nebo “PO”.
 
 Pro připomenutí:
 Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
@@ -121,7 +121,7 @@ Jak jste zaznamenali, úkol měl dvě verze:
 
 Podobně jako jste hráli tato dvě kola úlohy Vy, hráli ji v dřívější studii za stejných podmínek jiní účastníci studie.
 
-Odhadněte, kolik správných předpovědí u hodu kostkou průměrně učinili tito účastníci studie v PŘED verzi úkolu a kolik nahlásili průměrně správných předpovědí v PO verzi úkolu. Pokud se ani jeden z Vašich odhadů nebude od reálné průměrné hodnoty lišit o více než 0,2, dostanete k dnešní výhře navíc {} Kč.
+Odhadněte, kolik správných předpovědí u hodu kostkou průměrně učinili tito účastníci studie v “PŘED” verzi úkolu a kolik nahlásili průměrně správných předpovědí v “PO” verzi úkolu. Pokud se ani jeden z Vašich odhadů nebude od reálné průměrné hodnoty lišit o více než 0,2, dostanete k dnešní výhře navíc {} Kč.
 
 Odhad musí být v rozmezí od 0 do 12 a je možné používat desetinná místa.
 
@@ -129,9 +129,7 @@ Odhad uveďte pro každou z verzí níže:
 """
 
 
-
-# ČTVRTÝ a PÁTÝ BLOK
-intro_block_4 = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.
+intro_block_4 = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny po {} Kč.{}
 
 Nyní Vás čeká čtvrtý blok s dvanácti koly. 
 
@@ -139,19 +137,22 @@ Nyní Vás čeká čtvrtý blok s dvanácti koly.
 
 Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro všechny členy skupiny. Může se také stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
 
+Stále platí, že celková odměna, kterou v bloku získáte, bude odečtena od částky 250 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny. Zbývající dva členové skupiny hrají hru za stejných podmínek.
+
 Pro připomenutí:
 Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
 Ve <b>verzi “PO”</b> uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
 Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 """
-
 
 
 intro_block_5 = """Toto je konec čtvrtého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny získají od Vás po {} Kč.{}
 
 Nyní Vás čeká pátý blok s dvanácti koly. V tomto bloku opět můžete hlasovat, jestli chcete, aby <b>Vaše skupina hrála verzi “PŘED” nebo “PO”.</b> Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
 
+Stále platí, že celková odměna, kterou v bloku získáte, bude odečtena od částky 250 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny. Zbývající dva členové skupiny hrají hru za stejných podmínek.
+
 Pro připomenutí:
 Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
 Ve <b>verzi “PO”</b> uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
@@ -161,11 +162,11 @@ Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
 
 
 
-from_others_text = " <b>Od zbývajících dvou hráčů byste v tomto kole získal(a) dohromady {} Kč, pokud by pro ně byl tento blok vylosován.</b>"
+from_others_text = " <b>Od zbývajících dvou hráčů byste v tomto kole získal(a) dohromady {} Kč, pokud by byl pro oba tento blok vylosován.</b>"
 
 
 
-prediction_later = """Odhadněte, kolik správných odpovědí průměrně učiní zbývající dva členové Vaší skupiny, pokud budete Vaše skupina hrát PŘED verzi úkolu, a kolik si myslíte, že průměrně nahlásí správných odpovědí, pokud bude Vaše skupina hrát PO verzi úkolu.
+prediction_later = """Odhadněte, kolik správných odpovědí průměrně učiní zbývající dva členové Vaší skupiny v následujícím bloku, pokud bude Vaše skupina hrát PŘED verzi úkolu, kde se předpověď uvádí před hodem kostky, a kolik si myslíte, že průměrně nahlásí správných odpovědí, pokud bude Vaše skupina hrát PO verzi úkolu, kde se předpověď uvádí až po hodu kostkou.
 
 Odhad musí být v rozmezi od 0 do 12 a je možné používat desetinná místa.
 
@@ -176,8 +177,8 @@ Odhad uveďte pro každou z verzí níže:
 
 # INFORMACE O ZVOLENÉ VERZI
 info_condition = "Vaše skupina zvolila verzi {}"
-after_voted = "PO, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou."
-before_voted = "PŘED, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali."
+after_voted = "“PO”, ve které uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou."
+before_voted = "“PŘED”, ve které uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali."
 
 
 # ČEKÁNÍ
@@ -301,7 +302,7 @@ class Cheating(ExperimentFrame):
             win = sum(self.rewards[:self.root.wins[self.blockNumber]])
             self.root.texts["win" + str(self.blockNumber)] = win            
             coefficient = {"low": COEFFICIENTS[0], "high": COEFFICIENTS[2], "control": COEFFICIENTS[1]}[self.root.status["condition"]]
-            self.root.texts["otherwin" + str(self.blockNumber)] = ceil(round((250 - win * coefficient) / 2, 1))
+            self.root.texts["otherwin" + str(self.blockNumber)] = ceil(round(((250 - win) * coefficient) / 2, 1))
             self.nextFun()
 
 
@@ -538,6 +539,7 @@ class Selection(InstructionsFrame):
  
     def update_intro(self, condition, root):   
         conditionText = {"low": condition_text.format(str(COEFFICIENTS[0]).replace(".", ",")), "high": condition_text.format(str(COEFFICIENTS[2]).replace(".", ",")), "control": ""}[condition]
+        root.texts["conditionText"] = conditionText
         # global intro_block_3        
         otherRewards = ["{num: >4} ".format(num = ceil((250 - (1.5 * i) * (i + 1))*root.status["coefficient"] / 2)) for i in range(13)]        
         coef = str(root.status["coefficient"]).replace(".", ",")
@@ -586,7 +588,7 @@ class Prediction(InstructionsFrame):
         else:
             text = prediction_later
 
-        super().__init__(root, text = text, height = 20, font = 15, savedata = True)    
+        super().__init__(root, text = text, height = 21, font = 15, savedata = True)    
    
         self.checkVar = StringVar()
         self.checkVar2 = StringVar()
@@ -642,59 +644,6 @@ class Prediction(InstructionsFrame):
 
         self.file.write("Prediction\n")       
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + self.checkVar.get() + "\t" + self.checkVar2.get() + "\n\n")        
-
-
-
-# class Debrief(InstructionsFrame):
-#     def __init__(self, root):
-#         super().__init__(root, text = perception_intro, height = 2, font = 15)
-
-#         self.Q1 = TextArea(self, d1, alines = 5, qlines = 2, width = 60)
-#         self.Q2 = Measure(self, d2, values = scale, questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)  
-#         self.Q3 = Measure(self, d3, values = scale, questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)
-#         self.Q4 = Measure(self, d4, values = scale, questionPosition = "above", left = "", right = "", labelPosition = "next", filler = 700)
-#         self.Q5 = TextArea(self, d5, alines = 5, width = 60)
-
-#         self.Q1.grid(row = 2, column = 1)
-#         self.Q2.grid(row = 3, column = 1)
-#         self.Q3.grid(row = 4, column = 1)
-#         self.Q4.grid(row = 5, column = 1)
-#         self.Q5.grid(row = 6, column = 1)
-
-#         self.warning = ttk.Label(self, text = "Odpovězte prosím na všechny otázky.",
-#                                  background = "white", font = "helvetica 15", foreground = "white")
-#         self.warning.grid(row = 7, column = 1)
-
-#         self.next.grid(row = 8, column = 1)
-
-#         self.rowconfigure(0, weight = 2)
-#         self.rowconfigure(1, weight = 1)
-#         self.rowconfigure(2, weight = 1)
-#         self.rowconfigure(3, weight = 1)
-#         self.rowconfigure(4, weight = 1)
-#         self.rowconfigure(5, weight = 1)
-#         self.rowconfigure(6, weight = 1)
-#         self.rowconfigure(7, weight = 1)
-#         self.rowconfigure(8, weight = 1)
-#         self.rowconfigure(9, weight = 2)
-
-#     def check(self):
-#         ok = all([self.Q1.check(), self.Q2.check(), self.Q3.check(), self.Q4.check(), self.Q5.check()])
-#         if ok:
-#             self.write()
-#         return ok
-
-#     def back(self):
-#         self.warning.config(foreground = "red")
-
-#     def write(self):
-#         self.file.write("Debrief\n" + "\t".join([self.id, self.Q2.answer.get(), self.Q3.answer.get(), self.Q4.answer.get()]))
-#         self.file.write("\t")
-#         self.Q1.write(False)        
-#         self.file.write("\t")
-#         self.Q5.write() 
-#         self.file.write("\n") 
-
 
 
 class Wait(InstructionsFrame):
@@ -789,13 +738,13 @@ controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1], [intro_contr
 
 Instructions1 = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 26, "width": 110, "fillerHeight": 1, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1})
 Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
-Instructions3 = (Selection, {"text": "", "height": 33, "width": 110})
-Instructions4 = (Selection, {"text": intro_block_4, "update": ["win3", "otherwin3", "information3"]})
-Instructions5 = (Selection, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4"]})
+Instructions3 = (Selection, {"text": "", "height": 35, "width": 110})
+Instructions4 = (Selection, {"text": intro_block_4, "update": ["win3", "otherwin3", "information3", "conditionText"], "height": 22})
+Instructions5 = (Selection, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4", "conditionText"], "height": 22})
 ConditionInformation = (InstructionsFrame, {"text": info_condition, "update": ["voted_condition"]})
 
 #Instructions3 = (InstructionsAndUnderstanding, {"text": intro_third, "height": 28, "width": 100, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
-EndCheating = (InstructionsFrame, {"text": endtext, "height": 10, "update": ["win4", "otherwin4", "information5"]})
+EndCheating = (InstructionsFrame, {"text": endtext, "height": 10, "update": ["win5", "otherwin5", "information5"]})
 OutcomeWait = (Wait, {"what": "result"})
 
 

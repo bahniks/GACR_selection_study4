@@ -517,7 +517,7 @@ class MultipleChoice(Canvas):
         
 
 class InstructionsAndUnderstanding(InstructionsFrame):
-    def __init__(self, root, controlTexts, name, showFeedback = True, randomize = True, fillerheight = 255, finalButton = None, **kwargs):
+    def __init__(self, root, controlTexts, name, showFeedback = True, randomize = True, fillerHeight = 255, finalButton = None, **kwargs):
         super().__init__(root, **kwargs)
         if type(controlTexts) == str:
             self.controlTexts = self.root.texts[controlTexts]
@@ -529,7 +529,7 @@ class InstructionsAndUnderstanding(InstructionsFrame):
 
         self.controlFrame = Canvas(self, background = "white", highlightbackground = "white",
                                  highlightcolor = "white")
-        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = fillerheight,
+        self.filler2 = Canvas(self.controlFrame, background = "white", width = 1, height = fillerHeight,
                                 highlightbackground = "white", highlightcolor = "white")
         self.filler2.grid(column = 1, row = 0, rowspan = 10, sticky = NS)
 

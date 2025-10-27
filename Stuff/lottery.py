@@ -14,17 +14,15 @@ from gui import GUI
 ################################################################################
 # TEXTS
 
-options = ((42, 44, 46, 48, 50),
-           (30, 40, 50, 60, 70),
-           (100, 100, 100, 100, 100))
+options = ((26, 28, 30, 32, 34),
+           (5, 10, 20, 40, 80),
+           (400, 250, 170, 100, 60))
 
-instructions = """
-V následujícím úkolu uděláte 5 nezávislých rozhodnutí mezi dvěma možnostmi. První možnost vždy reprezentuje jistou odměnu a druhá možnost vždy reprezentuje loterii. Číslo s procenty reprezentuje pravděpodobnost, že vyhrajete a Vaše odměna bude {} Kč. Pokud prohrajete, Vaše odměna bude 0 Kč. Pravděpodobnost výhry se liší mezi rozhodnutími tak, že riziková možnost (tj. loterie) je s každým dalším řádkem více atraktivní.
+instructions = """V následujícím úkolu uděláte 5 nezávislých rozhodnutí mezi dvěma možnostmi. První možnost vždy reprezentuje jistou odměnu a druhá možnost vždy reprezentuje loterii. U loterie je vždy uvedena pravděpodobnost výhry a její výše. Pokud zvolíte loterii a prohrajete, Vaše odměna bude 0 Kč. Pravděpodobnost výhry se liší mezi rozhodnutími tak, že riziková možnost (tj. loterie) je s každým dalším řádkem více atraktivní.
 
-Až tuto úlohu dokončíte, bude stanovena Vaše odměna. Pro to bude vybráno náhodně jedno z rozhodnutí (každé se stejnou pravděpodobností) a dostanete jistou odměnu nebo bude realizována odpovídající loterie (podle toho, zda zvolíte jistou odměnu nebo loterii). I když učiníte 5 rozhodnutí, pouze jedno z nich bude tedy rozhodovat o Vaši odměně.
+Až tuto úlohu dokončíte, bude stanovena Vaše odměna. Pro to bude vybráno náhodně jedno z rozhodnutí (každé se stejnou pravděpodobností) a dostanete jistou odměnu nebo bude realizována odpovídající loterie (podle toho, zda zvolíte jistou odměnu nebo loterii). I když učiníte 5 rozhodnutí, pouze jedno z nich bude tedy rozhodovat o Vaší odměně.
 
-V každém z 5 řádků se rozhodněte a vyberte prosím, zda preferujete jistou odměnu nebo loterii.
-"""
+V každém z 5 řádků se rozhodněte a vyberte prosím, zda preferujete jistou odměnu nebo loterii."""
 
 wintext = """
 Bylo náhodně vybráno Vaše rozhodnutí číslo {}.
@@ -41,16 +39,17 @@ endText = "V úloze s výběrem loterie či jisté odměny jste vydělal(a) {} K
 ################################################################################
 
 
-class Lottery(ExperimentFrame):
+class Lottery(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root)
+        super().__init__(root, text = instructions, proceed = False, height = 12, savedata = True)
+        self.text.grid(row = 1, column = 0, columnspan = 4)
         self.options = options
            
-        self.text = Text(self, font = "helvetica 15", relief = "flat", background = "white", height = 14,
-                         wrap = "word", highlightbackground = "white", width = 90)
-        self.text.grid(row = 1, column = 0, columnspan = 4)
-        self.text.insert("1.0", instructions.format(options[2][0]))
-        self.text.config(state = "disabled")
+        # self.text = Text(self, font = "helvetica 15", relief = "flat", background = "white", height = 14,
+        #                  wrap = "word", highlightbackground = "white", width = 90)
+        # self.text.grid(row = 1, column = 0, columnspan = 4)
+        # self.text.insert("1.0", instructions.format(options[2][0]))
+        # self.text.config(state = "disabled")
 
         self.leftLabel = ttk.Label(self, text = "Jistá odměna", font = "helvetica 15", background = "white")
         self.leftLabel.grid(row = 3, column = 1, pady = 10)
@@ -76,9 +75,14 @@ class Lottery(ExperimentFrame):
         ttk.Style().configure("TButton", font = "helvetica 15")
 
         self.columnconfigure(0, weight = 1)
+        self.columnconfigure(1, weight = 0)
+        self.columnconfigure(2, weight = 0)
         self.columnconfigure(3, weight = 1)
         self.rowconfigure(0, weight = 1)
         self.rowconfigure(1, weight = 1)
+        self.rowconfigure(2, weight = 0)
+        self.rowconfigure(3, weight = 0)
+        self.rowconfigure(4, weight = 0)
         self.rowconfigure(9, weight = 1)
         self.rowconfigure(10, weight = 1)
 
