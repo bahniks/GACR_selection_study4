@@ -11,6 +11,7 @@ import urllib.parse
 
 from constants import TESTING, URL
 import re
+import math
 
 
 class ExperimentFrame(Canvas):
@@ -70,14 +71,16 @@ class ExperimentFrame(Canvas):
 
 
 class InstructionsFrame(ExperimentFrame):
-    def __init__(self, root, text, proceed = True, firstLine = None, end = False, height = 12,
-                 font = 15, space = False, width = 80, keys = None, update = None, bold = None, wait = 2, savedata = False):
+    def __init__(self, root, text, proceed = True, height = "auto", font = 15, space = False, width = 80, keys = None, 
+                 update = None, wait = 2, savedata = False):
         super().__init__(root)
 
         self.root = root
         self.wait = wait
         self.t0 = time()
         self.savedata = savedata
+        self.height = height
+        height = 12 if height == "auto" else height
 
         if update:
             updateTexts = []
@@ -87,15 +90,17 @@ class InstructionsFrame(ExperimentFrame):
                    
         self.text = Text(self, font = "helvetica {}".format(font), relief = "flat",
                          background = "white", width = width, height = height, wrap = "word",
-                         highlightbackground = "white")
+                         highlightbackground = "white", pady = 15)
         self.text.grid(row = 1, column = 0, columnspan = 3)
-        if firstLine:
-            self.text.insert("1.0", text[:text.find("\n", 5)], firstLine)
-            self.text.insert("end", text[text.find("\n", 5):])
-            self.text.tag_configure(firstLine, font = "helvetica 20 {}".format(firstLine))
-        else:
-            self.text.insert("1.0", text)
- 
+
+        self.text.insert("1.0", text)
+        if self.height == "auto":
+            self.text.update_idletasks()
+            num_lines = self.count_lines()
+            if "</b>" in text:
+                num_lines += 1
+            self.text.config(height = int(num_lines))
+
         self.text.tag_configure("bold", font = "helvetica {} bold".format(font))
         self.text.tag_configure("italic", font = "helvetica {} italic".format(font))    
         self.text.tag_configure("courier", font = "courier {}".format(font))      
@@ -174,7 +179,18 @@ class InstructionsFrame(ExperimentFrame):
         self.text.insert("1.0", newtext)
         if tags:
             self.addStandardTags()
+        if self.height == "auto":
+            self.text.update_idletasks()
+            num_lines = self.count_lines()
+            if "</b>" in text:
+                num_lines += 1
+            self.text.config(height = int(num_lines))
         self.text.config(state = "disabled")
+
+    def count_lines(self) -> int:
+        #val = self.text.tk.call(self.text._w, "count", "-displaylines", "1.0", "end-1c")
+        val = self.text.tk.call(self.text._w, "count", "-displaylines", "1.0", "end")
+        return int(val)
 
     def proceed(self):
         if time() - self.t0 > self.wait:

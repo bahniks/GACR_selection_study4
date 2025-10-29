@@ -609,11 +609,13 @@ class Prediction(InstructionsFrame):
     def __init__(self, root):    
         if root.status["block"] == 3:    
             text = prediction_third.format(root.texts["win2"], PREDICTION_BONUS)  
+            #height = 21
         else:
             text = prediction_later
+            #height = 10
 
-        super().__init__(root, text = text, height = 10, font = 15, savedata = True)    
-   
+        super().__init__(root, text = text, height = "auto", font = 15, savedata = True)
+
         self.checkVar1 = StringVar()
         self.checkVar2 = StringVar()
 
@@ -827,16 +829,16 @@ controlTexts1 = [[intro_control1, intro_answers1, intro_feedback1], [intro_contr
 controlTexts3 = [[q3, answers3, feedback3]]
 controlTexts4 = [[q4, answers4, feedback4]]
 
-Instructions1 = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": 26, "width": 110, "fillerHeight": 1, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1})
-Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": 5, "update": ["win1"]})
-Instructions3 = (Selection, {"text": "", "height": 35, "width": 110})
-Instructions4Check = (InstructionsAndUnderstanding, {"text": intro_block_4, "update": ["win3", "otherwin3", "conditionText"], "height": 26, "width": 80, "fillerHeight": 1, "name": "Cheating Round 4 Control Questions", "randomize": False, "controlTexts": controlTexts4})
-Instructions4 = (Selection, {"text": choice_fourth, "update": ["conditionText"], "height": 26})
-Instructions5 = (Selection, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4", "conditionText"], "height": 26})
+Instructions1 = (InstructionsAndUnderstanding, {"text": intro_block_1, "height": "auto", "width": 110, "fillerHeight": 1, "name": "Cheating Instructions Control Questions", "randomize": False, "controlTexts": controlTexts1})
+Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": "auto", "update": ["win1"]})
+Instructions3 = (Selection, {"text": "", "height": "auto", "width": 110})
+Instructions4Check = (InstructionsAndUnderstanding, {"text": intro_block_4, "update": ["win3", "otherwin3", "conditionText"], "height": "auto", "width": 80, "fillerHeight": 1, "name": "Cheating Round 4 Control Questions", "randomize": False, "controlTexts": controlTexts4})
+Instructions4 = (Selection, {"text": choice_fourth, "update": ["conditionText"], "height": "auto"})
+Instructions5 = (Selection, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4", "conditionText"], "height": "auto"})
 ConditionInformation = (InstructionsFrame, {"text": info_condition, "update": ["voted_condition"]})
 
 #Instructions3Check = (InstructionsAndUnderstanding, {"text": intro_block_3, "height": 35, "width": 110, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
-EndCheating = (InstructionsFrame, {"text": endtext, "height": 10, "update": ["win5", "otherwin5"]})
+EndCheating = (InstructionsFrame, {"text": endtext, "height": "auto", "update": ["win5", "otherwin5"]})
 OutcomeWait = (Wait, {"what": "result"})
 
 

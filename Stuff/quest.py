@@ -136,7 +136,12 @@ class Likert(Canvas):
         super().__init__(root)
 
         if wraplength == "auto":
-            wraplength = root.root.screenwidth * 0.9
+            if hasattr(root.root, "screenwidth"):
+                wraplength = root.root.screenwidth * 0.9
+            elif hasattr(root, "screenwidth"):
+                root.screenwidth * 0.9
+            else:
+                wraplength = 900
 
         self.root = root
         self.text = text
@@ -207,5 +212,5 @@ QuestInstructions = (InstructionsFrame, {"text": questintro, "height": 15})
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
-    GUI([QuestInstructions
+    GUI([QuestInstructions, Hexaco
          ])

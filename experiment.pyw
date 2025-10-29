@@ -16,8 +16,7 @@ from cheating import EndCheating, ConditionInformation, Login, Prediction, Outco
 from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
 from comments import Comments
-#from questionnaire import TEQ, RSMS, HEXACOinfo, PoliticalWill
-#from tosca import TOSCA
+from questionnaire import TDMS
 
 frames = [Initial,
           Intro,
@@ -51,11 +50,7 @@ frames = [Initial,
           DiceLottery,
           QuestInstructions,
           Hexaco,
-          #RSMS,
-          #TEQ,
-          #TOSCA,
-          #PoliticalWill,
-          #HEXACOinfo,
+          TDMS,
           Demographics,
           Comments,
           Ending

@@ -18,8 +18,7 @@ from cheating import Login
 
 ################################################################################
 # TEXTS
-login = """
-Vítejte na výzkumné studii pořádané Fakultou podnikohospodářskou Vysoké školy ekonomické v Praze! 
+login = """Vítejte na výzkumné studii pořádané Fakultou podnikohospodářskou Vysoké školy ekonomické v Praze! 
 
 Za účast na studii obdržíte {} Kč. Kromě toho můžete vydělat další peníze v průběhu studie. 
 
@@ -32,8 +31,7 @@ Pokud jste již tak neučinili, přečtěte si informovaný souhlas a pokud s n�
 Počkejte na pokyn experimentátora.""".format(PARTICIPATION_FEE)
 
 
-intro = """
-Studie se skládá z několika různých úkolů a otázek. Níže je uveden přehled toho, co Vás čeká:
+intro = """Studie se skládá z několika různých úkolů a otázek. Níže je uveden přehled toho, co Vás čeká:
 1) Hod kostkou: Vaším úkolem bude uhodnout, zda na kostce padne liché, nebo sudé číslo. Budete hádat v pěti blocích, v každém po dvanácti kolech. V tomto úkolu můžete vydělat peníze.
 2) Loterie: můžete se rozhodnout zúčastnit se loterie a získat další peníze v závislosti na výsledcích loterie.
 3) Dotazníky: budete odpovídat na otázky ohledně Vašich vlastností a postojů. 
@@ -142,9 +140,9 @@ class Ending(InstructionsFrame):
 
 
 
-Intro = (InstructionsFrame, {"text": intro, "proceed": True, "height": 22})
-Initial = (InstructionsFrame, {"text": login, "proceed": False, "height": 15, "keys": ["g", "G"]})
-HEXACOintro = (InstructionsFrame, {"text": hexacointrotext, "height": 11, "update": ["idNumber"]})
+Intro = (InstructionsFrame, {"text": intro, "proceed": True, "height": "auto"})
+Initial = (InstructionsFrame, {"text": login, "proceed": False, "height": "auto", "keys": ["g", "G"]})
+HEXACOintro = (InstructionsFrame, {"text": hexacointrotext, "height": "auto", "update": ["idNumber"]})
 
 
 if __name__ == "__main__":
