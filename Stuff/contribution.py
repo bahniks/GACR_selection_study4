@@ -7,39 +7,48 @@ import random
 
 from collections import OrderedDict
 
-from common import ExperimentFrame, InstructionsFrame
+from common import InstructionsFrame
 from gui import GUI
+
+
+
+options = (1,2,3,4,6,8,10)
+BASE = 10
+
+instructions = f"""V následujícím úkolu uděláte 7 nezávislých rozhodnutí mezi dvěma možnostmi. Pokud zvolíte první možnost, nic se nestane. Pokud zvolíte druhou možnost, ztratíte {BASE} Kč ze své výhry. Jiný účastník studie, se kterým jste ještě nebyli spárováni, obdrží částku, která je u této možnosti napsána. Jiný účastník bude podobně dělat rozhodnutí, která mohou ovlivnit Vaši odměnu.
+
+Až tuto úlohu dokončíte, bude vybráno náhodně jedno z rozhodnutí (každé se stejnou pravděpodobností) a nestane se nic nebo ztratíte {BASE} Kč a jiný účastník obdrží částku uvedenou u daného rozhodnutí. I když učiníte 7 rozhodnutí, pouze jedno z nich bude tedy rozhodovat o tom, jak bude ovlivněna Vaše odměna a odměna dalšího účastníka. Výsledek se dozvíte na konci studie.
+
+V každém z 7 řádků se rozhodněte a vyberte prosím, zda preferujete jistou odměnu nebo loterii."""
+
+noneResult = f"V úloze, kde jste volil(a), zda přispět jinému účastníkovi studie, jste mohl(a) zvolit, zda tento účastník obdrží {{0}} Kč a vy ztratíte {BASE} Kč. Zvolil(a) jste možnost 'Nic'. Neztratíte tedy žádné peníze a druhý účastník nic nedostane."
+
+donationResult = f"V úloze, kde jste volil(a), zda přispět jinému účastníkovi studie, jste mohl(a) zvolit, zda tento účastník obdrží {{0}} Kč a vy ztratíte {BASE} Kč. Zvolil(a) jste možnost 'Darování'. Ztratil(a) jste tedy {BASE} Kč a jiný účastník obdržel {{0}} Kč."
 
 
 class Contribution(InstructionsFrame):
     def __init__(self, root):
-        super().__init__(root, text = instructions, proceed = False, height = 12, savedata = True)
+        super().__init__(root, text = instructions, proceed = True, height = "auto", savedata = True)
         self.text.grid(row = 1, column = 0, columnspan = 4)
-        self.options = options
-           
-        # self.text = Text(self, font = "helvetica 15", relief = "flat", background = "white", height = 14,
-        #                  wrap = "word", highlightbackground = "white", width = 90)
-        # self.text.grid(row = 1, column = 0, columnspan = 4)
-        # self.text.insert("1.0", instructions.format(options[2][0]))
-        # self.text.config(state = "disabled")
+        self.options = options           
 
-        self.leftLabel = ttk.Label(self, text = "Jistá odměna", font = "helvetica 15", background = "white")
+        self.leftLabel = ttk.Label(self, text = "Nic", font = "helvetica 15 bold", background = "white")
         self.leftLabel.grid(row = 3, column = 1, pady = 10)
-        self.rightLabel = ttk.Label(self, text = "Loterie", font = "helvetica 15", background = "white")
+        self.rightLabel = ttk.Label(self, text = "Darování", font = "helvetica 15 bold", background = "white")
         self.rightLabel.grid(row = 3, column = 2, pady = 10)
 
         self.variables = OrderedDict()
         self.rbuttonsL = {}
         self.rbuttonsR = {}
-        for i in range(5):
+        for i in range(7):
             row = i + 4
             self.variables[i] = StringVar()
-            self.rbuttonsL[i] = ttk.Radiobutton(self, text = " {} Kč".format(options[0][i]),
-                                                variable = self.variables[i], value = str(i+1) + "sure",
+            self.rbuttonsL[i] = ttk.Radiobutton(self, text = "Beze změn odměn",
+                                                variable = self.variables[i], value = str(i+1) + "none",
                                                 command = self.checkAllFilled)
             self.rbuttonsL[i].grid(column = 1, row = row, sticky = W, padx = 30)
-            self.rbuttonsR[i] = ttk.Radiobutton(self, variable = self.variables[i], value = str(i+1) + "risky",
-                                                text = " {}% {} Kč".format(options[1][i], options[2][i]),
+            self.rbuttonsR[i] = ttk.Radiobutton(self, variable = self.variables[i], value = str(i+1) + "donation",
+                                                text = f"Vy: -{BASE} Kč   Další účastník: +{options[i] * BASE} Kč",
                                                 command = self.checkAllFilled)
             self.rbuttonsR[i].grid(column = 2, row = row, sticky = W, padx = 30)
 
@@ -55,11 +64,10 @@ class Contribution(InstructionsFrame):
         self.rowconfigure(2, weight = 0)
         self.rowconfigure(3, weight = 0)
         self.rowconfigure(4, weight = 0)
-        self.rowconfigure(9, weight = 1)
-        self.rowconfigure(10, weight = 1)
+        self.rowconfigure(11, weight = 1)
+        self.rowconfigure(12, weight = 1)
 
-        self.next = ttk.Button(self, text = "Pokračovat", command = self.nextFun)
-        self.next.grid(row = 9, column = 0, columnspan = 4, pady = 15)
+        self.next.grid(row = 11, column = 0, columnspan = 4, pady = 15)
         self.next["state"] = "disabled"
         
 
@@ -69,38 +77,20 @@ class Contribution(InstructionsFrame):
 
 
     def write(self):
-        selected = random.randint(1, 5)
-        self.root.texts["lottery_selected"] = selected
-        if "risky" in self.variables[selected - 1].get():
-            self.root.texts["lottery_chosen"] = "risky"
-            if random.random() * 100 < self.options[1][selected - 1]:
-                win = self.options[2][selected - 1]
-                self.root.texts["lottery_random"] = "won"
-            else:
-                win = 0
-                self.root.texts["lottery_random"] = "lost"
+        selected = random.randint(1, 7)
+        #self.root.texts["contribution_selected"] = selected
+        if "donation" in self.variables[selected - 1].get():
+            #self.root.texts["contribution_chosen"] = "donation"
+            self.root.status["results"] += [donationResult.format(self.options[selected - 1] * BASE)]
+            self.root.status["reward"] -= BASE            
         else:
-            self.root.texts["lottery_chosen"] = "safe"
-            win = self.options[0][selected - 1]
-        self.file.write("Lottery\n")
-        self.root.status["reward"] += win
-        self.root.status["results"] += [endText.format(win)]
-        self.root.texts["lottery_win"] = win
-        self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected), str(win)]) + "\n")
-    def __init__(self, root):
-        super().__init__(root)
+            #self.root.texts["contribution_chosen"] = "none"
+            self.root.status["results"] += [noneResult.format(self.options[selected - 1] * BASE)]
+        self.file.write("Contribution\n")     
+        print(self.root.status["results"])        
+        self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected)]) + "\n")
 
 
-
-class LotteryWin(InstructionsFrame):
-    def __init__(self, root):
-        self.root = root
-        if self.root.texts["lottery_chosen"] == "risky":
-            append = risky
-        else:
-            append = sure
-        text = wintext.format(self.root.texts["lottery_selected"], append.format(self.root.texts["lottery_win"]))       
-        super().__init__(root, text = text, proceed = True, height = 5)  
 
 
 if __name__ == "__main__":

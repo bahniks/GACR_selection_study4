@@ -109,12 +109,11 @@ Po vyplnění identifikačního čísla do záznamového archu klikněte na tla�
 class Ending(InstructionsFrame):
     def __init__(self, root):
         root.texts["results"] = "\n" + "\n".join(root.status["results"]) + "\n"
-
         root.texts["reward"] = str(root.status["reward"])
         root.texts["rounded_reward"] = ceil(root.status["reward"] / 10) * 10
         root.texts["participation_fee"] = PARTICIPATION_FEE
         updates = ["results", "participation_fee", "reward", "rounded_reward"]
-        super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 38, update = updates, width = 100)
+        super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = "auto", update = updates, width = 100)
         self.file.write("Ending\n")
         self.file.write(self.id + "\t" + str(root.texts["rounded_reward"]) + "\n\n")
 

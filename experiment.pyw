@@ -17,6 +17,8 @@ from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
 from comments import Comments
 from questionnaire import TDMS
+from contribution import Contribution
+from svo import SVO
 
 frames = [Initial,
           Intro,
@@ -44,6 +46,8 @@ frames = [Initial,
           Cheating,     
           OutcomeWait,  
           EndCheating,
+          Contribution,
+          SVO,
           Lottery,
           LotteryWin,
           LotteryInstructions,
