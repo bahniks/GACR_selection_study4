@@ -69,43 +69,6 @@ Po vyplnění identifikačního čísla do záznamového archu klikněte na tla�
 
 
 
-
-# class Ending(InstructionsFrame):
-#     def __init__(self, root):        
-#         root.texts["addOthers"] = additional.format(root.texts["fromOthers"]) if int(root.status["winning_block"]) >= 3 else ""        
-#         dice = int(root.texts["dice"]) + int(root.texts["fromOthers"])
-#         prediction = 0 if root.status["prediction"] == "incorrect" else PREDICTION_BONUS
-#         root.texts["predictionText"] = incorrect_prediction if root.status["prediction"] == "incorrect" else correct_prediction
-#         root.texts["reward"] = dice + prediction + int(root.texts["lottery_win"]) + PARTICIPATION_FEE
-#         root.texts["rounded_reward"] = ceil(root.texts["reward"] / 10) * 10
-#         root.texts["participation_fee"] = str(PARTICIPATION_FEE)
-#         updates = ["block", "dice", "addOthers", "predictionText", "lottery_win", "participation_fee", "reward", "rounded_reward"]
-#         super().__init__(root, text = ending, keys = ["g", "G"], proceed = False, height = 20, update = updates)
-#         self.file.write("Ending\n")
-#         self.file.write(self.id + "\t" + "\t".join([str(root.texts["rounded_reward"]), str(root.texts["block"])]) + "\n\n")
-
-#     def run(self):
-#         self.sendInfo()
-
-#     def sendInfo(self):
-#         while True:
-#             self.update()    
-#             data = urllib.parse.urlencode({'id': self.root.id, 'round': -99, 'offer': self.root.texts["rounded_reward"]})
-#             data = data.encode('ascii')
-#             if URL == "TEST":
-#                 response = "ok"
-#             else:
-#                 try:
-#                     with urllib.request.urlopen(URL, data = data) as f:
-#                         response = f.read().decode("utf-8") 
-#                 except Exception:
-#                     pass
-#             if "ok" in response:                     
-#                 break              
-#             sleep(5)
-
-
-
 class Ending(InstructionsFrame):
     def __init__(self, root):
         root.texts["results"] = "\n" + "\n".join(root.status["results"]) + "\n"
