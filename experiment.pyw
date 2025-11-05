@@ -16,7 +16,8 @@ from cheating import EndCheating, ConditionInformation, Login, Prediction, Outco
 from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
 from comments import Comments
-from questionnaire import TDMS
+from questionnaire import TDMS, TEQ, PoliticalWill
+from tosca import TOSCA
 from contribution import Contribution
 from svo import SVO
 
@@ -55,6 +56,9 @@ frames = [Initial,
           QuestInstructions,
           Hexaco,
           TDMS,
+          TEQ,
+          TOSCA,
+          PoliticalWill,
           Demographics,
           Comments,
           Ending

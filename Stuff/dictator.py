@@ -21,19 +21,19 @@ from cheating import Login
 instructions = """Vítejte v druhé části dnešní studie. Pozorně si přečtěte pokyny, abyste porozuměli studii a své roli v ní. Vaše rozhodnutí budou mít finanční důsledky pro Vás a pro dalšího přítomného účastníka.
 V této části studie Vám bude náhodně přidělena jedna ze dvou rolí: budete buď hráčem A, nebo hráčem B. Vaše role zůstane stejná po celou dobu úkolu a zároveň budete v obou kolech úkolu ve dvojici se stejným účastníkem. Oba účastníci ve dvojici budou vždy informováni o rozhodnutích toho druhého.
 
-<b>První kolo:</b>
+<center><b>První kolo</b></center>
 Každý z hráčů A a B obdrží 20 Kč. 
 <i>Hráč A:</i> Má možnost vzít si od hráče B od 0 do 10 Kč (v krocích po 2 Kč).
-<i>Hráč B:</i> Má k dispozici dvě možné reakce na rozhodnutí hráče A a bude moci vybrat zprávu, kterou pošle hráči A.
+<i>Hráč B:</i> Má k dispozici tři možné reakce na rozhodnutí hráče A a bude moci vybrat zprávu, kterou pošle hráči A.
 Reakce mohou být:
 <b>Odpustit</b>: Může hráči A odpustit a  poslat mu od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou ze svých peněz hráč B pošle, hráč A dostane 1 Kč.
 <b>Neudělat nic</b>: Pokračovat ve studii bez jakékoli akce.
 <b>Potrestat</b>: Může hráče A potrestat od symbolické 0 až po 10 Kč. Za každou 1 Kč, kterou hráč B vynaloží na potrestání, ztratí hráč A také 1 Kč.
 Hráč B zvolí svoji reakci a zprávu pro všechna možná rozhodnutí hráče A.
 
-Jakmile oba účastníci odešlou své odpovědi, jejich rozhodnutí budou provedena a hráči se dozví, co se rozhodl udělat hráč A, jak na to reagoval hráč B a jakou zprávu hráči A poslal. Hra pak postoupí do druhého kola, které je velmi podobné – liší se pouze částkou, kterou hráč A může vzít hráči B: zatímco v prvním kole mohl vzít polovinu z úvodní částky, ve druhém kole může vzít celou úvodní částku.
+Jakmile oba účastníci odešlou své odpovědi, jejich rozhodnutí budou provedena a hráči se dozví, co se rozhodl udělat hráč A, jak na to reagoval hráč B a jakou zprávu hráči A poslal. Hra pak postoupí do druhého kola, které je velmi podobné – liší se však částkou, kterou hráč A může vzít hráči B: zatímco v prvním kole mohl vzít polovinu z úvodní částky, ve druhém kole může vzít celou úvodní částku.
 
-<b>Druhé kolo:</b>
+<center><b>Druhé kolo</b></center>
 Každý z hráčů A a B obdrží 20 Kč.
 <i>Hráč A:</i> Má možnost vzít si od hráče B od 0 do 20 Kč (v krocích po 2 Kč).
 <i>Hráč B:</i> V druhém kole nedělá žádné rozhodnutí.
@@ -74,7 +74,7 @@ Vaše role zůstává po celou dobu studie stejná. Vy i hráč A jste dostali v
 S hráčem A budete ve dvojici pro obě kola studie. Oba budete informováni o rozhodnutích toho druhého.
 
 Nyní budete mít příležitost se rozhodnout, kolik (0-10 Kč, v krocích po 2 Kč) si od hráče B vezmete.
-Hráč B bude na Vaše rozhodnutí reagovat. Bude mít k dispozici dvě možnosti reakce na Vaše rozhodnutí a vybere pro Vás zprávu:
+Hráč B bude na Vaše rozhodnutí reagovat. Bude mít k dispozici tři možnosti reakce na Vaše rozhodnutí a vybere pro Vás zprávu:
 {}
 
 <b>Rozhodněte se, kolik si chcete od hráče B vzít (0-10 Kč)</b>:
@@ -102,11 +102,11 @@ ignoreMessage1 = '"V reakci na Vaše rozhodnutí neudělám nic a jen pokračuji
 ignoreMessage2 = '"Volím možnost: Neudělat nic."'
 punishMessage1 = '"V reakci na Vaše rozhodnutí Vás tímto trestám."'
 punishMessage2 = '"Volím možnost: Potrestat."'
-forgiveMessage1 = '"Je mi líto, že jste mi vzal/a peníze. Takto by se k sobě lidé chovat neměli. Já Vám ale odpouštím."'
+forgiveMessage1 = '"Je mi líto, že jste mi vzal(a) peníze. Takto by se k sobě lidé chovat neměli. Já Vám ale odpouštím."'
 forgiveMessage2 = '"Volím možnost: Odpustit."'
 
 
-followup = "Jak se cítíte poté, co jste učinil/a Vaši volbu?"
+followup = "Jak se cítíte poté, co jste učinil(a) Vaši volbu?"
 scale = ["Nepatrně\nnebo vůbec", "Velmi mírně", "Mírně", "Docela dost", "Extrémně"]
 dimensions = ["Naštvaně", "Rozrušeně", "Provinile", "Nepřátelsky", "Hrdě", "Nadšeně", "Zahanbeně", "Odhodlaně", "Bojácně"]
 
@@ -118,7 +118,7 @@ followupB2 = """Hráč A Vám může vzít 0 až 20 Kč. Vyčkejte na rozhodnut�
 Jak se cítíte?"""
 
 
-dictatorResultTextA = """Rozhodl/a jste se Hráči B vzít {} Kč.
+dictatorResultTextA = """Rozhodl(a) jste se Hráči B vzít {} Kč.
 
 Jako reakci Hráč B:
 <b>{}
@@ -150,25 +150,25 @@ Vy i Hráč A jste dostali 20 Kč.
 Hráč A se rozhodne, kolik (0-20 Kč) si od Vás vezme.
 Vy čekáte na rozhodnutí Hráče A."""
 
-ignoreResult = 'Neudělal nic a poslal zprávu "{}"'
-punishResult = '{} a poslal zprávu "{}" Oba ztrácíte {} Kč.'
-forgiveResult = '{} {} Kč a poslal zprávu "{}"'
+ignoreResult = 'Neudělal(a) nic a poslal(a) zprávu {}'
+punishResult = '{} a poslal(a) zprávu {} Oba ztrácíte {} Kč.'
+forgiveResult = '{} {} Kč a poslal(a) zprávu {}'
 
-punishA = "Vás potrestal/a"
-punishB = "Hráče A potrestal/a"
-forgiveA = "Vám odpustil/a, daroval/a Vám"
-forgiveB = "Hráči A odpustil/a, daroval/a Hráči A"
+punishA = "Vás potrestal(a)"
+punishB = "Hráče A potrestal(a)"
+forgiveA = "Vám odpustil(a), daroval(a) Vám"
+forgiveB = "Hráči A odpustil(a), daroval(a) Hráči A"
 
 
-finalTextA = """Rozhodl/a jste se Hráči B vzít {} Kč.
-V tomto kole jste získal/a {} Kč a Hráč B {} Kč.
+finalTextA = """Rozhodl(a) jste se Hráči B vzít {} Kč.
+V tomto kole jste získal(a) {} Kč a Hráč B {} Kč.
 <b>Z této úlohy si dohromady odnášíte {} Kč a Hráč B {} Kč.</b> 
 
 Tímto tato část studie končí.
 Ve studii pokračujte kliknutím na tlačítko "Pokračovat"."""
 
 finalTextB = """Hráč A se rozhodl Vám vzít {} Kč.
-V tomto kole jste získal/a {} Kč a Hráč A {} Kč.
+V tomto kole jste získal(a) {} Kč a Hráč A {} Kč.
 <b>Z této úlohy si dohromady odnášíte {} Kč a Hráč A {} Kč.</b> 
 
 Tímto tato část studie končí.
@@ -529,12 +529,12 @@ class DictatorFeelings(Questionnaire):
         question = followupB2 if root.status["dictatorRole"] == "B" and round == 2 else followup
 
         super().__init__(root, words = dimensions, question = question, labels = scale, values = 5, labelwidth = 12, text = False,
-                         fontsize = 14, blocksize = len(dimensions), filetext = "Dictator Feelings" + str(round))
+                         fontsize = 15, blocksize = len(dimensions), filetext = "Dictator Feelings" + str(round))
 
         self.round = round
 
         if self.root.status["dictatorRole"] == "A" and self.round == 1:
-            answers = [expectAnswers[condition] for condition in self.root.status["dictatorCondition"].split("-")]
+            answers = [expectAnswers[condition] for condition in ["forgive", "ignore", "punish"]]
             self.expectation = MultipleChoice(self, text = expectText, answers = answers, feedback = [""]*2, randomize = False, callback = self.clicked)
             self.expectation.grid(row = 2, column = 1)
             self.next.grid(row = 3, column = 1)
