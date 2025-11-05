@@ -107,7 +107,7 @@ condition_text = ", vynásobena koeficientem {}"
 
 q3 = "Kolik Kč dohromady získají členové Vaší skupiny dle pravidel uvedených výše,\npokud správně uhádnete 8 hodů a bude vylosován tento blok k proplacení?"
 answers3 = ["{} Kč", "{} Kč", "{} Kč", "{} Kč"]
-feedback3 = ["Špatná odpověď {}.", "Špatná odpověď {}.", "Špatná odpověď {}.", "Správná odpověď. {}"]
+feedback3 = ["Špatná odpověď {}", "Špatná odpověď {}", "Špatná odpověď {}", "Správná odpověď. {}"]
 explanation3 = "Každý získá {} Kč (“Odměna ostatních”) pro 8 správných odhadů, dohromady proto získají {} × 2 = {} Kč (hrajete s dvěma účastníky)."
 
 choice_third = """Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, zda <b>Vy budete hrát verzi “PŘED” nebo “PO”.</b> Ostatní členové skupiny rovněž sami rozhodují, zda budou oni sami hrát verzi “PŘED” nebo “PO”.
