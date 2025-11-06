@@ -95,7 +95,7 @@ Vaše odměna v Kč |   0 |   3 |   9 |  18 |  30 |  45 |  63 |  84 | 108 | 135 
 ------------------------------------------------------------------------------------------------
 Odměna ostatních |{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|
 </c>
-Například uhodnete-li 6 hodů, získáte 63 Kč (“Vaše odměna v Kč”). Ostatní dle uvedených pravidel získají 250 - 63 = 187 Kč{}, rozděleno dvěma spoluhráčům znamená, že <b>každý</b> dostane {} Kč (“Odměna ostatních”). 
+Například uhodnete-li 6 hodů, získáte 63 Kč (“Vaše odměna v Kč”). Ostatní dle uvedených pravidel získají 250 - 63 = 187 Kč{}, rozděleno dvěma spoluhráčům znamená, že <b>každý z nich</b> dostane {} Kč (“Odměna ostatních”). 
 
 K odměně, kterou získáte Vy ve svých odhadech, obdržíte navíc zbývající odměnu od dvou svých spoluhráčů (Vy získáte to, co u nich je v položce “Odměna ostatních”).
 
@@ -107,7 +107,7 @@ condition_text = ", vynásobena koeficientem {}"
 
 q3 = "Kolik Kč dohromady získají členové Vaší skupiny dle pravidel uvedených výše,\npokud správně uhádnete 8 hodů a bude vylosován tento blok k proplacení?"
 answers3 = ["{} Kč", "{} Kč", "{} Kč", "{} Kč"]
-feedback3 = ["Špatná odpověď {}", "Špatná odpověď {}", "Špatná odpověď {}", "Správná odpověď. {}"]
+feedback3 = ["Špatná odpověď. {}", "Špatná odpověď. {}", "Špatná odpověď. {}", "Správná odpověď. {}"]
 explanation3 = "Každý získá {} Kč (“Odměna ostatních”) pro 8 správných odhadů, dohromady proto získají {} × 2 = {} Kč (hrajete s dvěma účastníky)."
 
 choice_third = """Nyní Vás čeká třetí blok s dvanácti koly. V tomto bloku si můžete vybrat, zda <b>Vy budete hrát verzi “PŘED” nebo “PO”.</b> Ostatní členové skupiny rovněž sami rozhodují, zda budou oni sami hrát verzi “PŘED” nebo “PO”.
@@ -138,7 +138,7 @@ Jak jste zaznamenali, úkol měl dvě verze:
 
 Podobně jako jste hráli tato dvě kola úlohy Vy, hráli ji v dřívější studii za stejných podmínek jiní účastníci studie.
 
-Odhadněte, kolik správných předpovědí u hodu kostkou průměrně učinili tito účastníci studie v “PŘED” verzi úkolu a kolik nahlásili průměrně správných předpovědí v “PO” verzi úkolu. Pokud se ani jeden z Vašich odhadů nebude od reálné průměrné hodnoty lišit o více než 0,2, dostanete k dnešní výhře navíc {} Kč.
+Odhadněte, kolik správných předpovědí u hodu kostkou průměrně učinili tito účastníci studie v “PŘED” verzi úkolu a kolik nahlásili průměrně správných předpovědí v “PO” verzi úkolu. Pokud se ani jeden z Vašich odhadů nebude od skutečné průměrné hodnoty lišit o více než 0,2, dostanete k dnešní odměně navíc {} Kč.
 
 Odhad musí být v rozmezí od 0 do 12 a je možné používat desetinná místa.
 
@@ -150,13 +150,13 @@ intro_block_4 = """Toto je konec třetího bloku o dvanácti kolech. Pokud bude 
 
 Nyní Vás čeká čtvrtý blok s dvanácti koly. 
 
-<b>Zde je důležitá změna:</b> V tomto bloku můžete vybrat, jestli chcete, aby <b>všichni členové Vaší skupiny</b> hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
+<b>Zde je důležitá změna:</b> V tomto bloku můžete vybrat, zda <b>všichni členové Vaší skupiny</b> mají hrát verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů Vaší skupiny. 
 
-Oproti předchozímu bloku tedy nevolíte verzi úlohy pouze pro sebe, ale pro všechny členy skupiny. Může se také stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
+Oproti předchozímu bloku nevolíte verzi úlohy pro sebe, ale pro všechny členy skupiny. Může se stát, že nebudete hrát Vámi zvolenou verzi úlohy, pokud oba zbývající členové skupiny budou hlasovat pro druhou z verzí.
 
-Před pokračováním si odpovězte na následující kontrolní otázku."""
+Před pokračováním odpovězte na následující kontrolní otázku."""
 
-q4 = "Co se stane, pokud si vyberete verzi „PO“ a jeden ze zbývajících dvou členů skupiny také hlasuje pro tuto verzi?"
+q4 = "Co se stane, pokud vyberete verzi „PO“ a jeden ze zbývajících dvou členů skupiny také hlasuje pro tuto verzi?"
 answers4 = ["Všichni budete hrát verzi „PO”.", "Všichni budete hrát verzi „PŘED”.", "Verze bude zvolena pro všechny náhodně.", "Každý člen skupiny bude hrát svou vybranou verzi."]
 feedback4 = ["Správná odpověď. Jste ve skupině tří osob, pakliže Vy a další člen hlasujete pro “PO” verzi, pak většina zvolila “PO” verzi. “PO” verzi budete hrát všichni.", "Špatná odpověď. Jste ve skupině tří osob, pakliže Vy a další člen hlasujete pro “PO” verzi, pak většina zvolila “PO” verzi. “PO” verzi budete hrát všichni.", "Špatná odpověď. Jste ve skupině tří osob, pakliže Vy a další člen hlasujete pro “PO” verzi, pak většina zvolila “PO” verzi. “PO” verzi budete hrát všichni.", "Špatná odpověď. Jste ve skupině tří osob, pakliže Vy a další člen hlasujete pro “PO” verzi, pak většina zvolila “PO” verzi. “PO” verzi budete hrát všichni."]
 
@@ -490,10 +490,10 @@ class Cheating(ExperimentFrame):
         if self.root.status["winning_block"] == self.blockNumber:
             self.root.status["reward"] += reward
             self.root.status["results"] += [endText.format(self.blockNumber, reward)]
-        if self.blockNumber >= 3: # send the results of the after version in the third to fifth round            
+        if self.blockNumber >= 3: # send the results of the after version in the fourth to fifth round            
             wins = self.root.wins[self.blockNumber]
             reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
-            outcome = "|".join(["outcome", str(wins), str(reward), self.condition])
+            outcome = "|".join(["outcome", str(wins), str(reward)])
             while True:
                 data = urllib.parse.urlencode({'id': self.id, 'round': self.blockNumber, 'offer': outcome})
                 data = data.encode('ascii')
@@ -728,7 +728,7 @@ class Wait(InstructionsFrame):
                         othervote2 = random.randint(0, 1)                        
                         response = "treatment" if myvote + othervote1 + othervote2 > 1 else "control"        
                     elif self.what == "result":
-                        response = "result"                                           
+                        response = "result"
                         outcome1 = random.randint(0,12)   
                         outcome2 = random.randint(0,12)   
                         reward1 = ceil((250 - (1.5 * outcome1) * (outcome1 + 1))*self.root.status["coefficient"] / 2)  
@@ -750,7 +750,7 @@ class Wait(InstructionsFrame):
                 if response:              
                     if self.what == "voting":
                         condition = response
-                        self.root.status["conditions"].append(condition)                                   
+                        self.root.status["conditions"].append(condition)
                         self.root.texts["voted_condition"] = after_voted if condition == "treatment" else before_voted
                         self.write(response)
                     elif self.what == "result":   
@@ -777,11 +777,11 @@ class Wait(InstructionsFrame):
         self.progressBar.start()
         self.checkOffers()
 
-    def updateResults(self, maxvotes, votes):                
-        if maxvotes == self.root.status["number"]:
-            self.root.texts["voting_result_text"] = voting_you + members[int(votes) - 1]
-        else:
-            self.root.texts["voting_result_text"] = voting_other.format(maxvotes) + members[int(votes) - 1]
+    # def updateResults(self, maxvotes, votes):                
+    #     if maxvotes == self.root.status["number"]:
+    #         self.root.texts["voting_result_text"] = voting_you + members[int(votes) - 1]
+    #     else:
+    #         self.root.texts["voting_result_text"] = voting_other.format(maxvotes) + members[int(votes) - 1]
 
     def write(self, response):
         self.file.write("Voting Result" + "\n")

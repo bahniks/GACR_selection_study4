@@ -70,8 +70,8 @@ wait_text = "Prosím počkejte na druhého hráče.  Můžete zatím vyplňovat 
 
 
 A1text = """Byla Vám náhodně přidělena role: <b>Hráč A</b> 
-Vaše role zůstává po celou dobu studie stejná. Vy i hráč A jste dostali v této části studie 20 Kč.
-S hráčem A budete ve dvojici pro obě kola studie. Oba budete informováni o rozhodnutích toho druhého.
+Vaše role zůstává po celou dobu studie stejná. Vy i hráč B jste dostali v této části studie 20 Kč.
+S hráčem B budete ve dvojici pro obě kola studie. Oba budete informováni o rozhodnutích toho druhého.
 
 Nyní budete mít příležitost se rozhodnout, kolik (0-10 Kč, v krocích po 2 Kč) si od hráče B vezmete.
 Hráč B bude na Vaše rozhodnutí reagovat. Bude mít k dispozici tři možnosti reakce na Vaše rozhodnutí a vybere pro Vás zprávu:
