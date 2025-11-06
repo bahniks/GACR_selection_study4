@@ -11,7 +11,7 @@ from common import InstructionsFrame
 from gui import GUI
 from constants import SVO_PROBABILITY
 
-instructions = f"""Pod tímto oknem najdete 6 voleb, které zaznamenáte zvolením jednoho z tlačítek v každém z 6 řádků. Volby mění rozdělení odměn mezi vámi a jiným účastníkem studie, se kterým jste ještě nebyli spárováni. Jiný účastník bude podobně dělat rozhodnutí, která mohou ovlivnit Vaši odměnu. Neexistují žádné správné nebo špatné odpovědi, jde pouze o osobní preference.
+instructions = f"""Pod tímto oknem najdete 6 voleb, které zaznamenáte zvolením jednoho z tlačítek v každém z 6 řádků. Volby mění rozdělení odměn mezi Vámi a jiným účastníkem studie, se kterým jste ještě nebyli spárováni. Jiný účastník bude podobně dělat rozhodnutí, která mohou ovlivnit Vaši odměnu. Neexistují žádné správné nebo špatné odpovědi, jde pouze o osobní preference.
 
 Až tuto úlohu dokončíte, bude s pravděpodobností {int(SVO_PROBABILITY*100)} % vybráno náhodně jedno z rozhodnutí (každé se stejnou pravděpodobností) a realizováno. Výsledek se dozvíte na konci studie."""
 

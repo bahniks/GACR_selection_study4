@@ -19,7 +19,7 @@ from comments import Comments
 from questionnaire import TDMS, TEQ, PoliticalWill
 from tosca import TOSCA
 from contribution import Contribution
-from svo import SVO
+#from svo import SVO
 
 frames = [Initial,
           Intro,
@@ -48,7 +48,6 @@ frames = [Initial,
           OutcomeWait,  
           EndCheating,
           Contribution,
-          SVO,
           Lottery,
           LotteryWin,
           LotteryInstructions,

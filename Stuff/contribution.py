@@ -15,16 +15,19 @@ from gui import GUI
 options = (1,2,3,4,6,8,10)
 BASE = 10
 
-instructions = f"""V následujícím úkolu uděláte 7 nezávislých rozhodnutí mezi dvěma možnostmi. Pokud zvolíte první možnost, nic se nestane. Pokud zvolíte druhou možnost, ztratíte {BASE} Kč ze své výhry. Jiný účastník studie, se kterým jste ještě nebyli spárováni, obdrží částku, která je u této možnosti napsána. Jiný účastník bude podobně dělat rozhodnutí, která mohou ovlivnit Vaši odměnu.
+################################################################################
+# TEXTS
 
-Až tuto úlohu dokončíte, bude vybráno náhodně jedno z rozhodnutí (každé se stejnou pravděpodobností) a nestane se nic nebo ztratíte {BASE} Kč a jiný účastník obdrží částku uvedenou u daného rozhodnutí. I když učiníte 7 rozhodnutí, pouze jedno z nich bude tedy rozhodovat o tom, jak bude ovlivněna Vaše odměna a odměna dalšího účastníka. Výsledek se dozvíte na konci studie.
+instructions = f"""V následujícím úkolu uděláte 7 nezávislých rozhodnutí mezi dvěma možnostmi. Pokud zvolíte první možnost, nic se nestane. Pokud zvolíte druhou možnost, ztratíte {BASE} Kč ze své výhry. Jiný účastník studie, se kterým jste ještě nebyli spárováni, obdrží částku, která je u této možnosti napsána. Další účastník bude podobně dělat rozhodnutí, která mohou ovlivnit Vaši odměnu. Svou identitu navzájem nebudete znát.
 
-V každém z 7 řádků se rozhodněte a vyberte prosím, zda preferujete jistou odměnu nebo loterii."""
+Až tuto úlohu dokončíte, bude vybráno náhodně jedno ze 7 rozhodnutí (každé se stejnou pravděpodobností) a, podle Vaší volby v daném rozhodnutí, se nestane nic nebo ztratíte {BASE} Kč a jiný účastník obdrží částku uvedenou u daného rozhodnutí. I když učiníte 7 rozhodnutí, pouze jedno z nich bude tedy rozhodovat o tom, jak bude ovlivněna Vaše odměna a odměna dalšího účastníka. Výsledek se dozvíte na konci studie.
+
+V každém z 7 řádků se rozhodněte a vyberte prosím, zda preferujete "Nic" nebo "Darování"."""
 
 noneResult = f"V úloze, kde jste volil(a), zda přispět jinému účastníkovi studie, jste mohl(a) zvolit, zda tento účastník obdrží {{0}} Kč a vy ztratíte {BASE} Kč. Zvolil(a) jste možnost 'Nic'. Neztratíte tedy žádné peníze a druhý účastník nic nedostane."
 
 donationResult = f"V úloze, kde jste volil(a), zda přispět jinému účastníkovi studie, jste mohl(a) zvolit, zda tento účastník obdrží {{0}} Kč a vy ztratíte {BASE} Kč. Zvolil(a) jste možnost 'Darování'. Ztratil(a) jste tedy {BASE} Kč a jiný účastník obdržel {{0}} Kč."
-
+################################################################################
 
 class Contribution(InstructionsFrame):
     def __init__(self, root):
@@ -40,17 +43,20 @@ class Contribution(InstructionsFrame):
         self.variables = OrderedDict()
         self.rbuttonsL = {}
         self.rbuttonsR = {}
+        self.labels = {}
         for i in range(7):
             row = i + 4
             self.variables[i] = StringVar()
-            self.rbuttonsL[i] = ttk.Radiobutton(self, text = "Beze změn odměn",
+            self.rbuttonsL[i] = ttk.Radiobutton(self, text = "Žádné změny odměn",
                                                 variable = self.variables[i], value = str(i+1) + "none",
                                                 command = self.checkAllFilled)
-            self.rbuttonsL[i].grid(column = 1, row = row, sticky = W, padx = 30)
+            self.rbuttonsL[i].grid(column = 1, row = row, sticky = W, padx = 30, pady = 5)
             self.rbuttonsR[i] = ttk.Radiobutton(self, variable = self.variables[i], value = str(i+1) + "donation",
                                                 text = f"Vy: -{BASE} Kč   Další účastník: +{options[i] * BASE} Kč",
                                                 command = self.checkAllFilled)
-            self.rbuttonsR[i].grid(column = 2, row = row, sticky = W, padx = 30)
+            self.rbuttonsR[i].grid(column = 2, row = row, sticky = W, padx = 30, pady = 5)
+            self.labels[i] = ttk.Label(self, text = f"{i+1})", font = "helvetica 15", background = "white")
+            self.labels[i].grid(column = 0, row = row, sticky = NE, padx = 10, pady = 5)
 
         ttk.Style().configure("TRadiobutton", background = "white", font = "helvetica 15")
         ttk.Style().configure("TButton", font = "helvetica 15")
@@ -86,8 +92,7 @@ class Contribution(InstructionsFrame):
         else:
             #self.root.texts["contribution_chosen"] = "none"
             self.root.status["results"] += [noneResult.format(self.options[selected - 1] * BASE)]
-        self.file.write("Contribution\n")     
-        print(self.root.status["results"])        
+        self.file.write("Contribution\n")  
         self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected)]) + "\n")
 
 
