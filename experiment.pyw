@@ -2,6 +2,7 @@
 
 import sys
 import os
+import argparse
 
 sys.path.append(os.path.join(os.getcwd(), "Stuff"))
 
@@ -65,5 +66,23 @@ frames = [Initial,
 
 #frames = [Login, HEXACOinfo]
 
+
+def parse_arguments():
+    """Parse command line arguments"""
+    parser = argparse.ArgumentParser(description='Run experiment')
+    parser.add_argument('--load', type=str, default='True', help='Load previous session data')    
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    GUI(frames, load = os.path.exists("temp.json"))
+    args = parse_arguments()
+
+    print(args)
+    print(args.load)
+
+    if args.load == "False":
+        load = False
+    else:
+        load = os.path.exists("temp.json")    
+    
+    GUI(frames, load=load)

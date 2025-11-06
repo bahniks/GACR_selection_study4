@@ -49,7 +49,7 @@ class Login(InstructionsFrame):
                     except Exception:
                         self.changeText("Server nedostupný")
                 if "start" in response:
-                    info, condition, information, winning_block = response.split("|")              
+                    info, condition, information, winning_block = response.split("_")              
                     self.root.status["condition"] = condition        
                     self.root.status["information"] = information
                     self.root.texts["block"] = self.root.status["winning_block"] = winning_block
