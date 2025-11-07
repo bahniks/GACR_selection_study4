@@ -416,7 +416,9 @@ class DictatorDecision(InstructionsFrame):
 
     def gothrough(self):
         if self.root.status["dictatorRole"] == "A":
-            self.scaleFrame.changedValue(str(random.randint(0,5)*2))
+            newValue = random.randint(0,5)*2
+            self.scaleFrame.valueVar.set(str(newValue))
+            self.scaleFrame.changedValue(str(newValue))
             sleep(0.1)
             self.update()
             self.next.invoke()

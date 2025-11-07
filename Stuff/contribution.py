@@ -100,7 +100,7 @@ class Contribution(InstructionsFrame):
             self.root.status["results"] += [noneResult.format(self.options[selected - 1] * BASE)]
             other = 0
         self.file.write("Contribution\n")  
-        self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected)]) + "\n")
+        self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected)]) + "\n\n")
         data = {'id': self.id, 'round': "contribution", 'offer': other}
         self.sendData(data)
 

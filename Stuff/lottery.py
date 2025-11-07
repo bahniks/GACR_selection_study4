@@ -115,7 +115,7 @@ class Lottery(InstructionsFrame):
         self.root.status["reward"] += win
         self.root.status["results"] += [endText.format(win)]
         self.root.texts["lottery_win"] = win
-        self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected), str(win)]) + "\n")
+        self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected), str(win)]) + "\n\n")
 
     def gothrough(self):
         for i in range(5):
