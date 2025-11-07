@@ -109,19 +109,21 @@ class GUI(Tk):
 
 
     def nextFrame(self):
-        self.removeJson()
-        with open("temp.json", mode = "w") as f:
-            json.dump({"id": self.id,
-                       "outputfile": self.outputfile,
-                       "texts": self.texts,
-                       "status": self.status,
-                       "count": self.count}, 
-                       f)
+        if not GOTHROUGH:
+            self.removeJson()
+            with open("temp.json", mode = "w") as f:
+                json.dump({"id": self.id,
+                        "outputfile": self.outputfile,
+                        "texts": self.texts,
+                        "status": self.status,
+                        "count": self.count}, 
+                        f)
 
         self.file.write("time: " + str(time()) + "\n")
         self.count += 1       
         if self.count >= len(self.order):
-            self.removeJson()
+            if not GOTHROUGH:
+                self.removeJson()
             self.destroy()
         else:
             nxt = self.order[self.count]
@@ -133,12 +135,11 @@ class GUI(Tk):
             if self.status["logged"]:
                 self.frame.sendData({'id': self.id, 'round': self.count, 'offer': "progress"}, pause = 0.01, trials = 5)
 
-            if GOTHROUGH and GOTHROUGH != type(self.frame).__name__ and (type(GOTHROUGH) is not int or GOTHROUGH < self.count):                
+            if GOTHROUGH and GOTHROUGH != type(self.frame).__name__ and (type(GOTHROUGH) is not int or GOTHROUGH < self.count):
                 self.update()
-                sleep(0.5)         
+                sleep(0.5)
                 self.frame.gothrough()
-
-            if hasattr(self.frame, "run"):
+            elif hasattr(self.frame, "run"):
                 self.update()
                 self.frame.run()
 

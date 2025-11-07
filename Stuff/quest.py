@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter import ttk
 from collections import defaultdict
 from copy import deepcopy
+from time import sleep
 
 import os
 import random
@@ -128,6 +129,22 @@ class Quest(ExperimentFrame):
                 return
         else:
             self.next["state"] = "!disabled"
+
+    def gothrough(self):
+        self.goingThrough = True
+        for m in self.measures:
+            choice = random.randint(1, self.options)
+            m.answer.set(str(choice))
+        self.next["state"] = "!disabled"
+        self.update()
+        sleep(0.5)
+        self.next.invoke()
+        if not self.mnumber == len(self.questions) and self.goingThrough:
+            self.gothrough()
+        else:
+            self.goingThrough = False
+            self.gothrough()
+
 
 
 

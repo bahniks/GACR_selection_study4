@@ -2,7 +2,7 @@
 from tkinter import *
 from tkinter import ttk
 from collections import defaultdict
-from copy import deepcopy
+from time import sleep
 
 import os
 import random
@@ -113,6 +113,18 @@ class TOSCA(ExperimentFrame):
     def check(self):
         if self.first.answer.get() and self.second.answer.get():                
             self.next["state"] = "!disabled"
+
+    
+    def gothrough(self):
+        for _ in range(len(self.questions)//3):
+            choice1 = random.randint(1, self.options)
+            choice2 = random.randint(1, self.options)
+            self.first.answer.set(str(choice1))
+            self.second.answer.set(str(choice2))
+            self.next["state"] = "!disabled"
+            self.update()
+            sleep(0.5)
+            self.next.invoke()
 
 
 

@@ -162,6 +162,14 @@ class Questionnaire(ExperimentFrame):
         for word in self.words:
             self.file.write(self.id + "\t" + word + "\t" + self.variables[word].get() + "\n")
 
+    def gothrough(self):
+        for word in self.words:
+            choice = random.randint(1, self.values)
+            self.buttons[word][choice].invoke()
+        self.update()
+        sleep(0.5)
+        self.next.invoke()
+
 
 
 

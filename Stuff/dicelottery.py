@@ -154,6 +154,19 @@ class DiceLottery(ExperimentFrame):
         self.root.status["reward"] += int(self.currentReward)
         self.root.status["results"] += [endText.format(self.currentReward)]
         self.file.write("\t".join([self.id, str(self.numberOfRolls), str(self.currentReward)]) + "\n")
+
+    def gothrough(self):
+        if random.random() < 0.5:
+            self.nextRoll.invoke()
+            self.update()
+            sleep(0.5)
+            if self.currentRoll % 2 == 0:
+                self.gothrough()
+            else:
+                self.endRolls.invoke()
+        else:
+            self.endRolls.invoke()
+
         
 
 LotteryInstructions = (InstructionsFrame, {"text": lotteryinstructions, "height": 12})

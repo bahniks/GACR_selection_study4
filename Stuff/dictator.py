@@ -413,6 +413,32 @@ class DictatorDecision(InstructionsFrame):
                 self.root.status["dictatorTestResponse"] = self.response
         self.file.write("\n\n")
 
+    def gothrough(self):
+        if self.root.status["dictatorRole"] == "A":
+            self.scaleFrame.changedValue(str(random.randint(0,5)*2))
+            sleep(0.1)
+            self.update()
+            self.next.invoke()
+        else:
+            for frame in self.frames.values():
+                answerBut = random.choice([frame.responseBut1, frame.responseBut2, frame.responseBut3])
+                answerBut.invoke()
+                sleep(0.1)
+                self.update()
+                if random.random() < 0.5:
+                    frame.messageBut1.invoke()  
+                else:
+                    frame.messageBut2.invoke()
+                if frame.responseVar.get() != "ignore":
+                    sleep(0.1)
+                    self.update()
+                    newValue = str(random.randint(0, frame.value*2))
+                    frame.scale.valueVar.set(newValue)
+                    frame.changedValue()
+            sleep(0.1)
+            self.update()
+            self.next.invoke()
+
 
 class WaitDictator(InstructionsFrame):
     def __init__(self, root, what = "pairing"):
@@ -520,6 +546,9 @@ class WaitDictator(InstructionsFrame):
         elif self.what == "decision2":
             self.file.write("Dictator Results 2" + "\n")
         self.file.write(self.id + "\t" + response.replace("_", "\t") + "\n\n") 
+
+    def gothrough(self):
+        self.run()
 
 
 

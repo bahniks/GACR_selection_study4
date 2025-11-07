@@ -1,9 +1,12 @@
 #! python3
+from time import sleep
 from tkinter import *
 from tkinter import ttk
 
 import os
+import random
 
+from time import sleep
 from math import ceil
 
 from common import InstructionsFrame
@@ -117,6 +120,27 @@ class Demographics(InstructionsFrame):
         self.file.write("Demographics\n")
         self.file.write("\t".join([self.id, self.sex.get(), self.age.get(), self.language.get(),
                                    self.student.get(), self.field.get()]) + "\n\n")
+        
+
+    def gothrough(self):
+        if random.random() < 0.5:
+            self.male.invoke()
+        else:
+            self.female.invoke()
+        age_choice = random.randint(18, 79)
+        self.ageCB.set(str(age_choice))
+        self.fieldCB.set(random.choice(self.fieldCB["values"][1:]))
+        if random.random() < 0.8:
+            self.czech.invoke()
+        else:
+            self.slovak.invoke()        
+        if random.random() < 0.6:
+            self.yes.invoke()
+        else:
+            self.no.invoke()
+        sleep(0.5)
+        self.update()
+        self.next.invoke()  
 
 
 if __name__ == "__main__":

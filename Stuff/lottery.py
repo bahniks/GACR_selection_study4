@@ -6,6 +6,7 @@ import os
 import random
 
 from collections import OrderedDict
+from time import sleep
 
 from common import ExperimentFrame, InstructionsFrame
 from gui import GUI
@@ -116,6 +117,15 @@ class Lottery(InstructionsFrame):
         self.root.texts["lottery_win"] = win
         self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected), str(win)]) + "\n")
 
+    def gothrough(self):
+        for i in range(5):
+            if random.random() < 0.5:
+                self.rbuttonsL[i].invoke()
+            else:
+                self.rbuttonsR[i].invoke()        
+        self.update()
+        sleep(0.5)
+        self.next.invoke()
 
 
 class LotteryWin(InstructionsFrame):

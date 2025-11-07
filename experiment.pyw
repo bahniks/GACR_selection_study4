@@ -20,6 +20,7 @@ from comments import Comments
 from questionnaire import TDMS, TEQ, PoliticalWill
 from tosca import TOSCA
 from contribution import Contribution
+from dictator import WaitDictator, InstructionsDictator, DictatorDecision, DictatorFeelings, WaitResult1, DictatorResult, DictatorFeelings2, WaitResult2, DictatorEnd
 #from svo import SVO
 
 frames = [Initial,
@@ -48,6 +49,15 @@ frames = [Initial,
           Cheating,     
           OutcomeWait,  
           EndCheating,
+          WaitDictator,
+          InstructionsDictator,
+          DictatorDecision,
+          DictatorFeelings,
+          WaitResult1,
+          DictatorResult,
+          DictatorFeelings2,
+          WaitResult2,
+          DictatorEnd,
           Contribution,
           Lottery,
           LotteryWin,
@@ -76,9 +86,6 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-
-    print(args)
-    print(args.load)
 
     if args.load == "False":
         load = False

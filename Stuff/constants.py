@@ -6,9 +6,9 @@ BEFORE = 5.878906
 AFTER = 8.878906
 SVO_PROBABILITY = 0.2
 
-AUTOFILL = False
+AUTOFILL = True
 TESTING = True
-GOTHROUGH = False #"Voting"
+GOTHROUGH = True #"Voting"
 URL = "https://dlab-bahnik.pythonanywhere.com/"
 URL = "TEST"
-URL = "http://127.0.0.1:8000/"
+#URL = "http://127.0.0.1:8000/"

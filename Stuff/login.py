@@ -38,7 +38,7 @@ class Login(InstructionsFrame):
                     condition = random.choice(["low", "control", "high"])
                     information = random.choice(["yes", "no"])                   
                     winning_block = str(random.randint(1,5))                                       
-                    response = "|".join(["start", condition, information, winning_block])
+                    response = "_".join(["start", condition, information, winning_block])
                     self.root.status["otherWin1"] = random.randint(1, 5)
                     self.root.status["otherWin2"] = random.randint(1, 5)
                 else:

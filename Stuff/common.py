@@ -77,6 +77,8 @@ class InstructionsFrame(ExperimentFrame):
 
         self.root = root
         self.wait = wait
+        self.proceedB = proceed
+        self.keys = keys
         self.t0 = time()
         self.savedata = savedata
         self.height = height
@@ -212,6 +214,16 @@ class InstructionsFrame(ExperimentFrame):
         else:
             self.back()
 
+    def gothrough(self):
+        #self.update()
+        if self.wait > 0:
+            sleep(self.wait)
+        self.focus_force()
+        if self.proceedB:
+            self.next.invoke()
+        elif self.keys:
+            key = self.keys[0]
+            self.root.event_generate(f"<KeyPress-{key}>")
 
 
 class Question(Canvas):
@@ -578,6 +590,29 @@ class InstructionsAndUnderstanding(InstructionsFrame):
             self.controlstate = "feedback"     
             if self.controlNum == len(self.controlTexts) and self.finalButton:         
                 self.next["text"] = self.finalButton
+
+    def gothrough(self):
+        for i in range(len(self.controlTexts)):
+            sleep(0.1)
+            self.update()
+            self.focus_force()
+            num_options = len(self.controlTexts[i][1])
+            option = random.randint(0, num_options - 1)
+            self.update()
+            # invoke the selected radio for the current question
+            self.controlQuestion.radios[option].invoke()
+            self.update()
+            sleep(0.1)
+            self.focus_force()
+            # first click: show feedback (if enabled) or proceed immediately if not
+            self.next.invoke()
+            self.update()
+            sleep(0.1)
+            # if feedback is shown, click Next again to advance to the next question
+            if self.showFeedback:
+                self.next.invoke()
+                self.update()
+                sleep(0.05)
 
 
 class OneFrame(Canvas):

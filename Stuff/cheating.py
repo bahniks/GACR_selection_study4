@@ -15,7 +15,7 @@ import urllib.parse
 
 from common import ExperimentFrame, InstructionsFrame, Measure, MultipleChoice, InstructionsAndUnderstanding, OneFrame, Question, TextArea
 from gui import GUI
-from constants import TESTING, URL, COEFFICIENTS, PREDICTION_BONUS, BEFORE, AFTER
+from constants import TESTING, URL, COEFFICIENTS, PREDICTION_BONUS, BEFORE, AFTER, GOTHROUGH
 from login import Login
 
 
@@ -321,7 +321,7 @@ class Cheating(ExperimentFrame):
             self.startTrial()
         else:
             win = sum(self.rewards[:self.root.wins[self.blockNumber]])
-            self.root.texts["win" + str(self.blockNumber)] = win            
+            self.root.texts["win" + str(self.blockNumber)] = win                        
             coefficient = {"low": COEFFICIENTS[0], "high": COEFFICIENTS[2], "control": COEFFICIENTS[1]}[self.root.status["condition"]]
             self.root.texts["otherwin" + str(self.blockNumber)] = ceil(round(((250 - win) * coefficient) / 2, 1))
             self.nextFun()
@@ -449,16 +449,18 @@ class Cheating(ExperimentFrame):
     def createText(self, x0, y0, num):
         self.die.create_text(x0, y0, text = str(num), font = "helvetica 70", tag = "die")
 
+
     def showWinnings(self):
         wins = self.root.wins[self.blockNumber]        
         self.infoWinnings["text"] = "Počet správných odhadů:\n{}".format(wins)        
         self.infoWinnings["text"] += "\n\nVaše současná výhra:\n{} Kč".format(sum(self.rewards[:wins]))
 
-    def answer(self, answer = "NA"):
+
+    def answer(self, answer = "NA"):    
         t = perf_counter()
         if answer == "win":
             self.root.wins[self.blockNumber] += 1
-        self.responses.append([self.blockNumber, self.currentTrial, self.condition, self.root.status["source"], 
+        self.responses.append([self.blockNumber, self.currentTrial, self.condition, 
                                self.root.status["condition"], self.currentRoll, self.response, answer, 
                                sum(self.rewards[:self.root.wins[self.blockNumber]]), t - self.time, self.firstResponse - self.time,
                                t - self.beforeSecondResponse])
@@ -477,20 +479,21 @@ class Cheating(ExperimentFrame):
         self.update()
         sleep(self.pause_before_trial)
         self.run()
-        
                    
+
     def write(self):
         self.root.status["block"] += 1
         for response in self.responses:
             begin = [self.id]
             self.file.write("\t".join(map(str, begin + response)) + "\n")
 
-    
+
     def nextFun(self):
         if self.root.status["winning_block"] == self.blockNumber:
             self.root.status["reward"] += reward
             self.root.status["results"] += [endText.format(self.blockNumber, reward)]
-        if self.blockNumber >= 3: # send the results of the after version in the fourth to fifth round            
+        if self.blockNumber >= 3: # send the results of the after version in the third to fifth round            
+            print("sending results of cheating block", self.blockNumber)
             wins = self.root.wins[self.blockNumber]
             reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
             outcome = "|".join(["outcome", str(wins), str(reward)])
@@ -503,7 +506,9 @@ class Cheating(ExperimentFrame):
                     try:
                         with urllib.request.urlopen(URL, data = data) as f:
                             response = f.read().decode("utf-8")       
-                    except Exception:
+                    except Exception as e:
+                        if GOTHROUGH:
+                            print("Error:", e)
                         continue
                 if response == "ok":                    
                     super().nextFun()  
@@ -514,25 +519,35 @@ class Cheating(ExperimentFrame):
 
 
     def gothrough(self):
-        # nefunguje :(
+        print("block", self.root.status["block"])
+        print(self.condition)
         self.run()
-       
-        if "treatment" in self.condition:
-            self.predictedCB.invoke()
-            self.after(200, self.rollButton.invoke)
-            self.after(200, self.winButton.invoke)
-            #self.root.update()
-            #self.after(500, self.update)
-            #answer = random.choice([self.winButton, self.lossButton])
-            #self.after(700, answer.invoke)
-        elif "control" in self.condition:
-            answer = random.choice([self.evenButton, self.oddButton])
-            answer.invoke()            
-            self.after(200, self.rollButton.invoke)
-            self.update()
-            self.after(200, self.continueButton.invoke)
-            #self.root.update()
-            #self.after(700, self.continueButton.invoke)
+        print("running through cheating")
+        for trial in range(self.trials):
+            print("trial", trial + 1)
+            if "treatment" in self.condition:
+                self.predictedCB.invoke()
+                sleep(0.2)
+                self.rollButton.invoke()
+                self.update()
+                sleep(0.2)
+                if random.random() < 0.5:
+                    self.winButton.invoke()
+                else:
+                    self.lossButton.invoke()
+                sleep(0.2)
+                self.update()
+            elif "control" in self.condition:
+                answer = random.choice([self.evenButton, self.oddButton])
+                answer.invoke()
+                sleep(0.2)
+                self.rollButton.invoke()
+                self.update()
+                sleep(0.2)
+                self.continueButton.invoke()
+                sleep(0.2)
+                self.update()
+        print("finished gothrough cheating")
 
 
 
@@ -550,10 +565,8 @@ class Selection(InstructionsFrame):
 
         ttk.Style().configure("TButton", font = "helvetica 15", width = 16)
 
-        self.control = ttk.Button(self, text = controlchoicetext,
-                                  command = lambda: self.response("control"))
-        self.treatment = ttk.Button(self, text = treatmentchoicetext,
-                                    command = lambda: self.response("treatment"))
+        self.control = ttk.Button(self, text = controlchoicetext, command = lambda: self.response("control"))
+        self.treatment = ttk.Button(self, text = treatmentchoicetext, command = lambda: self.response("treatment"))
         self.control.grid(row = 2, column = 0)
         self.treatment.grid(row = 2, column = 2)        
 
@@ -566,11 +579,11 @@ class Selection(InstructionsFrame):
         root.texts["conditionText"] = conditionText
         # global intro_block_3        
         otherRewards = ["{num: >4} ".format(num = ceil((250 - (1.5 * i) * (i + 1))*root.status["coefficient"] / 2)) for i in range(13)]        
-        coef = str(root.status["coefficient"]).replace(".", ",")
-        if coef != "1":
-             coefText  = " × {} = {} Kč".format(coef, int(otherRewards[6])*2)
-        else:
-             coefText = ""
+        # coef = str(root.status["coefficient"]).replace(".", ",")
+        # if coef != "1":
+        #      coefText  = " × {} = {} Kč".format(coef, int(otherRewards[6])*2)
+        # else:
+        #      coefText = ""
         root.texts["introtext"] = choice_third.format(conditionText, *otherRewards)
 
     def write(self):
@@ -585,7 +598,7 @@ class Selection(InstructionsFrame):
         data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.choice})
         data = data.encode('ascii')
         if URL != "TEST":
-            for i in range(60):
+            while True:
                 try: 
                     with urllib.request.urlopen(URL, data = data) as f:
                         if f.getcode() != 200 or f.read().decode("utf-8").strip() != "ok":
@@ -597,11 +610,15 @@ class Selection(InstructionsFrame):
                             break
                 except Exception:
                     continue
-            else:
-                messagebox.showinfo(message = "Zavolejte prosím experimentátora.", icon = "error", parent = self.root, 
-                                  detail = "Pravděpodobně je problém se serverem.", title = "Problém")
         else:
             self.root.status["TESTvote"] = self.choice
+
+    def gothrough(self):
+        self.update()
+        if random.random() < 0.5:
+            self.control.invoke()
+        else:
+            self.treatment.invoke()
 
 
 
@@ -705,6 +722,24 @@ class Prediction(InstructionsFrame):
                 self.root.status["prediction"] = "correct"
             else:
                 self.root.status["prediction"] = "incorrect"
+
+    def gothrough(self):
+        # Autofill entries directly instead of generating KeyPress events which may fail for some characters
+        self.focus_force()
+        #s1 = str(round(random.random() * 12, 1))
+        s2 = str(round(random.random() * 12, 1))
+        #self.checkVar1.set(s1)
+        self.checkVar2.set(s2)
+        if self.root.status["block"] != 3:
+            s3 = str(round(random.random() * 12, 1))
+            s4 = str(round(random.random() * 12, 1))
+            self.checkVar3.set(s3)
+            self.checkVar4.set(s4)
+        self.entryBefore.focus_force()
+        self.entryBefore.event_generate('<KeyPress-2>', keysym='2')
+        self.entryBefore.event_generate('<KeyRelease-2>', keysym='2')
+        self.update()        
+        self.after(500, self.next.invoke)
  
 
 class Wait(InstructionsFrame):
@@ -719,7 +754,7 @@ class Wait(InstructionsFrame):
         while True:
             self.update()
             if count % 50 == 0:
-                data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"], 'offer': self.what})                
+                data = urllib.parse.urlencode({'id': self.id, 'round': self.root.status["block"]-1, 'offer': self.what})
                 data = data.encode('ascii')
                 if URL == "TEST":
                     if self.what == "voting":
@@ -746,10 +781,17 @@ class Wait(InstructionsFrame):
                         with urllib.request.urlopen(URL, data = data) as f:
                             response = f.read().decode("utf-8")       
                     except Exception as e:
-                        continue
+                        if TESTING:
+                            print(e)
+                            continue
+                        else:
+                            continue
                 if response:              
+                    print("Received response:", response)
                     if self.what == "voting":
-                        condition = response
+                        condition = response                        
+                        if condition not in ["treatment", "control"]:
+                            continue
                         self.root.status["conditions"].append(condition)
                         self.root.texts["voted_condition"] = after_voted if condition == "treatment" else before_voted
                         self.write(response)
@@ -786,6 +828,9 @@ class Wait(InstructionsFrame):
     def write(self, response):
         self.file.write("Voting Result" + "\n")
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + response + "\n\n")        
+
+    def gothrough(self):
+        self.run()
 
 
 

@@ -6,6 +6,7 @@ import os
 import random
 
 from collections import OrderedDict
+from time import sleep
 
 from common import InstructionsFrame
 from gui import GUI
@@ -94,6 +95,17 @@ class Contribution(InstructionsFrame):
             self.root.status["results"] += [noneResult.format(self.options[selected - 1] * BASE)]
         self.file.write("Contribution\n")  
         self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected)]) + "\n")
+
+
+    def gothrough(self):
+        for i in range(7):
+            if random.random() < 0.5:
+                self.rbuttonsL[i].invoke()
+            else:
+                self.rbuttonsR[i].invoke()        
+        self.update()
+        sleep(0.5)
+        self.next.invoke()
 
 
 
