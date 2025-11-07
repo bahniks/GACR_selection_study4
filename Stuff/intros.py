@@ -102,7 +102,6 @@ class Ending(InstructionsFrame):
 
 Intro = (InstructionsFrame, {"text": intro, "proceed": True, "height": "auto"})
 Initial = (InstructionsFrame, {"text": login, "proceed": False, "height": "auto", "keys": ["g", "G"]})
-HEXACOintro = (InstructionsFrame, {"text": hexacointrotext, "height": "auto", "update": ["idNumber"]})
 
 
 if __name__ == "__main__":
