@@ -1,5 +1,5 @@
 BONUS = 30
-PARTICIPATION_FEE = 100
+PARTICIPATION_FEE = 60
 COEFFICIENTS = [0.6, 1, 1.4]
 PREDICTION_BONUS = 40
 BEFORE = 5.878906
@@ -7,8 +7,8 @@ AFTER = 8.878906
 SVO_PROBABILITY = 0.2
 
 AUTOFILL = True
-TESTING = True
-GOTHROUGH = True #"Voting"
+TESTING = False
+GOTHROUGH = "Ending"
 URL = "https://dlab-bahnik.pythonanywhere.com/"
 URL = "TEST"
-#URL = "http://127.0.0.1:8000/"
+URL = "http://127.0.0.1:8000/"

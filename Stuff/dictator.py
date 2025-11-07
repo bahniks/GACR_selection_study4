@@ -65,7 +65,7 @@ DictAnswers5 = ["Získá navíc 20 Kč a obdrží zprávu od hráče B.", "Žád
 DictFeedback5 = ["Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen zprávu od hráče B.", "Správná odpověď.", "Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen zprávu od hráče B.", "Chybná odpověď. Hráč A v prvním kole žádné další peníze nezíská, ani neztratí.\nObdrží jen zprávu od hráče B."]
 
 
-wait_text = "Prosím počkejte na druhého hráče.  Můžete zatím vyplňovat vytištěný dotazník."
+wait_text = "Prosím počkejte na druhého hráče."
 
 
 
@@ -174,6 +174,7 @@ V tomto kole jste získal(a) {} Kč a Hráč A {} Kč.
 Tímto tato část studie končí.
 Ve studii pokračujte kliknutím na tlačítko "Pokračovat"."""
 
+end_text = "V úloze, kde jste dělil(a) peníze v páru s druhým hráčem, jste vydělal(a) {} Kč."
 
 ################################################################################
 
@@ -488,7 +489,9 @@ class WaitDictator(InstructionsFrame):
                     if self.what == "pairing":
                         pair, role = response.split("_")                                 
                         self.root.status["dictatorRole"] = role
-                        self.root.status["dictatorPair"] = pair                 
+                        self.root.status["dictatorPair"] = pair    
+                        if pair == "-1":
+                            self.root.count += 8
                     elif self.what == "decision1":   
                         pair, took, decision, message, money = response.split("_")
                         message = eval(decision + "Message" + message)
@@ -523,9 +526,13 @@ class WaitDictator(InstructionsFrame):
                         if self.root.status["dictatorRole"] == "A":
                             text = finalTextA.format(took, a, b, aTotal, bTotal)
                             self.root.texts["dictator"] = aTotal
+                            self.root.status["reward"] += aTotal
+                            self.root.status["results"] += [end_text.format(aTotal)]
                         else:                            
                             text = finalTextB.format(took, b, a, bTotal, aTotal)
                             self.root.texts["dictator"] = bTotal
+                            self.root.status["reward"] += bTotal
+                            self.root.status["results"] += [end_text.format(bTotal)]
                         self.root.texts["dictatorEnd"] = text
                     self.write(response)
                     self.progressBar.stop()
@@ -637,7 +644,7 @@ class InstructionsDictator(InstructionsAndUnderstanding):
 controlTexts1 = [[DictControl1, DictAnswers1, DictFeedback1], [DictControl2, DictAnswers2, DictFeedback2], [DictControl3, DictAnswers3, DictFeedback3], [DictControl4, DictAnswers4, DictFeedback4], [DictControl5, DictAnswers5, DictFeedback5]]
 WaitResult1 = (WaitDictator, {"what": "decision1"})
 WaitResult2 = (WaitDictator, {"what": "decision2"})
-DictatorEnd = (InstructionsFrame, {"text": "{}", "height": 8, "update": ["dictatorEnd"]})
+DictatorEnd = (InstructionsFrame, {"text": "{}", "height": "auto", "update": ["dictatorEnd"]})
 DictatorFeelings2 = (DictatorFeelings, {"round": 2})
 
 

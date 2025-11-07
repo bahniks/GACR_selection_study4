@@ -46,7 +46,7 @@ intro_feedback1 = ['Ano, budete odhadovat jednu ze dvou stejně pravděpodobnýc
 
 intro_control2 = 'Kolik obdržíte za úkol peněz, pokud bude vylosován blok, kde uhodnete dohromady 4 hody?' 
 intro_answers2 = ['18 Kč (0 + 3 + 6 + 9)', '27 Kč (3 + 6 + 9 + 9)', '30 Kč (3 + 6 + 9 + 12)', '36 Kč (4 x 9)'] 
-intro_feedback2 = ['Ne, obdželi byste 30 Kč. Za první hod 3 Kč a za každý další o 3 Kč více (tj. 3 + 6 + 9 + 12).', 'Ne, obdželi byste 30 Kč. Za první hod 3 Kč a za každý další o 3 Kč více (tj. 3 + 6 + 9 + 12).', 'Ano, obdželi byste 30 Kč.', 'Ne, obdželi byste 30 Kč. Za první hod 3 Kč a za každý další o 3 Kč více (tj. 3 + 6 + 9 + 12).']
+intro_feedback2 = ['Ne, obrdželi byste 30 Kč. Za první hod 3 Kč a za každý další o 3 Kč více (tj. 3 + 6 + 9 + 12).', 'Ne, obrdželi byste 30 Kč. Za první hod 3 Kč a za každý další o 3 Kč více (tj. 3 + 6 + 9 + 12).', 'Ano, obrdželi byste 30 Kč.', 'Ne, obrdželi byste 30 Kč. Za první hod 3 Kč a za každý další o 3 Kč více (tj. 3 + 6 + 9 + 12).']
 
 
 # ÚLOHA
@@ -127,7 +127,7 @@ Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvole
 Ve <b>verzi “PO”</b> uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
 
-Chcete, hrát verzi “PŘED” nebo “PO”?"""
+Chcete hrát verzi “PŘED” nebo “PO”?"""
 
 
 prediction_third = """Toto je konec druhého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč.
@@ -190,7 +190,7 @@ from_others_text = " <b>Od zbývajících dvou hráčů byste v tomto kole získ
 
 prediction_later = """Odhadněte, kolik správných odpovědí průměrně učiní zbývající dva členové Vaší skupiny v následujícím bloku, pokud bude Vaše skupina hrát “PŘED” verzi úkolu, kde se předpověď uvádí před hodem kostky, a kolik si myslíte, že průměrně nahlásí správných odpovědí, pokud bude Vaše skupina hrát “PO” verzi úkolu, kde se předpověď uvádí až po hodu kostkou.
 
-Odhad musí být v rozmezi od 0 do 12 a je možné používat desetinná místa.
+Odhad musí být v rozmezí od 0 do 12 a je možné používat desetinná místa.
 
 Odhad uveďte pro každou z verzí níže:"""
 
@@ -220,7 +220,7 @@ treatmentchoicetext = "PO"
 
 
 endText = "V úloze s házením kostek byl náhodně vybrán blok {}. V úkolu s kostkou jste tedy vydělal(a) {} Kč."  
-additional = "Na základě voleb ostatních hráčů v této úloze jste obdržel(a) navíc {} Kč"
+additional = "Na základě voleb ostatních hráčů jste v úloze s házením kostek obdržel(a) navíc {} Kč"
 correct_prediction = "Oba Vaše odhady počtu správných odhadů v úloze s kostkou účastníků dřívější studie byly správné a získal(a) jste za správné odhady {} Kč.".format(PREDICTION_BONUS)
 incorrect_prediction = "Alespoň jeden z Vašich odhadů počtu správných odhadů v úloze s kostkou účastníků dřívější studie byl špatný a za odhady jste nezískal(a) nic."
 
@@ -489,13 +489,12 @@ class Cheating(ExperimentFrame):
 
 
     def nextFun(self):
-        if self.root.status["winning_block"] == self.blockNumber:
+        reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
+        if self.root.status["winning_block"] == str(self.blockNumber):            
             self.root.status["reward"] += reward
             self.root.status["results"] += [endText.format(self.blockNumber, reward)]
-        if self.blockNumber >= 3: # send the results of the after version in the third to fifth round            
-            print("sending results of cheating block", self.blockNumber)
-            wins = self.root.wins[self.blockNumber]
-            reward = sum(self.rewards[:self.root.wins[self.blockNumber]])
+        if self.blockNumber >= 3: # send the results of the after version in the third to fifth round                        
+            wins = self.root.wins[self.blockNumber]            
             outcome = "|".join(["outcome", str(wins), str(reward)])
             while True:
                 data = urllib.parse.urlencode({'id': self.id, 'round': self.blockNumber, 'offer': outcome})
@@ -547,7 +546,6 @@ class Cheating(ExperimentFrame):
                 self.continueButton.invoke()
                 sleep(0.2)
                 self.update()
-        print("finished gothrough cheating")
 
 
 
@@ -720,8 +718,11 @@ class Prediction(InstructionsFrame):
         if self.root.status["block"] == 3:
             if abs(float(self.checkVar1.get().replace(",", ".")) - BEFORE) <= 0.2 and abs(float(self.checkVar2.get().replace(",", ".")) - AFTER) <= 0.2:
                 self.root.status["prediction"] = "correct"
+                self.root.status["reward"] += PREDICTION_BONUS
+                self.root.status["results"] += [correct_prediction]
             else:
                 self.root.status["prediction"] = "incorrect"
+                self.root.status["results"] += [incorrect_prediction]
 
     def gothrough(self):
         # Autofill entries directly instead of generating KeyPress events which may fail for some characters

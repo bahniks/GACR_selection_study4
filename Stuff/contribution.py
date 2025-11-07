@@ -4,13 +4,15 @@ from tkinter import ttk
 
 import os
 import random
+import urllib.request
+import urllib.parse
 
 from collections import OrderedDict
 from time import sleep
 
 from common import InstructionsFrame
 from gui import GUI
-
+from constants import URL, TESTING, GOTHROUGH
 
 
 options = (1,2,3,4,6,8,10)
@@ -28,6 +30,8 @@ V každém z 7 řádků se rozhodněte a vyberte prosím, zda preferujete "Nic" 
 noneResult = f"V úloze, kde jste volil(a), zda přispět jinému účastníkovi studie, jste mohl(a) zvolit, zda tento účastník obdrží {{0}} Kč a vy ztratíte {BASE} Kč. Zvolil(a) jste možnost 'Nic'. Neztratíte tedy žádné peníze a druhý účastník nic nedostane."
 
 donationResult = f"V úloze, kde jste volil(a), zda přispět jinému účastníkovi studie, jste mohl(a) zvolit, zda tento účastník obdrží {{0}} Kč a vy ztratíte {BASE} Kč. Zvolil(a) jste možnost 'Darování'. Ztratil(a) jste tedy {BASE} Kč a jiný účastník obdržel {{0}} Kč."
+
+wait_text = "Prosím počkejte na ostatní účastníky studie."
 ################################################################################
 
 class Contribution(InstructionsFrame):
@@ -90,11 +94,15 @@ class Contribution(InstructionsFrame):
             #self.root.texts["contribution_chosen"] = "donation"
             self.root.status["results"] += [donationResult.format(self.options[selected - 1] * BASE)]
             self.root.status["reward"] -= BASE            
+            other = self.options[selected - 1] * BASE
         else:
             #self.root.texts["contribution_chosen"] = "none"
             self.root.status["results"] += [noneResult.format(self.options[selected - 1] * BASE)]
+            other = 0
         self.file.write("Contribution\n")  
         self.file.write("\t".join([self.id] + [var.get() for var in self.variables.values()] + [str(selected)]) + "\n")
+        data = {'id': self.id, 'round': "contribution", 'offer': other}
+        self.sendData(data)
 
 
     def gothrough(self):
@@ -106,6 +114,60 @@ class Contribution(InstructionsFrame):
         self.update()
         sleep(0.5)
         self.next.invoke()
+
+
+
+
+class WaitContribution(InstructionsFrame):
+    def __init__(self, root):
+        super().__init__(root, text = wait_text, height = 3, font = 15, proceed = False, width = 45)        
+        self.progressBar = ttk.Progressbar(self, orient = HORIZONTAL, length = 400, mode = 'indeterminate')
+        self.progressBar.grid(row = 2, column = 1, sticky = N)
+
+    def checkOffers(self):
+        count = 0
+        while True:
+            self.update()
+            if count % 50 == 0:
+                data = urllib.parse.urlencode({'id': self.id, 'round': "contribution_received", 'offer': "check"})
+                data = data.encode('ascii')
+                if URL == "TEST":
+                    response = random.choice([str(i * 10) for i in options] + ["0", "0", "0", "0", "0"])
+                else:
+                    try:
+                        with urllib.request.urlopen(URL, data = data) as f:
+                            response = f.read().decode("utf-8")       
+                    except Exception as e:
+                        if TESTING:
+                            print(e)
+                            continue
+                        else:
+                            continue
+                if response:
+                    self.root.status["reward"] += int(response)
+                    if response == "0":
+                        additional = "V úloze, kde Vám jiný účastník mohl darovat peníze se pro náhodně vybranou volbu rozhodl nepřispět. Nezískal(a) jste tedy žádné další peníze."
+                    else:
+                        additional = "V úloze, kde Vám jiný účastník mohl darovat peníze se pro náhodně vybranou volbu rozhodl Vám přispět. Získal(a) jste tedy {} Kč.".format(response)
+                    self.root.status["results"] += [additional]
+                    self.progressBar.stop()
+                    self.nextFun()  
+                    return
+            count += 1
+            sleep(0.1)
+
+    def run(self):
+        self.progressBar.start()
+        self.checkOffers()
+
+    def write(self, response):
+        self.file.write("Contribution Result" + "\n")
+        self.file.write(self.id + "\t" + response + "\n\n")        
+
+    def gothrough(self):
+        self.run()
+
+
 
 
 

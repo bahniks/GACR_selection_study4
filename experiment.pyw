@@ -19,7 +19,7 @@ from dicelottery import LotteryInstructions, DiceLottery
 from comments import Comments
 from questionnaire import TDMS, TEQ, PoliticalWill
 from tosca import TOSCA
-from contribution import Contribution
+from contribution import Contribution, WaitContribution
 from dictator import WaitDictator, InstructionsDictator, DictatorDecision, DictatorFeelings, WaitResult1, DictatorResult, DictatorFeelings2, WaitResult2, DictatorEnd
 #from svo import SVO
 
@@ -59,18 +59,19 @@ frames = [Initial,
           WaitResult2,
           DictatorEnd,
           Contribution,
-          Lottery,
-          LotteryWin,
-          LotteryInstructions,
-          DiceLottery,
           QuestInstructions,
           Hexaco,
           TDMS,
           TEQ,
           TOSCA,
           PoliticalWill,
+          Lottery,
+          LotteryWin,
+          LotteryInstructions,
+          DiceLottery,
           Demographics,
           Comments,
+          WaitContribution,
           Ending
          ]
 
