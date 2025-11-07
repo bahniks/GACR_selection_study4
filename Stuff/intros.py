@@ -58,13 +58,6 @@ Toto je konec experimentu. Děkujeme za Vaši účast!
  
 Decision Lab při FPH VŠE""" 
 
-
-hexacointrotext = """
-Před sebou máte na papíře vytištěný dotazník a záznamový arch. Do záznamového archu vyplňte do pole vlevo dole své identifikační číslo <b>{}</b>. Samotný dotazník ještě nevyplňujte.
-
-Jelikož probíhá v některých částech studie interakce s ostatními účastníky studie, může se stát, že na ně budete muset chvíli čekat. Během případného čekání můžete vyplňovat odpovědi na vytištěný dotazník do přiloženého záznamového archu. <b>Aby nemuseli ostatní účastníci studie čekat na Vás, nevyplňujte dotazník, když je možné pokračovat ve studii na počítači.</b>
-
-Po vyplnění identifikačního čísla do záznamového archu klikněte na tlačítko Pokračovat."""
 ################################################################################
 
 
