@@ -7,8 +7,8 @@ AFTER = 8.878906
 SVO_PROBABILITY = 0.2
 
 AUTOFILL = False
-TESTING = True
+TESTING = False
 GOTHROUGH = False #"Ending"
 URL = "https://dlab-bahnik.pythonanywhere.com/"
-URL = "TEST"
+#URL = "TEST"
 #URL = "http://127.0.0.1:8000/"
