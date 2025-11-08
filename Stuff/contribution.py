@@ -150,6 +150,7 @@ class WaitContribution(InstructionsFrame):
                     else:
                         additional = "V úloze, kde Vám jiný účastník mohl darovat peníze se pro náhodně vybranou volbu rozhodl Vám přispět. Získal(a) jste tedy {} Kč.".format(response)
                     self.root.status["results"] += [additional]
+                    self.write(response)
                     self.progressBar.stop()
                     self.nextFun()  
                     return

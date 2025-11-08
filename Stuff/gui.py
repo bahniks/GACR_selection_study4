@@ -104,9 +104,13 @@ class GUI(Tk):
 
 
     def removeJson(self):
-        if os.path.exists("temp.json"):
-            os.remove("temp.json")
-
+        try:
+            if os.path.exists("temp.json"):
+                os.remove("temp.json")
+        except Exception as e:
+            if TESTING:
+                print("Could not remove temp.json:", e)
+                
 
     def nextFrame(self):
         if not GOTHROUGH:

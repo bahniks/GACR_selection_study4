@@ -573,7 +573,7 @@ class DictatorFeelings(Questionnaire):
 
         if self.root.status["dictatorRole"] == "A" and self.round == 1:
             answers = [expectAnswers[condition] for condition in ["forgive", "ignore", "punish"]]
-            self.expectation = MultipleChoice(self, text = expectText, answers = answers, feedback = [""]*2, randomize = False, callback = self.clicked)
+            self.expectation = MultipleChoice(self, text = expectText, answers = answers, feedback = [""]*3, randomize = False, callback = self.clicked)
             self.expectation.grid(row = 2, column = 1)
             self.next.grid(row = 3, column = 1)
         
@@ -593,6 +593,14 @@ class DictatorFeelings(Questionnaire):
         if self.root.status["dictatorRole"] == "A" and self.round == 1:            
             self.file.write("\nDictator Expectation\n")
             self.file.write(self.id + "\t" + self.expectation.answer.get() + "\n")
+
+    def gothrough(self):
+        if self.root.status["dictatorRole"] == "A" and self.round == 1:   
+            option = random.randint(0, 2)
+            self.expectation.radios[option].invoke()
+            sleep(0.1)
+            self.update()
+        super().gothrough()
         
 
                

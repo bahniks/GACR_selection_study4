@@ -713,7 +713,7 @@ class Prediction(InstructionsFrame):
         return True
 
     def write(self):
-        self.file.write("Prediction\n")    
+        self.file.write("Prediction{}\n".format(str(self.root.status["block"])))    
         self.file.write(self.id + "\t" + str(self.root.status["block"]) + "\t" + "\t".join([i.get() for i in self.vars]) + "\n\n")        
         if self.root.status["block"] == 3:
             if abs(float(self.checkVar1.get().replace(",", ".")) - BEFORE) <= 0.2 and abs(float(self.checkVar2.get().replace(",", ".")) - AFTER) <= 0.2:
