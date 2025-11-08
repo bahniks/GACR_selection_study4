@@ -6,7 +6,7 @@ BEFORE = 5.878906
 AFTER = 8.878906
 SVO_PROBABILITY = 0.2
 
-AUTOFILL = True
+AUTOFILL = False
 TESTING = True
 GOTHROUGH = False #"Ending"
 URL = "https://dlab-bahnik.pythonanywhere.com/"

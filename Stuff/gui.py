@@ -110,7 +110,7 @@ class GUI(Tk):
         except Exception as e:
             if TESTING:
                 print("Could not remove temp.json:", e)
-                
+
 
     def nextFrame(self):
         if not GOTHROUGH:

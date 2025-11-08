@@ -21,6 +21,7 @@ from questionnaire import TDMS, TEQ, PoliticalWill
 from tosca import TOSCA
 from contribution import Contribution, WaitContribution
 from dictator import WaitDictator, InstructionsDictator, DictatorDecision, DictatorFeelings, WaitResult1, DictatorResult, DictatorFeelings2, WaitResult2, DictatorEnd
+from debriefing import DebriefCheating, DebriefingInstructions
 #from svo import SVO
 
 frames = [Initial,
@@ -49,6 +50,8 @@ frames = [Initial,
           Cheating,     
           OutcomeWait,  
           EndCheating,
+          DebriefingInstructions,
+          DebriefCheating,
           WaitDictator,
           InstructionsDictator,
           DictatorDecision,
