@@ -10,10 +10,10 @@ sys.path.append(os.path.join(os.getcwd(), "Stuff"))
 from gui import GUI
 
 from quest import QuestInstructions, Hexaco
-from intros import Initial, Intro, Ending#, HEXACOintro
+from intros import Initial, Intro, Ending
 from demo import Demographics
 from cheating import Instructions1, Cheating, Instructions2, Wait, Instructions3Check, Instructions3, Instructions4Check, Instructions4, Instructions5
-from cheating import EndCheating, ConditionInformation, Login, Prediction, OutcomeWait#, VotingResult, Perception, Debrief, FinalWait
+from cheating import EndCheating, ConditionInformation, Login, Prediction, OutcomeWait, Choice5
 from lottery import Lottery, LotteryWin
 from dicelottery import LotteryInstructions, DiceLottery
 from comments import Comments
@@ -37,14 +37,15 @@ frames = [Initial,
           Cheating,
           OutcomeWait, 
           Instructions4Check,
-          Instructions4,
           Prediction,
+          Instructions4,
           Wait,
           ConditionInformation,
           Cheating,         
           OutcomeWait,
           Instructions5,
           Prediction,
+          Choice5,
           Wait,
           ConditionInformation,
           Cheating,     

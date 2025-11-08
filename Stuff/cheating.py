@@ -173,16 +173,20 @@ Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?"""
 
 intro_block_5 = """Toto je konec čtvrtého bloku o dvanácti kolech. Pokud bude tento blok vylosován, obdržíte {} Kč a oba zbývající členové skupiny získají od Vás po {} Kč.{}
 
-Nyní Vás čeká pátý blok s dvanácti koly. V tomto bloku opět můžete hlasovat, jestli chcete, aby <b>Vaše skupina hrála verzi “PŘED” nebo “PO”.</b> Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
+Nyní Vás čeká pátý blok s dvanácti koly. V tomto bloku opět budete moct hlasovat, jestli chcete, aby <b>Vaše skupina hrála verzi “PŘED” nebo “PO”.</b> Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
 
-Stále platí, že celková odměna, kterou v bloku získáte, bude odečtena od částky 250 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny. Zbývající dva členové skupiny hrají hru za stejných podmínek.
+Stále platí, že celková odměna, kterou v bloku získáte, bude odečtena od částky 250 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny. Zbývající dva členové skupiny hrají hru za stejných podmínek."""
+
+
+choice_fifth = """Nyní můžete vybrat, jestli chcete, aby <b>všichni členové Vaší skupiny</b> hráli verzi “PŘED” nebo “PO”. Všichni následně budete hrát verzi úlohy, pro kterou hlasovali dva nebo více členů skupiny. 
 
 Pro připomenutí:
 Ve <b>verzi “PŘED”</b> uvádíte předpovědi před hodem kostkou. Po zvolení možnosti vidíte výsledek hodu a dozvíte se, zda jste uhodli, či nikoliv a kolik jste vydělali.
 Ve <b>verzi “PO”</b> uvádíte, zda jste uhodli, či nikoliv a kolik jste vydělali, až poté, co vidíte výsledek hodu kostkou.
 
-Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?
-"""
+Stále platí, že celková odměna, kterou v bloku získáte, bude odečtena od částky 250 Kč{} a rovnoměrně rozdělena mezi zbývající dva členy skupiny. Zbývající dva členové skupiny hrají hru za stejných podmínek.
+
+Chcete, aby Vaše skupina hrála verzi “PŘED” nebo “PO”?"""
 
 
 from_others_text = " <b>Od zbývajících dvou hráčů byste v tomto kole získal(a) dohromady {} Kč, pokud by byl pro oba tento blok vylosován.</b>"
@@ -880,8 +884,9 @@ Instructions2 = (InstructionsFrame, {"text": intro_block_2, "height": "auto", "u
 Instructions3 = (Selection, {"text": "", "height": "auto", "width": 110})
 Instructions4Check = (InstructionsAndUnderstanding, {"text": intro_block_4, "update": ["win3", "otherwin3", "conditionText"], "height": "auto", "width": 80, "fillerHeight": 1, "name": "Cheating Round 4 Control Questions", "randomize": False, "controlTexts": controlTexts4})
 Instructions4 = (Selection, {"text": choice_fourth, "update": ["conditionText"], "height": "auto"})
-Instructions5 = (Selection, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4", "conditionText"], "height": "auto"})
+Instructions5 = (InstructionsFrame, {"text": intro_block_5, "update": ["win4", "otherwin4", "information4", "conditionText"], "height": "auto"})
 ConditionInformation = (InstructionsFrame, {"text": info_condition, "update": ["voted_condition"]})
+Choice5 = (Selection, {"text": choice_fifth, "update": ["conditionText"], "height": "auto"})
 
 #Instructions3Check = (InstructionsAndUnderstanding, {"text": intro_block_3, "height": 35, "width": 110, "name": "Cheating Round 3 Control Questions", "update": ["win2", "condition", "source"], "controlTexts": controlTexts3})
 EndCheating = (InstructionsFrame, {"text": endtext, "height": "auto", "update": ["win5", "otherwin5"]})
@@ -892,26 +897,27 @@ if __name__ == "__main__":
     os.chdir(os.path.dirname(os.getcwd()))
     GUI([Login,
          Instructions1,
-         Cheating,
-         Instructions2,
-         Cheating,
-         Prediction,
-         Instructions3Check,
-         Instructions3,         
-         Cheating,
-         OutcomeWait, 
-         Instructions4Check,
-         Instructions4,
-         Prediction,
-         Wait,
-         ConditionInformation,
-         Cheating,         
-         OutcomeWait,
-         Instructions5,
-         Prediction,
-         Wait,
-         ConditionInformation,
-         Cheating,     
-         OutcomeWait,  
-         EndCheating
+          Cheating,
+          Instructions2,
+          Cheating,
+          Prediction,
+          Instructions3Check,
+          Instructions3,         
+          Cheating,
+          OutcomeWait, 
+          Instructions4Check,
+          Prediction,
+          Instructions4,
+          Wait,
+          ConditionInformation,
+          Cheating,         
+          OutcomeWait,
+          Instructions5,
+          Prediction,
+          Choice5,
+          Wait,
+          ConditionInformation,
+          Cheating,     
+          OutcomeWait,  
+          EndCheating
          ])
