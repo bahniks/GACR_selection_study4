@@ -56,7 +56,7 @@ DictControl3 = 'Pokud se hráč B rozhodne “potrestat” hráče A v prvním k
 DictAnswers3 = ["0 Kč ", "6 Kč", "10 Kč", "12 Kč"]
 DictFeedback3 = ["Chybná odpověď. Za každou 1 Kč trestu, ztratí hráč A také 1 Kč.", "Správná odpověď.", "Chybná odpověď. Za každou 1 Kč trestu, ztratí hráč A také 1 Kč.", "Chybná odpověď. Za každou 1 Kč trestu, ztratí hráč A také 1 Kč."]
 
-DictControl4 = 'Pokud hráč B rozhodne "odpustit" a poslat hráči A 2 Kč v prvním kole, kolik peněz ztratí hráč B a kolik získá hráč A?'
+DictControl4 = 'Pokud se hráč B rozhodne "odpustit" a poslat hráči A 2 Kč v prvním kole, kolik peněz ztratí hráč B a kolik získá hráč A?'
 DictAnswers4 = ["Hráč B ztratí 2 Kč, hráč A získá 0 Kč.", "Hráč B ztratí 6 Kč, hráč A získá 4 Kč.", "Hráč B ztratí 2 Kč, hráč A získá 2 Kč.", "Hráč B ztratí 0 Kč, hráč A získá 4 Kč."]
 DictFeedback4 = ["Chybná odpověď. Hráč B ztratí 2 Kč, hráč A získá 2 Kč.", "Chybná odpověď. Hráč B ztratí 2 Kč, hráč A získá 2 Kč.", "Správná odpověď.", "Chybná odpověď. Hráč B ztratí 2 Kč, hráč A získá 2 Kč."]
 
@@ -644,7 +644,7 @@ class DictatorResult(InstructionsFrame):
 
 class InstructionsDictator(InstructionsAndUnderstanding):
     def __init__(self, root):       
-        super().__init__(root, text = instructions, height = 30, width = 110, name = "Dictator Control Questions", randomize = False, controlTexts = controlTexts1)    
+        super().__init__(root, text = instructions, height = 30, width = 110, name = "Dictator Control Questions", randomize = False, controlTexts = controlTexts1, fillerHeight=260)    
 
 
 

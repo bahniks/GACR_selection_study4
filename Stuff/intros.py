@@ -38,6 +38,8 @@ intro = """Studie se skládá z několika různých úkolů a otázek. Níže je
 4) Loterie: můžete se rozhodnout zúčastnit se loterie a získat další peníze v závislosti na výsledcích loterie.
 5) Konec studie a platba: poté, co skončíte, půjdete do vedlejší místnosti, kde podepíšete pokladní dokument, na základě kterého obdržíte vydělané peníze v hotovosti. <b>Jelikož v dokumentu bude uvedena pouze celková suma, experimentátor, který Vám bude vyplácet odměnu, nebude vědět, kolik jste vydělali v jednotlivých částech studie.</b>
 
+Jelikož v průběhu studie interagujete s jinými účastníky, je možné, že v některých částech studie budete muset chvíli počkat, než se tito účastníci dostanou do stejného bodu studie. V takovém případě Vás požádáme o trpělivost a klidné vyčkání.
+
 V případě, že máte otázky nebo narazíte na technický problém během úkolů, zvedněte ruku a tiše vyčkejte příchodu výzkumného asistenta.
 
 Všechny informace, které v průběhu studie uvidíte, jsou pravdivé a nebudete za žádných okolností klamáni či jinak podváděni.
@@ -52,7 +54,7 @@ Vaše odměna za tuto studii je tedy dohromady {} Kč, zaokrouhleno na desítky 
 
 Výsledky experimentu budou volně dostupné na stránkách Centra laboratorního a experimentálního výzkumu FPH VŠE, krátce po vyhodnocení dat a publikaci výsledků. Žádáme Vás, abyste nesdělovali detaily této studie možným účastníkům, aby jejich volby a odpovědi nebyly ovlivněny a znehodnoceny.
   
-Můžete si vzít všechny svoje věci, vyplněný pokladní doklad a záznamový arch, a aniž byste rušili ostatní účastníky, odeberte se do vedlejší místnosti za výzkumným asistentem, od kterého obdržíte svoji odměnu. 
+Můžete si vzít všechny svoje věci, vyplněný pokladní doklad, a aniž byste rušili ostatní účastníky, odeberte se do vedlejší místnosti za výzkumným asistentem, od kterého obdržíte svoji odměnu. 
 
 Toto je konec experimentu. Děkujeme za Vaši účast!
  
@@ -109,5 +111,4 @@ if __name__ == "__main__":
     GUI([Login,
          Initial, 
          Intro,
-         HEXACOintro,
          Ending])

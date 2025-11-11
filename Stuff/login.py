@@ -94,7 +94,7 @@ class Login(InstructionsFrame):
 
     def write(self, response):
         self.file.write("Login" + "\n")
-        self.file.write(self.id + response.replace("_", "\t").lstrip("start") + "\t" + self.root.status["winning_block"] + "\n\n")
+        self.file.write(self.id + response.replace("_", "\t").lstrip("start") + "\n\n")
 
     def gothrough(self):
         self.run()
